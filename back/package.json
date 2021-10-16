@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "compile": "tsc typescript/server.ts --outdir javascript -w",
     "start": "nodemon javascript/server.js",
-    "concurrently": "concurrently -c 'bgYellow, bgBlue' \"nodemon javascript/server.js\" \"tsc typescript/server.ts --outdir javascript -w\""
+    "concurrently": "concurrently -c 'yellow,blue' \"nodemon javascript/server.js\" \"tsc typescript/server.ts --outdir javascript -w\""
   },
   "author": "florian.bergot564@gmail.com",
   "license": "ISC",
