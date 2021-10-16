@@ -1,0 +1,32 @@
+{
+  "name": "back",
+  "version": "1.0.0",
+  "description": "server ",
+  "main": "javascript/server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "compile": "tsc typescript/server.ts --outdir javascript -w",
+    "start": "nodemon javascript/server.js",
+    "concurrently": "concurrently -c 'bgYellow, bgBlue' \"nodemon javascript/server.js\" \"tsc typescript/server.ts --outdir javascript -w\""
+  },
+  "author": "florian.bergot564@gmail.com",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "multer": "^1.4.3",
+    "mysql": "^2.18.1",
+    "mysql2": "^2.3.2",
+    "sequelize": "^6.7.0"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
+    "@types/express": "^4.17.13",
+    "@types/jsonwebtoken": "^8.5.5",
+    "@types/multer": "^1.4.7",
+    "@types/node": "^16.11.0",
+    "@types/sequelize": "^4.28.10"
+  }
+}
