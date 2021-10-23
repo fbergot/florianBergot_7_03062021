@@ -77,23 +77,17 @@ class UserController {
      * @memberof UserController
      */
 	public async signin(req: Request, res: Response, next: NextFunction): Promise<void> {
-		let user: unknown;
 		// --- find if user exist with his email --- 
+		var user;
 		try {
-			user = await this.user.findOne<User>({
+			 user = await this.user.findOne<User>({
 				where: { email: req.body.email }
 			});
 			if (!user) {
 				res.status(404).json({ error: this.messages.userNotExist });
 				return;
 			}
-		} catch (err: any) {
-			res.status(500).json({ err: err.message });
-		}
-		// --- compare password & create jwt if password is correct
-		try {
 			if (!await this.bcryptInst.bcryptCompare(req.body.password, user.password)) {
-				console.log(user);
 				res.status(401).json({ error: this.messages.badPass });
 				return;
 			}
@@ -104,7 +98,7 @@ class UserController {
 			res.status(200).json({uuid: user.uuid, token: signedPayload });
 		} catch (err: any) {
 			res.status(500).json({ err: err.message });
-		}   
+		}  
 	}
 }
 

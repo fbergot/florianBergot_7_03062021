@@ -1,7 +1,6 @@
 import * as jwt from 'jsonwebtoken';
 
 type PayloadInterface = {
-    userId: number,
     userUuid: string
 }
 /**

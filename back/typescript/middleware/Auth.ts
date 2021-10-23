@@ -55,7 +55,7 @@ class Auth {
      * @memberof Auth
      */
     private getTokenInHeader(req: Request): string {
-		// --- split => ["Bearer", "1e254354d85sf.."]
+		// --- split autho string by space => ["Bearer", "1e254354d85sf.."] ---
 		const token = req.headers.authorization?.split(' ')[1];
 		if (!token || token.length < 10) throw Error(`${this.messages.errorMessageToken}`);
 		return token;
