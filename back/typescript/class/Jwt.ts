@@ -1,14 +1,15 @@
 import * as jwt from 'jsonwebtoken';
 
 type PayloadInterface = {
-    userId: string,
+    userId: number,
+    userUuid: string
 }
 /**
  * For sign & verify token
  * @export
  * @class JSONWebToken
  */
-export default class JSONWebToken {
+export class JSONWebToken {
 
     private JWT: typeof jwt;
 
@@ -44,3 +45,5 @@ export default class JSONWebToken {
         })
     }
 }
+
+export const jwtInstance = new JSONWebToken(jwt);

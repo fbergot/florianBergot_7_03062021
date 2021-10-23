@@ -48,26 +48,32 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 exports.__esModule = true;
 var Bcrypt_1 = require("../class/Bcrypt");
+var Jwt_1 = require("../class/Jwt");
 var models = require('../../models');
 var UserController = /** @class */ (function () {
-    function UserController(user, bcryptInst) {
+    function UserController(user, bcryptInst, jwt) {
         this.user = user;
         this.bcryptInst = bcryptInst;
+        this.jwtInst = jwt;
+        this.messages = {
+            badPass: "Bad password",
+            userNotExist: 'User not exist, please signup'
+        };
     }
     /**
-     * Register a user
+     * Register an user
      * @memberof UserController
      */
     UserController.prototype.signup = function (req, res, next) {
         var _a;
         return __awaiter(this, void 0, void 0, function () {
-            var password, salt, hashPassord, newUser, err_1;
+            var salt, password, hashPassord, newUser, err_1;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
                         _b.trys.push([0, 3, , 4]);
-                        password = req.body.password;
                         salt = Number.parseInt((_a = process.env.SALT) !== null && _a !== void 0 ? _a : "10");
+                        password = req.body.password;
                         return [4 /*yield*/, this.bcryptInst.bcryptHash(password, salt)];
                     case 1:
                         hashPassord = _b.sent();
@@ -85,7 +91,59 @@ var UserController = /** @class */ (function () {
             });
         });
     };
+    /**
+     * Signin an user
+     * @memberof UserController
+     */
+    UserController.prototype.signin = function (req, res, next) {
+        var _a;
+        return __awaiter(this, void 0, void 0, function () {
+            var user, err_2, secret, options, payload, signedPayload, err_3;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        _b.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.user.findOne({
+                                where: { email: req.body.email }
+                            })];
+                    case 1:
+                        user = _b.sent();
+                        if (!user) {
+                            res.status(404).json({ error: this.messages.userNotExist });
+                            return [2 /*return*/];
+                        }
+                        return [3 /*break*/, 3];
+                    case 2:
+                        err_2 = _b.sent();
+                        res.status(500).json({ err: err_2.message });
+                        return [3 /*break*/, 3];
+                    case 3:
+                        _b.trys.push([3, 6, , 7]);
+                        return [4 /*yield*/, this.bcryptInst.bcryptCompare(req.body.password, user.password)];
+                    case 4:
+                        if (!(_b.sent())) {
+                            console.log(user);
+                            res.status(401).json({ error: this.messages.badPass });
+                            return [2 /*return*/];
+                        }
+                        secret = (_a = process.env.SECRET) !== null && _a !== void 0 ? _a : "secret";
+                        options = { expiresIn: '2h' };
+                        payload = { userUuid: user.uuid };
+                        return [4 /*yield*/, this.jwtInst.signJWT(payload, secret, options)];
+                    case 5:
+                        signedPayload = _b.sent();
+                        res.status(200).json({ uuid: user.uuid, token: signedPayload });
+                        return [3 /*break*/, 7];
+                    case 6:
+                        err_3 = _b.sent();
+                        res.status(500).json({ err: err_3.message });
+                        return [3 /*break*/, 7];
+                    case 7: return [2 /*return*/];
+                }
+            });
+        });
+    };
     return UserController;
 }());
-var userController = new UserController(models.User, Bcrypt_1.bcryptInstance);
+var userController = new UserController(models.User, Bcrypt_1.bcryptInstance, Jwt_1.jwtInstance);
 exports["default"] = userController;

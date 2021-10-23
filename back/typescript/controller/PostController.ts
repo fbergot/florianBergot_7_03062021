@@ -3,4 +3,5 @@ const models = require("../../models");
 
 export default class PostController {
 
+	constructor() {}
 }

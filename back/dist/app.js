@@ -14,6 +14,7 @@ var baseUrlCategory = "/api/categories";
 var baseUrlReaction = "/api/reactions";
 // add middlewares
 app.use(express.json());
+app.use("/images", express.static("images"));
 app.use(Utils_1["default"].setHeadersCORS);
 app.use(baseUrlUser, userRouter_1.router);
 app.use(baseUrlPost, postRouter_1.router);

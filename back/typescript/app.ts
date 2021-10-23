@@ -16,6 +16,7 @@ const baseUrlReaction = "/api/reactions";
 
 // add middlewares
 app.use(express.json());
+app.use("/images", express.static("images"));
 app.use(utils.setHeadersCORS);
 
 app.use(baseUrlUser, userRouter);
