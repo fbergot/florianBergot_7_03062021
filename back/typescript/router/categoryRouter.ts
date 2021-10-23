@@ -1,5 +1,6 @@
 import * as express from "express";
 import categoryController from "../controller/CategoryController";
+import authInstance from "../middleware/Auth";
 
 export const router = (function (express_router) {
 	const Router = express_router();

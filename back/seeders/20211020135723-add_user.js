@@ -13,7 +13,7 @@ module.exports = {
 				},
 				{
 					email: "flor@testing22.com",
-					password: "pas54684",
+					password: "test",
 					username: "Florence",
 					isAdmin: "false",
                     businessRole: "PDG"

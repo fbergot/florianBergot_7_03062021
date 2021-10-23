@@ -76,7 +76,6 @@ var Auth = /** @class */ (function () {
                             res.status(403).json({ error: this.messages.unauthorized });
                             return [2 /*return*/];
                         }
-                        // if ok, next middleware
                         next();
                         return [3 /*break*/, 3];
                     case 2:

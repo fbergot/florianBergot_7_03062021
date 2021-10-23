@@ -1,6 +1,6 @@
 import * as http from 'http';
-import app from './app';
 import * as dotenv from 'dotenv';
+import app from './app';
 import utils from './class/Utils';
 import { sequelize } from '../models';
 

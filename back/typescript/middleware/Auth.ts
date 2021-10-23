@@ -42,7 +42,6 @@ class Auth {
 				res.status(403).json({ error: this.messages.unauthorized });
 				return;
 			}
-			// if ok, next middleware
 			next();             
 		} catch (e: any) {
 			res.status(401).json({ error: e.message})

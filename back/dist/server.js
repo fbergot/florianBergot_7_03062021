@@ -37,8 +37,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 exports.__esModule = true;
 var http = require("http");
-var app_1 = require("./app");
 var dotenv = require("dotenv");
+var app_1 = require("./app");
 var Utils_1 = require("./class/Utils");
 var models_1 = require("../models");
 dotenv.config();

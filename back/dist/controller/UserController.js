@@ -49,7 +49,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 exports.__esModule = true;
 var Bcrypt_1 = require("../class/Bcrypt");
 var Jwt_1 = require("../class/Jwt");
+var dotenv = require("dotenv");
 var models = require('../../models');
+dotenv.config();
 var UserController = /** @class */ (function () {
     function UserController(user, bcryptInst, jwt) {
         this.user = user;
@@ -57,36 +59,46 @@ var UserController = /** @class */ (function () {
         this.jwtInst = jwt;
         this.messages = {
             badPass: "Bad password",
-            userNotExist: 'User not exist, please signup'
+            userNotExist: 'User not exist, please signup',
+            alreadyUser: "This user already exist"
         };
     }
     /**
-     * Register an user
+     * Register an user (if not already exist)
      * @memberof UserController
      */
     UserController.prototype.signup = function (req, res, next) {
         var _a;
         return __awaiter(this, void 0, void 0, function () {
-            var salt, password, hashPassord, newUser, err_1;
+            var user, salt, password, hashPassord, newUser, err_1;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        _b.trys.push([0, 3, , 4]);
+                        _b.trys.push([0, 4, , 5]);
+                        return [4 /*yield*/, this.user.findOne({
+                                where: { email: req.body.email }
+                            })];
+                    case 1:
+                        user = _b.sent();
+                        if (user) {
+                            res.status(409).json({ error: this.messages.alreadyUser });
+                            return [2 /*return*/];
+                        }
                         salt = Number.parseInt((_a = process.env.SALT) !== null && _a !== void 0 ? _a : "10");
                         password = req.body.password;
                         return [4 /*yield*/, this.bcryptInst.bcryptHash(password, salt)];
-                    case 1:
+                    case 2:
                         hashPassord = _b.sent();
                         return [4 /*yield*/, this.user.create(__assign(__assign({}, req.body), { password: hashPassord }))];
-                    case 2:
+                    case 3:
                         newUser = _b.sent();
                         res.status(201).json(newUser);
-                        return [3 /*break*/, 4];
-                    case 3:
+                        return [3 /*break*/, 5];
+                    case 4:
                         err_1 = _b.sent();
                         res.status(500).json({ err: err_1.message });
-                        return [3 /*break*/, 4];
-                    case 4: return [2 /*return*/];
+                        return [3 /*break*/, 5];
+                    case 5: return [2 /*return*/];
                 }
             });
         });
