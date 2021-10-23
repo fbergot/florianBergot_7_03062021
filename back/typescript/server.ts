@@ -1,14 +1,22 @@
 import * as http from 'http';
 import app from './app';
 import * as dotenv from 'dotenv';
-import Utils from './class/Utils';
+import utils from './class/Utils';
+import { sequelize } from '../models';
 
 dotenv.config();
 
-const utils = new Utils;
 const server = http.createServer(app);
 const port = utils.normalizePort(process.env.PORT || 3000);
 
+server.on("listening", async () => {
+    try {
+        utils.logHandler(port, server);
+        await sequelize.authenticate();
+        console.log("Database connected");
+    } catch (err: any) {
+        console.error(err.message);
+    }
+});
 
-server.on("listening", () => utils.logHandler(port, server));
 server.listen(port);

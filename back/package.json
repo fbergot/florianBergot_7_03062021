@@ -2,12 +2,12 @@
   "name": "back",
   "version": "1.0.0",
   "description": "server ",
-  "main": "javascript/server.js",
+  "main": "dist/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "compile": "tsc typescript/server.ts --outdir javascript -w",
-    "start": "nodemon javascript/server.js",
-    "concurrently": "concurrently -c 'yellow,blue' \"nodemon javascript/server.js\" \"tsc typescript/server.ts --outdir javascript -w\""
+    "compile": "tsc typescript/server.ts --outdir dist -w",
+    "start": "nodemon dist/server.js",
+    "concurrently": "concurrently -c 'blue,yellow' \"tsc typescript/server.ts --outdir dist -w\" \"nodemon dist/server.js\""
   },
   "author": "florian.bergot564@gmail.com",
   "license": "ISC",
@@ -27,6 +27,7 @@
     "@types/jsonwebtoken": "^8.5.5",
     "@types/multer": "^1.4.7",
     "@types/node": "^16.11.0",
-    "@types/sequelize": "^4.28.10"
+    "@types/sequelize": "^4.28.10",
+    "typescript": "^4.4.4"
   }
 }
