@@ -1,7 +1,7 @@
 import * as express from 'express';
 import userController from '../controller/UserController';
 
-const router = (function (express_router) {
+export const router = (function (express_router) {
 
     const Router = express_router();
 
@@ -10,4 +10,3 @@ const router = (function (express_router) {
     return Router;
 })(express.Router);
 
-export default router;

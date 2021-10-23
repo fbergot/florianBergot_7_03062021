@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import {bcryptInstance, Bcrypt} from '../class/Bcrypt';
-
 const models = require('../../models');
 
 type User = {
