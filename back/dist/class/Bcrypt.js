@@ -36,38 +36,50 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-var http = require("http");
-var app_1 = require("./app");
-var dotenv = require("dotenv");
-var Utils_1 = require("./class/Utils");
-var models_1 = require("../models");
-dotenv.config();
-var server = http.createServer(app_1["default"]);
-var port = Utils_1["default"].normalizePort(process.env.PORT || 3000);
-server.on("listening", function () { return __awaiter(void 0, void 0, void 0, function () {
-    var mLog, err_1;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                mLog = {
-                    ok: "Database connected",
-                    notOk: "Database connection failed"
-                };
-                _a.label = 1;
-            case 1:
-                _a.trys.push([1, 3, , 4]);
-                Utils_1["default"].logHandler(port, server);
-                return [4 /*yield*/, models_1.sequelize.authenticate()];
-            case 2:
-                _a.sent();
-                console.log(mLog.ok);
-                return [3 /*break*/, 4];
-            case 3:
-                err_1 = _a.sent();
-                console.log(mLog.notOk);
-                return [3 /*break*/, 4];
-            case 4: return [2 /*return*/];
-        }
-    });
-}); });
-server.listen(port);
+exports.bcryptInstance = exports.Bcrypt = void 0;
+var bcrypt = require("bcrypt");
+/**
+ * For all bcrypt operation
+ * @export
+ * @class Bcrypt
+ */
+var Bcrypt = /** @class */ (function () {
+    /**
+     *Creates an instance of Bcrypt.
+     * @memberof Bcrypt
+     */
+    function Bcrypt(module) {
+        this.bcryptModule = module;
+    }
+    /**
+     * Hash data
+     * @memberof Bcrypt
+     */
+    Bcrypt.prototype.bcryptHash = function (data, salt) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.bcryptModule.hash(data, salt)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    /**
+     * Compare data with hash
+     * @memberof Bcrypt
+     */
+    Bcrypt.prototype.bcryptCompare = function (plaintextData, hash) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.bcryptModule.compare(plaintextData, hash)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    return Bcrypt;
+}());
+exports.Bcrypt = Bcrypt;
+exports.bcryptInstance = new Bcrypt(bcrypt);

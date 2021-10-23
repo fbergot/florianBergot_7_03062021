@@ -10,12 +10,16 @@ const server = http.createServer(app);
 const port = utils.normalizePort(process.env.PORT || 3000);
 
 server.on("listening", async () => {
+    const mLog = {
+        ok: "Database connected",
+        notOk: "Database connection failed",
+    };
     try {
         utils.logHandler(port, server);
         await sequelize.authenticate();
-        console.log("Database connected");
-    } catch (err: any) {
-        console.error(err.message);
+        console.log(mLog.ok);
+    } catch (err) {
+        console.log(mLog.notOk);
     }
 });
 

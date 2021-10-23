@@ -8,7 +8,7 @@ class Utils {
      * @throw if val < 0 or if parseInt(val) === NaN
      * @memberof Utils
      */
-    normalizePort(val: string | number): number {
+    public normalizePort(val: string | number): number {
         let port: undefined | number;
         if (typeof val === 'string') {
             if (isNaN(parseInt(val, 10))) {
@@ -29,7 +29,7 @@ class Utils {
      * Log message in console when event listening is emit
      * @memberof Utils
      */
-    logHandler(port: number, server: http.Server): void {
+    public logHandler(port: number, server: http.Server): void {
         const address = server.address();
         const bind = typeof address === "string" ? `pipe: ${address}` : `port: ${port}`;
         console.log("listening on " + bind);
@@ -39,12 +39,13 @@ class Utils {
      * Middleware for add headers CORS
      * @memberof Utils
      */
-    setHeadersCORS(req: Request, res: Response, next: CallableFunction): void {
+    public setHeadersCORS(req: Request, res: Response, next: CallableFunction): void {
         res.setHeader('Access-Control-Allow-Origin', "*");
         res.setHeader('Access-Control-Allow-Headers', "Origin, X-Requested-With, Content, Accept, Content-Type, Authorization");
         res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
         next();
     }
+
 }
 
 const utils = new Utils;

@@ -47,33 +47,45 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
+var Bcrypt_1 = require("../class/Bcrypt");
 var models = require('../../models');
 var UserController = /** @class */ (function () {
-    function UserController(user) {
+    function UserController(user, bcryptInst) {
         this.user = user;
+        this.bcryptInst = bcryptInst;
     }
-    UserController.prototype.register = function (req, res, next) {
+    /**
+     * Register a user
+     * @memberof UserController
+     */
+    UserController.prototype.signup = function (req, res, next) {
+        var _a;
         return __awaiter(this, void 0, void 0, function () {
-            var newUser, err_1;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var password, salt, hashPassord, newUser, err_1;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.user.create(__assign({}, req.body))];
+                        _b.trys.push([0, 3, , 4]);
+                        password = req.body.password;
+                        salt = Number.parseInt((_a = process.env.SALT) !== null && _a !== void 0 ? _a : "10");
+                        return [4 /*yield*/, this.bcryptInst.bcryptHash(password, salt)];
                     case 1:
-                        newUser = _a.sent();
-                        res.status(201).json(newUser);
-                        return [3 /*break*/, 3];
+                        hashPassord = _b.sent();
+                        return [4 /*yield*/, this.user.create(__assign(__assign({}, req.body), { password: hashPassord }))];
                     case 2:
-                        err_1 = _a.sent();
+                        newUser = _b.sent();
+                        res.status(201).json(newUser);
+                        return [3 /*break*/, 4];
+                    case 3:
+                        err_1 = _b.sent();
                         res.status(500).json({ err: err_1.message });
-                        return [3 /*break*/, 3];
-                    case 3: return [2 /*return*/];
+                        return [3 /*break*/, 4];
+                    case 4: return [2 /*return*/];
                 }
             });
         });
     };
     return UserController;
 }());
-var userController = new UserController(models.User);
+var userController = new UserController(models.User, Bcrypt_1.bcryptInstance);
 exports["default"] = userController;
