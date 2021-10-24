@@ -15,8 +15,8 @@ class Auth {
 
 	private JSONWebTokenInst: JSONWebToken;
 	private messages: {
-		unauthorized: string; 
-		errorMessageToken: string; 
+		readonly unauthorized: string; 
+		readonly errorMessageToken: string; 
 	}
 
 	constructor(JSONWebTokenInstance: JSONWebToken) {

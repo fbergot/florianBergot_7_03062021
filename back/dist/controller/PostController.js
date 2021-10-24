@@ -49,8 +49,12 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 exports.__esModule = true;
 var models = require("../../models");
 var PostController = /** @class */ (function () {
-    function PostController(postModel) {
+    function PostController(postModel, categoryModel, userModel, commentModel, reactionModel) {
         this.postModel = postModel;
+        this.categoryModel = categoryModel;
+        this.userModel = userModel;
+        this.commentModel = commentModel;
+        this.reactionModel = reactionModel;
     }
     /**
      * Create a post
@@ -58,19 +62,69 @@ var PostController = /** @class */ (function () {
      */
     PostController.prototype.create = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
-            var newMessage, err_1;
+            var newPost, categoryOfPost, err_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 4, , 5]);
+                        return [4 /*yield*/, this.postModel.create(__assign({}, req.body))];
+                    case 1:
+                        newPost = _a.sent();
+                        return [4 /*yield*/, this.categoryModel.findOne({
+                                where: { id: req.body.category }
+                            })];
+                    case 2:
+                        categoryOfPost = _a.sent();
+                        return [4 /*yield*/, newPost.addCategory(categoryOfPost)];
+                    case 3:
+                        _a.sent();
+                        res.status(201).json(newPost);
+                        return [3 /*break*/, 5];
+                    case 4:
+                        err_1 = _a.sent();
+                        res.status(500).json({ error: err_1.message });
+                        return [3 /*break*/, 5];
+                    case 5: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    /**
+     * Get all posts with associations
+     * @memberof PostController
+     */
+    PostController.prototype.getAll = function (req, res, next) {
+        return __awaiter(this, void 0, void 0, function () {
+            var posts, err_2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.postModel.create(__assign({}, req.body))];
+                        return [4 /*yield*/, this.postModel.findAll({
+                                include: [
+                                    {
+                                        model: this.userModel,
+                                        attributes: ['username']
+                                    },
+                                    {
+                                        model: this.commentModel
+                                    },
+                                    {
+                                        model: this.categoryModel,
+                                        attributes: ['name']
+                                    },
+                                    {
+                                        model: this.reactionModel
+                                    }
+                                ]
+                            })];
                     case 1:
-                        newMessage = _a.sent();
-                        res.status(201).json(newMessage);
+                        posts = _a.sent();
+                        res.status(200).json(posts);
                         return [3 /*break*/, 3];
                     case 2:
-                        err_1 = _a.sent();
-                        res.status(500).json({ error: err_1.message });
+                        err_2 = _a.sent();
+                        res.status(500).json({ error: err_2.messge });
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
                 }
@@ -79,5 +133,5 @@ var PostController = /** @class */ (function () {
     };
     return PostController;
 }());
-var postController = new PostController(models.Post);
+var postController = new PostController(models.Post, models.Category, models.User, models.Comment, models.Reaction);
 exports["default"] = postController;

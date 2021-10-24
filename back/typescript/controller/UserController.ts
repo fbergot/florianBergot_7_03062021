@@ -93,9 +93,9 @@ class UserController {
 			}
 			const secret = process.env.SECRET ?? "secret";
 			const options = { expiresIn: '2h' };
-			const payload = { userUuid: user.uuid};
+			const payload = { userUuid: user.uuid };
 			const signedPayload = await this.jwtInst.signJWT(payload, secret, options);
-			res.status(200).json({uuid: user.uuid, token: signedPayload });
+			res.status(200).json({ uuid: user.uuid, token: signedPayload });
 		} catch (err: any) {
 			res.status(500).json({ err: err.message });
 		}  

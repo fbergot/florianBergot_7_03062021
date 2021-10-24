@@ -4,6 +4,7 @@ import {router as userRouter} from './router/userRouter';
 import {router as postRouter} from './router/postRouter';
 import {router as commentRouter} from './router/commentRouter';
 import {router as categoryRouter} from './router/categoryRouter';
+import {router as reactionRouter} from './router/reactionRouter';
 
 
 const app: express.Application = express();
@@ -19,10 +20,12 @@ app.use(express.json());
 app.use("/images", express.static("images"));
 app.use(utils.setHeadersCORS);
 
+// router
 app.use(baseUrlUser, userRouter);
 app.use(baseUrlPost, postRouter);
 app.use(baseUrlComment, commentRouter);
 app.use(baseUrlCategory, categoryRouter);
+app.use(baseUrlReaction, reactionRouter);
 
 
 export default app;
