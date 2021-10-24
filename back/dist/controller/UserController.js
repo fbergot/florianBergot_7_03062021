@@ -110,11 +110,11 @@ var UserController = /** @class */ (function () {
     UserController.prototype.signin = function (req, res, next) {
         var _a;
         return __awaiter(this, void 0, void 0, function () {
-            var user, err_2, secret, options, payload, signedPayload, err_3;
+            var user, secret, options, payload, signedPayload, err_2;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        _b.trys.push([0, 2, , 3]);
+                        _b.trys.push([0, 4, , 5]);
                         return [4 /*yield*/, this.user.findOne({
                                 where: { email: req.body.email }
                             })];
@@ -124,17 +124,9 @@ var UserController = /** @class */ (function () {
                             res.status(404).json({ error: this.messages.userNotExist });
                             return [2 /*return*/];
                         }
-                        return [3 /*break*/, 3];
-                    case 2:
-                        err_2 = _b.sent();
-                        res.status(500).json({ err: err_2.message });
-                        return [3 /*break*/, 3];
-                    case 3:
-                        _b.trys.push([3, 6, , 7]);
                         return [4 /*yield*/, this.bcryptInst.bcryptCompare(req.body.password, user.password)];
-                    case 4:
+                    case 2:
                         if (!(_b.sent())) {
-                            console.log(user);
                             res.status(401).json({ error: this.messages.badPass });
                             return [2 /*return*/];
                         }
@@ -142,15 +134,15 @@ var UserController = /** @class */ (function () {
                         options = { expiresIn: '2h' };
                         payload = { userUuid: user.uuid };
                         return [4 /*yield*/, this.jwtInst.signJWT(payload, secret, options)];
-                    case 5:
+                    case 3:
                         signedPayload = _b.sent();
                         res.status(200).json({ uuid: user.uuid, token: signedPayload });
-                        return [3 /*break*/, 7];
-                    case 6:
-                        err_3 = _b.sent();
-                        res.status(500).json({ err: err_3.message });
-                        return [3 /*break*/, 7];
-                    case 7: return [2 /*return*/];
+                        return [3 /*break*/, 5];
+                    case 4:
+                        err_2 = _b.sent();
+                        res.status(500).json({ err: err_2.message });
+                        return [3 /*break*/, 5];
+                    case 5: return [2 /*return*/];
                 }
             });
         });

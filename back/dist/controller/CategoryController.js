@@ -38,8 +38,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 exports.__esModule = true;
 var models = require("../../models");
 var CategoryController = /** @class */ (function () {
-    function CategoryController(categoryModel) {
+    function CategoryController(categoryModel, postModel) {
         this.categoryModel = categoryModel;
+        this.postModel = postModel;
     }
     /**
      * Create one category
@@ -52,7 +53,9 @@ var CategoryController = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.categoryModel.create({ name: req.body.name })];
+                        return [4 /*yield*/, this.categoryModel.create({
+                                name: req.body.name
+                            })];
                     case 1:
                         newCategory = _a.sent();
                         res.status(201).json(newCategory);
@@ -66,7 +69,38 @@ var CategoryController = /** @class */ (function () {
             });
         });
     };
+    /**
+     * Get all categories with posts associated
+     * @memberof CategoryController
+     */
+    CategoryController.prototype.getAll = function (req, res, next) {
+        return __awaiter(this, void 0, void 0, function () {
+            var categories, err_2;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.categoryModel.findAll({
+                                include: [
+                                    {
+                                        model: this.postModel
+                                    }
+                                ]
+                            })];
+                    case 1:
+                        categories = _a.sent();
+                        res.status(200).json(categories);
+                        return [3 /*break*/, 3];
+                    case 2:
+                        err_2 = _a.sent();
+                        res.status(500).json({ error: err_2.message });
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
     return CategoryController;
 }());
-var categoryController = new CategoryController(models.Category);
+var categoryController = new CategoryController(models.Category, models.Post);
 exports["default"] = categoryController;

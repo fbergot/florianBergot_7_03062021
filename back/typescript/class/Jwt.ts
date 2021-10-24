@@ -1,8 +1,5 @@
 import * as jwt from 'jsonwebtoken';
 
-type PayloadInterface = {
-    userUuid: string
-}
 /**
  * For sign & verify token
  * @export
@@ -24,7 +21,7 @@ export class JSONWebToken {
      * sign a token
      * @memberof JSONWebToken
      */
-    public signJWT(payload: PayloadInterface, secret: string, options: jwt.SignOptions): Promise<any> {
+    public signJWT(payload: { userUuid: string }, secret: string, options: jwt.SignOptions): Promise<any> {
         return new Promise((resolve, reject) => {
             this.JWT.sign(payload, secret, options, (err, token) => {
                 err ? reject(err) : resolve(token);
