@@ -9,7 +9,7 @@ dotenv.config();
 const server = http.createServer(app);
 const port = utils.normalizePort(process.env.PORT || 3000);
 
-server.on("listening", async () => {
+server.on("listening", async (): Promise<void> => {
     const mLog = {
         ok: "Database connected",
         notOk: "Database connection failed",

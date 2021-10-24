@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
 			this.hasMany(Reaction);
 		}
 	};
+	
 	User.init({
 		uuid: {
 				type: DataTypes.UUID,

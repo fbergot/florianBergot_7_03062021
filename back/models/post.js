@@ -23,6 +23,7 @@ module.exports = (sequelize, DataTypes) => {
 			});
 		}
 	};
+	
 	Post.init({
 		content: DataTypes.STRING,
 		attachment: DataTypes.STRING

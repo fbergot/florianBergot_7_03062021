@@ -16,9 +16,9 @@ type User = {
 	"businessRole": string,
 	"updatedAt": string,
 	"createdAt": string
-} & MethodsModels
+} & MethodsModel
 
-type MethodsModels = {
+type MethodsModel = {
 	create<T>(data: {
 		[key in keyof T]: T[key]
 	}): Promise<T>;

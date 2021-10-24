@@ -3,6 +3,7 @@
 const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
+
 	class Reaction extends Model {
 		static associate({Post, User, ReactionPost}) {
 			this.belongsTo(User, {
@@ -15,6 +16,7 @@ module.exports = (sequelize, DataTypes) => {
 		  });
 		}
 	};
+	
 	Reaction.init({
 		userId: DataTypes.INTEGER,
 		likeOrDislike: DataTypes.STRING

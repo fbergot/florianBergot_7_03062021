@@ -2,7 +2,7 @@ import * as express from "express";
 import categoryController from "../controller/CategoryController";
 import authInstance from "../middleware/Auth";
 
-export const router = (function (express_router) {
+export const router = (function (express_router): express.Router {
 	const Router = express_router();
 
 	Router.route("/create").post((req, res, next) => categoryController.create(req, res, next));
