@@ -20,6 +20,8 @@ server.on("listening", async (): Promise<void> => {
         console.log(mLog.ok);
     } catch (err) {
         console.log(mLog.notOk);
+        // if DB not connected, exit of current process
+        process.exit();
     }
 });
 

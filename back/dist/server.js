@@ -65,6 +65,8 @@ server.on("listening", function () { return __awaiter(void 0, void 0, void 0, fu
             case 3:
                 err_1 = _a.sent();
                 console.log(mLog.notOk);
+                // if DB not connected, exit of current process
+                process.exit();
                 return [3 /*break*/, 4];
             case 4: return [2 /*return*/];
         }

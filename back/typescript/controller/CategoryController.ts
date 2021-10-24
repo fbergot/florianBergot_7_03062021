@@ -2,16 +2,16 @@ import { Request, Response, NextFunction } from 'express';
 const models = require("../../models");
 
 type CatModel = {
-	id: number,
+	readonly id: number,
 	name: string,
 	createdAt: string,
 	updatedAt: string
 } & methodModel;
 
 type PostModel = {
-	id: number,
+	readonly id: number,
 	content: string,
-	userId: number,
+	readonly userId: number,
 	attachment?: string,
 	createdAt: string,
 	updatedAt: string,
@@ -19,7 +19,7 @@ type PostModel = {
 
 type methodModel = {
 	create<T>(data: unknown): Promise<T>;
-	findAll<T>(objOption: any): Promise<T>;
+	findAll<T>(objOption: { include: {model: any}[] }): Promise<T>;
 }
 
 class CategoryController {
@@ -52,7 +52,7 @@ class CategoryController {
 	 */
 	public async getAll(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
-			const categories = await this.categoryModel.findAll<CatModel|undefined>({
+			const categories = await this.categoryModel.findAll<CatModel>({
 				include: [
 					{
 						model: this.postModel
@@ -63,7 +63,7 @@ class CategoryController {
 		} catch (err: any) {
 			res.status(500).json({ error: err.message });
 		}
-  }
+  	}
 }
 
 const categoryController = new CategoryController(models.Category, models.Post);

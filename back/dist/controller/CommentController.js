@@ -36,72 +36,44 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-var Jwt_1 = require("../class/Jwt");
-var dotenv = require("dotenv");
-dotenv.config();
-/**
- * For auth users
- * @class Auth
- */
-var Auth = /** @class */ (function () {
-    function Auth(JSONWebTokenInstance) {
-        this.JSONWebTokenInst = JSONWebTokenInstance;
-        this.messages = {
-            unauthorized: "Request unauthorized",
-            errorMessageToken: "Missing token or poorly formed (valid: 'Bearer 1e254e...')"
-        };
+var models = require("../../models");
+var CommentController = /** @class */ (function () {
+    function CommentController(commentModel) {
+        this.commentModel = commentModel;
     }
     /**
-     * For verif auth (with token)
-     * @memberof Auth
+     * Create a comment for one post
+     * @memberof CommentController
      */
-    Auth.prototype.verifAuth = function (req, res, next) {
-        var _a;
+    CommentController.prototype.create = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
-            var token, secret, decodedToken, userUuid, e_1;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
+            var commentProp, newComment, err_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
                     case 0:
-                        _b.trys.push([0, 2, , 3]);
-                        token = this.getTokenInHeader(req);
-                        secret = (_a = process.env.SECRET) !== null && _a !== void 0 ? _a : 'secret';
-                        return [4 /*yield*/, this.JSONWebTokenInst.verifyJWT(token, secret, {})];
+                        commentProp = {
+                            content: req.body.content,
+                            UserId: req.body.userId,
+                            PostId: req.body.postId
+                        };
+                        _a.label = 1;
                     case 1:
-                        decodedToken = _b.sent();
-                        userUuid = void 0;
-                        if (decodedToken) {
-                            userUuid = decodedToken.userUuid;
-                        }
-                        if (req.body.uuid && (req.body.uuid !== userUuid)) {
-                            res.status(403).json({ error: this.messages.unauthorized });
-                            return [2 /*return*/];
-                        }
-                        next();
-                        return [3 /*break*/, 3];
+                        _a.trys.push([1, 3, , 4]);
+                        return [4 /*yield*/, this.commentModel.create(commentProp)];
                     case 2:
-                        e_1 = _b.sent();
-                        res.status(401).json({ error: e_1.message });
-                        return [3 /*break*/, 3];
-                    case 3: return [2 /*return*/];
+                        newComment = _a.sent();
+                        res.status(201).json(newComment);
+                        return [3 /*break*/, 4];
+                    case 3:
+                        err_1 = _a.sent();
+                        res.status(500).json({ error: err_1.message });
+                        return [3 /*break*/, 4];
+                    case 4: return [2 /*return*/];
                 }
             });
         });
     };
-    /**
-     * Get a token in req authorization header
-     * @private
-     * @throw if token
-     * @memberof Auth
-     */
-    Auth.prototype.getTokenInHeader = function (req) {
-        var _a;
-        // --- split autho string by space => ["Bearer", "1e254354d85sf.."] ---
-        var token = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(' ')[1];
-        if (!token || token.length < 10)
-            throw Error("" + this.messages.errorMessageToken);
-        return token;
-    };
-    return Auth;
+    return CommentController;
 }());
-var authInstance = new Auth(Jwt_1.jwtInstance);
-exports["default"] = authInstance;
+var commentController = new CommentController(models.Comment);
+exports["default"] = commentController;

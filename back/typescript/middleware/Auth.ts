@@ -4,6 +4,9 @@ import * as dotenv from 'dotenv';
 
 dotenv.config();
 
+type DecodedToken = {
+	userUuid: string
+}
 /**
  * For auth users
  * @class Auth
@@ -32,8 +35,8 @@ class Auth {
 		try {
 			// --- get token in header & verify if token is valid ---
 			const token = this.getTokenInHeader(req);
-			const secret = process.env.SECRET ?? '';
-			const decodedToken = await this.JSONWebTokenInst.verifyJWT(token, secret, {});           
+			const secret = process.env.SECRET ?? 'secret';
+			const decodedToken: DecodedToken = await this.JSONWebTokenInst.verifyJWT(token, secret, {});           
 			let userUuid: undefined | string;
 			if (decodedToken) {
 				userUuid = decodedToken.userUuid;

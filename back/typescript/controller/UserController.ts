@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import {bcryptInstance, Bcrypt} from '../class/Bcrypt';
+import { bcryptInstance, Bcrypt } from '../class/Bcrypt';
 import { jwtInstance, JSONWebToken } from '../class/Jwt';
 import * as dotenv from 'dotenv';
 const models = require('../../models');
@@ -7,22 +7,22 @@ const models = require('../../models');
 dotenv.config();
 
 type User = {
-	"uuid": string,
-	"id": number,
-	"email": string,
-	"password": string,
-	"username": string,
-	"isAdmin": boolean,
-	"businessRole": string,
-	"updatedAt": string,
-	"createdAt": string
+readonly uuid: string,
+readonly id: number,
+	email: string,
+	password: string,
+	username: string,
+	isAdmin: boolean,
+	businessRole: string,
+	updatedAt: string,
+	createdAt: string
 } & MethodsModel
 
 type MethodsModel = {
 	create<T>(data: {
 		[key in keyof T]: T[key]
 	}): Promise<T>;
-	findOne<T>(data: { where: {} }): Promise<T>;
+	findOne<T>(filter: { where: { email: string }}): Promise<T>;
 }
 
 class UserController {
@@ -31,9 +31,9 @@ class UserController {
 	private bcryptInst: Bcrypt;
 	private jwtInst: JSONWebToken;
 	private messages: {
-		badPass: string,
-		userNotExist: string,
-		alreadyUser: string
+		readonly badPass: string,
+		readonly userNotExist: string,
+		readonly alreadyUser: string
 	}
 
     constructor(user: User, bcryptInst: Bcrypt, jwt: JSONWebToken) { 
