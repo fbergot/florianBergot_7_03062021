@@ -50,6 +50,7 @@ exports.__esModule = true;
 var Bcrypt_1 = require("../class/Bcrypt");
 var Jwt_1 = require("../class/Jwt");
 var dotenv = require("dotenv");
+var fs = require("fs");
 var models = require('../../models');
 dotenv.config();
 var UserController = /** @class */ (function () {
@@ -71,18 +72,18 @@ var UserController = /** @class */ (function () {
      * @memberof UserController
      */
     UserController.prototype.signup = function (req, res, next) {
-        var _a;
+        var _a, _b;
         return __awaiter(this, void 0, void 0, function () {
-            var user, salt, password, hashPassord, newUser, err_1;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
+            var user, salt, password, hashPassord, imageUrl, newUser, err_1;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
                     case 0:
-                        _b.trys.push([0, 4, , 5]);
+                        _c.trys.push([0, 4, , 5]);
                         return [4 /*yield*/, this.user.findOne({
                                 where: { email: req.body.email }
                             })];
                     case 1:
-                        user = _b.sent();
+                        user = _c.sent();
                         if (user) {
                             res.status(409).json({ error: this.messages.alreadyUser });
                             return [2 /*return*/];
@@ -91,14 +92,18 @@ var UserController = /** @class */ (function () {
                         password = req.body.password;
                         return [4 /*yield*/, this.bcryptInst.bcryptHash(password, salt)];
                     case 2:
-                        hashPassord = _b.sent();
-                        return [4 /*yield*/, this.user.create(__assign(__assign({}, req.body), { password: hashPassord }))];
+                        hashPassord = _c.sent();
+                        imageUrl = void 0;
+                        if (req.file) {
+                            imageUrl = req.protocol + "://" + req.get('host') + "/images/" + ((_b = req.file) === null || _b === void 0 ? void 0 : _b.filename);
+                        }
+                        return [4 /*yield*/, this.user.create(__assign(__assign({}, req.body), { password: hashPassord, urlAvatar: imageUrl }))];
                     case 3:
-                        newUser = _b.sent();
+                        newUser = _c.sent();
                         res.status(201).json(newUser);
                         return [3 /*break*/, 5];
                     case 4:
-                        err_1 = _b.sent();
+                        err_1 = _c.sent();
                         res.status(500).json({ err: err_1.message });
                         return [3 /*break*/, 5];
                     case 5: return [2 /*return*/];
@@ -156,7 +161,7 @@ var UserController = /** @class */ (function () {
      */
     UserController.prototype["delete"] = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
-            var user, userDeleted, err_3;
+            var user, fileName, userDeleted, err_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -171,6 +176,14 @@ var UserController = /** @class */ (function () {
                             return [2 /*return*/];
                         }
                         if (!(user && user.id === req.body.userId || req.body.isAdmin)) return [3 /*break*/, 3];
+                        // if img, delete image
+                        if (user.urlAvatar) {
+                            fileName = user.urlAvatar.split("/images/")[1];
+                            fs.unlink("images/" + fileName, function (err) {
+                                if (err)
+                                    throw err;
+                            });
+                        }
                         return [4 /*yield*/, user.destroy()];
                     case 2:
                         userDeleted = _a.sent();

@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { bcryptInstance, Bcrypt } from '../class/Bcrypt';
 import { jwtInstance, JSONWebToken } from '../class/Jwt';
 import * as dotenv from 'dotenv';
+import * as fs from "fs";
 const models = require('../../models');
 
 dotenv.config();
@@ -14,6 +15,7 @@ readonly id: number,
 	username: string,
 	isAdmin: boolean,
 	businessRole: string,
+	urlAvatar?: string,
 	updatedAt: string,
 	createdAt: string
 } & MethodsModel
@@ -58,7 +60,7 @@ class UserController {
      * Register an user (if not already exist)
      * @memberof UserController
      */
-    public async signup(req: Request, res: Response, next: NextFunction): Promise<void> {
+	public async signup(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			// verif if user already exist
 			const user = await this.user.findOne<User>({
@@ -72,7 +74,12 @@ class UserController {
 			const salt = Number.parseInt(process.env.SALT ?? "10");
 			const password: string = req.body.password;
 			const hashPassord = await this.bcryptInst.bcryptHash(password, salt);
-			const newUser = await this.user.create<User>({ ...req.body, password: hashPassord });            
+			// build imageUrl if img exist
+			let imageUrl;
+			if (req.file) {
+				imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file?.filename}`;
+			}
+			const newUser = await this.user.create<User>({ ...req.body, password: hashPassord, urlAvatar: imageUrl });            
 			res.status(201).json(newUser);
 		} catch (err: any) {
 			res.status(500).json({ err: err.message });
@@ -125,6 +132,14 @@ class UserController {
 
 			// compare user to delete with user authenticated || ckeck if is admin user
 			if (user && user.id === req.body.userId || req.body.isAdmin) {
+				// if img, delete image
+				if (user.urlAvatar) {
+					const fileName = user.urlAvatar.split("/images/")[1];
+					fs.unlink(`images/${fileName}`, err => {
+						if (err) throw err;
+					})
+				}
+				// del user
 				const userDeleted = await user.destroy<User>();
 				res.status(200).json({message: this.messages.userDeleted, info: {username: userDeleted.username}});
 				return;				
