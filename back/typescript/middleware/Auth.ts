@@ -5,7 +5,9 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 type DecodedToken = {
-	userUuid: string
+	userUuid: string,
+	userId: number,
+	isAdmin: boolean
 }
 /**
  * For auth users
@@ -45,6 +47,8 @@ class Auth {
 				res.status(403).json({ error: this.messages.unauthorized });
 				return;
 			}
+			req.body.isAdmin = decodedToken.isAdmin;
+			req.body.userId = decodedToken.userId;
 			next();             
 		} catch (e: any) {
 			res.status(401).json({ error: e.message})

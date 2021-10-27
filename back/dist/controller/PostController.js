@@ -1,15 +1,4 @@
 "use strict";
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -55,23 +44,40 @@ var PostController = /** @class */ (function () {
         this.userModel = userModel;
         this.commentModel = commentModel;
         this.reactionModel = reactionModel;
+        this.messages = {
+            noPost: "Not post with this id",
+            postDeleted: "Post deleted",
+            postNotDeleted: 'Cannot delete this post, requires elevation of privilege',
+            notFound: "Post not found",
+            modified: "Post modified",
+            notAutho: 'Modification not authorized'
+        };
     }
     /**
-     * Create a post
+     * Create a post with category
      * @memberof PostController
      */
     PostController.prototype.create = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
-            var newPost, categoryOfPost, err_1;
+            var data, newPost, categoryOfPost, err_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 4, , 5]);
-                        return [4 /*yield*/, this.postModel.create(__assign({}, req.body))];
+                        data = {
+                            title: req.body.title,
+                            content: req.body.content,
+                            UserId: req.body.userId,
+                            category: req.body.category
+                        };
+                        return [4 /*yield*/, this.postModel.create(data)];
                     case 1:
                         newPost = _a.sent();
-                        return [4 /*yield*/, this.categoryModel.findOne({
-                                where: { id: req.body.category }
+                        return [4 /*yield*/, this.categoryModel.findOrCreate({
+                                where: { name: req.body.category },
+                                "default": {
+                                    name: req.body.category
+                                }
                             })];
                     case 2:
                         categoryOfPost = _a.sent();
@@ -127,6 +133,84 @@ var PostController = /** @class */ (function () {
                         res.status(500).json({ error: err_2.messge });
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    /**
+     * Update one message
+     * @memberof PostController
+     */
+    PostController.prototype.update = function (req, res, next) {
+        return __awaiter(this, void 0, void 0, function () {
+            var post, newPost, err_3;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 4, , 5]);
+                        return [4 /*yield*/, this.postModel.findOne({
+                                where: { id: req.params.id }
+                            })];
+                    case 1:
+                        post = _a.sent();
+                        if (!post) {
+                            res.status(404).json({ message: this.messages.notFound });
+                            return [2 /*return*/];
+                        }
+                        if (!(post.UserId === req.body.userId)) return [3 /*break*/, 3];
+                        post.content = req.body.content;
+                        return [4 /*yield*/, post.save()];
+                    case 2:
+                        newPost = _a.sent();
+                        res.status(200).json({ message: this.messages.modified, info: newPost });
+                        return [2 /*return*/];
+                    case 3:
+                        res.status(401).json({ message: this.messages.notAutho });
+                        return [3 /*break*/, 5];
+                    case 4:
+                        err_3 = _a.sent();
+                        res.status(500).json({ error: err_3.message });
+                        return [3 /*break*/, 5];
+                    case 5: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    /**
+     * Delete one post
+     * @memberof PostController
+     */
+    PostController.prototype["delete"] = function (req, res, next) {
+        return __awaiter(this, void 0, void 0, function () {
+            var post, deletedPost, err_4;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 5, , 6]);
+                        return [4 /*yield*/, this.postModel.findOne({
+                                where: { id: req.params.id }
+                            })];
+                    case 1:
+                        post = _a.sent();
+                        if (!post) {
+                            res.status(404).json({ message: this.messages.noPost });
+                            return [2 /*return*/];
+                        }
+                        if (!(post.UserId === req.body.userId || req.body.isAdmin)) return [3 /*break*/, 3];
+                        return [4 /*yield*/, post.destroy()];
+                    case 2:
+                        deletedPost = _a.sent();
+                        res.status(200).json({ message: this.messages.postDeleted, info: { idPostDeleted: deletedPost.id } });
+                        return [3 /*break*/, 4];
+                    case 3:
+                        res.status(403).json({ error: this.messages.postNotDeleted });
+                        _a.label = 4;
+                    case 4: return [3 /*break*/, 6];
+                    case 5:
+                        err_4 = _a.sent();
+                        res.status(500).json({ error: err_4.message });
+                        return [3 /*break*/, 6];
+                    case 6: return [2 /*return*/];
                 }
             });
         });

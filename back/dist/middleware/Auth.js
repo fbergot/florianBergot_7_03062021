@@ -76,6 +76,8 @@ var Auth = /** @class */ (function () {
                             res.status(403).json({ error: this.messages.unauthorized });
                             return [2 /*return*/];
                         }
+                        req.body.isAdmin = decodedToken.isAdmin;
+                        req.body.userId = decodedToken.userId;
                         next();
                         return [3 /*break*/, 3];
                     case 2:

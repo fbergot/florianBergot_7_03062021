@@ -60,7 +60,10 @@ var UserController = /** @class */ (function () {
         this.messages = {
             badPass: "Bad password",
             userNotExist: 'User not exist, please signup',
-            alreadyUser: "This user already exist"
+            alreadyUser: "This user already exist",
+            userDeleted: 'User deleted',
+            userNotDeleted: 'Cannot delete this user, requires elevation of privilege',
+            userNotFound: 'User not found'
         };
     }
     /**
@@ -132,7 +135,7 @@ var UserController = /** @class */ (function () {
                         }
                         secret = (_a = process.env.SECRET) !== null && _a !== void 0 ? _a : "secret";
                         options = { expiresIn: '2h' };
-                        payload = { userUuid: user.uuid };
+                        payload = { userUuid: user.uuid, userId: user.id, isAdmin: user.isAdmin };
                         return [4 /*yield*/, this.jwtInst.signJWT(payload, secret, options)];
                     case 3:
                         signedPayload = _b.sent();
@@ -143,6 +146,45 @@ var UserController = /** @class */ (function () {
                         res.status(500).json({ err: err_2.message });
                         return [3 /*break*/, 5];
                     case 5: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    /**
+     * For delete account
+     * @memberof UserController
+     */
+    UserController.prototype["delete"] = function (req, res, next) {
+        return __awaiter(this, void 0, void 0, function () {
+            var user, userDeleted, err_3;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 5, , 6]);
+                        return [4 /*yield*/, this.user.findOne({
+                                where: { email: req.params.email }
+                            })];
+                    case 1:
+                        user = _a.sent();
+                        if (!user) {
+                            res.status(404).json({ message: this.messages.userNotFound });
+                            return [2 /*return*/];
+                        }
+                        if (!(user && user.id === req.body.userId || req.body.isAdmin)) return [3 /*break*/, 3];
+                        return [4 /*yield*/, user.destroy()];
+                    case 2:
+                        userDeleted = _a.sent();
+                        res.status(200).json({ message: this.messages.userDeleted, info: { username: userDeleted.username } });
+                        return [2 /*return*/];
+                    case 3:
+                        res.status(401).json({ message: this.messages.userNotDeleted });
+                        _a.label = 4;
+                    case 4: return [3 /*break*/, 6];
+                    case 5:
+                        err_3 = _a.sent();
+                        res.status(500).json({ error: err_3.message });
+                        return [3 /*break*/, 6];
+                    case 6: return [2 /*return*/];
                 }
             });
         });
