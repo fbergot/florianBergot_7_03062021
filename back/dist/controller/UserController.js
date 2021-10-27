@@ -134,7 +134,7 @@ var UserController = /** @class */ (function () {
                             return [2 /*return*/];
                         }
                         secret = (_a = process.env.SECRET) !== null && _a !== void 0 ? _a : "secret";
-                        options = { expiresIn: '2h' };
+                        options = { expiresIn: '6h' };
                         payload = { userUuid: user.uuid, userId: user.id, isAdmin: user.isAdmin };
                         return [4 /*yield*/, this.jwtInst.signJWT(payload, secret, options)];
                     case 3:

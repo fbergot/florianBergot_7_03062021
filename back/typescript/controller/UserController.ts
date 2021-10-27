@@ -99,7 +99,7 @@ class UserController {
 				return;
 			}
 			const secret = process.env.SECRET ?? "secret";
-			const options = { expiresIn: '2h' };
+			const options = { expiresIn: '6h' };
 			const payload = { userUuid: user.uuid, userId: user.id, isAdmin: user.isAdmin };
 			const signedPayload = await this.jwtInst.signJWT(payload, secret, options);
 			res.status(200).json({ uuid: user.uuid, token: signedPayload });

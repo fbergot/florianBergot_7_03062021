@@ -40,6 +40,11 @@ var models = require("../../models");
 var CommentController = /** @class */ (function () {
     function CommentController(commentModel) {
         this.commentModel = commentModel;
+        this.messages = {
+            notFound: "Comment not found",
+            comDeleted: "Comment deleted",
+            comNotDeleted: "Comment not deleted"
+        };
     }
     /**
      * Create a comment for one post
@@ -54,7 +59,7 @@ var CommentController = /** @class */ (function () {
                         commentProp = {
                             content: req.body.content,
                             UserId: req.body.userId,
-                            PostId: req.body.postId
+                            PostId: parseInt(req.params.postId)
                         };
                         _a.label = 1;
                     case 1:
@@ -69,6 +74,45 @@ var CommentController = /** @class */ (function () {
                         res.status(500).json({ error: err_1.message });
                         return [3 /*break*/, 4];
                     case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    /**
+     * Delete one comment
+     * @memberof CommentController
+     */
+    CommentController.prototype["delete"] = function (req, res, next) {
+        return __awaiter(this, void 0, void 0, function () {
+            var comment, deletedComment, err_2;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 5, , 6]);
+                        return [4 /*yield*/, this.commentModel.findOne({
+                                where: { id: req.params.commentId }
+                            })];
+                    case 1:
+                        comment = _a.sent();
+                        if (!comment) {
+                            res.status(404).json({ message: this.messages.notFound });
+                            return [2 /*return*/];
+                        }
+                        if (!(comment.UserId === req.body.userId || req.body.isAdmin)) return [3 /*break*/, 3];
+                        return [4 /*yield*/, comment.destroy()];
+                    case 2:
+                        deletedComment = _a.sent();
+                        res.status(200).json({ message: this.messages.comDeleted, info: { idComDeleted: deletedComment.id } });
+                        return [3 /*break*/, 4];
+                    case 3:
+                        res.status(401).json({ error: this.messages.comNotDeleted });
+                        _a.label = 4;
+                    case 4: return [3 /*break*/, 6];
+                    case 5:
+                        err_2 = _a.sent();
+                        res.status(500).json({ error: err_2.message });
+                        return [3 /*break*/, 6];
+                    case 6: return [2 /*return*/];
                 }
             });
         });

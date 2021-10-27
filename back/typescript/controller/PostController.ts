@@ -195,7 +195,7 @@ class PostController {
 				const deletedPost = await post.destroy<PostModel>();
 				res.status(200).json({ message: this.messages.postDeleted, info: { idPostDeleted: deletedPost.id } });
 			} else {
-				res.status(403).json({ error: this.messages.postNotDeleted });
+				res.status(401).json({ error: this.messages.postNotDeleted });
 			}
 		} catch (err: any) {
 			res.status(500).json({ error: err.message });

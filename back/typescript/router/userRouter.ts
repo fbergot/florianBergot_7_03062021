@@ -13,7 +13,7 @@ export const router = (function (express_router): express.Router {
         .post((req, res, next) => userController.signin(req, res, next));
     
     Router.route('/delete/:email')
-        .post(
+        .delete(
             (req, res, next) => authInstance.verifAuth(req, res, next),
             (req, res, next) => userController.delete(req, res, next)
         );

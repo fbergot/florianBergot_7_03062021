@@ -12,7 +12,6 @@ exports.router = (function (express_router) {
         .get(function (req, res, next) { return Auth_1["default"].verifAuth(req, res, next); }, function (req, res, next) { return PostController_1["default"].getAll(req, res, next); });
     Router.route("/update/:id")
         .put(function (req, res, next) { return Auth_1["default"].verifAuth(req, res, next); }, function (req, res, next) { return PostController_1["default"].update(req, res, next); });
-    Router.route("/delete/:id")
-        .post(function (req, res, next) { return Auth_1["default"].verifAuth(req, res, next); }, function (req, res, next) { return PostController_1["default"]["delete"](req, res, next); });
+    Router.route("/delete/:id")["delete"](function (req, res, next) { return Auth_1["default"].verifAuth(req, res, next); }, function (req, res, next) { return PostController_1["default"]["delete"](req, res, next); });
     return Router;
 })(express.Router);

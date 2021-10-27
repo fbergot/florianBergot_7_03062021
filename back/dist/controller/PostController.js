@@ -203,7 +203,7 @@ var PostController = /** @class */ (function () {
                         res.status(200).json({ message: this.messages.postDeleted, info: { idPostDeleted: deletedPost.id } });
                         return [3 /*break*/, 4];
                     case 3:
-                        res.status(403).json({ error: this.messages.postNotDeleted });
+                        res.status(401).json({ error: this.messages.postNotDeleted });
                         _a.label = 4;
                     case 4: return [3 /*break*/, 6];
                     case 5:

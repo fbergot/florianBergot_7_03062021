@@ -24,7 +24,7 @@ export const router = (function (express_router): express.Router {
 	);
 	
 	Router.route("/delete/:id")
-		.post(
+		.delete(
 			(req, res, next) => authInstance.verifAuth(req, res, next),
 			(req, res, next) => postController.delete(req, res, next)
 		);
