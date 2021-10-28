@@ -36,6 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
+var Auth_1 = require("../middleware/Auth");
 var models = require("../../models");
 var CommentController = /** @class */ (function () {
     function CommentController(commentModel) {
@@ -43,7 +44,8 @@ var CommentController = /** @class */ (function () {
         this.messages = {
             notFound: "Comment not found",
             comDeleted: "Comment deleted",
-            comNotDeleted: "Comment not deleted"
+            comNotDeleted: "Comment not deleted",
+            infoNotFound: "Info user not found in token"
         };
     }
     /**
@@ -52,18 +54,19 @@ var CommentController = /** @class */ (function () {
      */
     CommentController.prototype.create = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
-            var commentProp, newComment, err_1;
+            var tokenPayload, commentProp, newComment, err_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
+                        _a.trys.push([0, 3, , 4]);
+                        return [4 /*yield*/, Auth_1["default"].getTokenInfo(req)];
+                    case 1:
+                        tokenPayload = _a.sent();
                         commentProp = {
                             content: req.body.content,
-                            UserId: req.body.userId,
+                            UserId: tokenPayload.userId,
                             PostId: parseInt(req.params.postId)
                         };
-                        _a.label = 1;
-                    case 1:
-                        _a.trys.push([1, 3, , 4]);
                         return [4 /*yield*/, this.commentModel.create(commentProp)];
                     case 2:
                         newComment = _a.sent();
@@ -84,30 +87,32 @@ var CommentController = /** @class */ (function () {
      */
     CommentController.prototype["delete"] = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
-            var comment, deletedComment, err_2;
+            var tokenPayload, comment, deletedComment, err_2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 5, , 6]);
+                        return [4 /*yield*/, Auth_1["default"].getTokenInfo(req)];
+                    case 1:
+                        tokenPayload = _a.sent();
                         return [4 /*yield*/, this.commentModel.findOne({
                                 where: { id: req.params.commentId }
                             })];
-                    case 1:
+                    case 2:
                         comment = _a.sent();
                         if (!comment) {
                             res.status(404).json({ message: this.messages.notFound });
                             return [2 /*return*/];
                         }
-                        if (!(comment.UserId === req.body.userId || req.body.isAdmin)) return [3 /*break*/, 3];
+                        if (!(comment.UserId === tokenPayload.userId || tokenPayload.isAdmin)) return [3 /*break*/, 4];
                         return [4 /*yield*/, comment.destroy()];
-                    case 2:
+                    case 3:
                         deletedComment = _a.sent();
                         res.status(200).json({ message: this.messages.comDeleted, info: { idComDeleted: deletedComment.id } });
-                        return [3 /*break*/, 4];
-                    case 3:
-                        res.status(401).json({ error: this.messages.comNotDeleted });
                         _a.label = 4;
-                    case 4: return [3 /*break*/, 6];
+                    case 4:
+                        res.status(403).json({ error: this.messages.comNotDeleted });
+                        return [3 /*break*/, 6];
                     case 5:
                         err_2 = _a.sent();
                         res.status(500).json({ error: err_2.message });

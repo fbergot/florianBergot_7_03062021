@@ -1,4 +1,6 @@
 import { NextFunction, Request, Response } from "express";
+import authInstance from '../middleware/Auth';
+
 const models = require("../../models");
 
 type PostModel = {
@@ -23,7 +25,7 @@ type MethodsModel = {
 	findAll<T>(options: { include: {}[] }): Promise<T[] | null>;
 	findOrCreate<T>(data: any): Promise<T>;
 	destroy<T>(): Promise<T>;
-	save(): any
+	save<T>(): Promise<T>;
 };
 
 type CatModel = {
@@ -75,7 +77,8 @@ class PostController {
 		postNotDeleted: string,
 		notFound: string,
 		modified: string,
-		notAutho: string
+		notAutho: string,
+		infoNotFound: string
 	}
 
 	constructor(postModel: PostModel, categoryModel: CatModel,
@@ -91,7 +94,8 @@ class PostController {
 			postNotDeleted: 'Cannot delete this post, requires elevation of privilege',
 			notFound: "Post not found",
 			modified: "Post modified",
-			notAutho: 'Modification not authorized'
+			notAutho: 'Modification not authorized',
+			infoNotFound: "Info user not found in token"
 		}
 	}
 
@@ -100,19 +104,21 @@ class PostController {
 	 * @memberof PostController
 	 */
 	public async create(req: Request, res: Response, next: NextFunction): Promise<void> {
-		// body.userId per Auth
 		try {
+			// get user info
+			const tokenPayload = await authInstance.getTokenInfo(req);
 			const data = {
 				title: req.body.title,
 				content: req.body.content,
-				UserId: req.body.userId,
+				UserId: tokenPayload.userId,
 				category: req.body.category
 			}
+			// create post & find or create the category
 			const newPost = await this.postModel.create<PostModel>(data);
 			const categoryOfPost = await this.categoryModel.findOrCreate<CatModel>({
 				where: { name: req.body.category },
 				default: {
-					name: req.body.category
+					name: req.body.category || 'divers'
 				}
 			});
 			await newPost.addCategory(categoryOfPost);
@@ -158,6 +164,9 @@ class PostController {
 	 */
 	public async update(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
+			// get userInfo
+			const tokenPayload = await authInstance.getTokenInfo(req);
+			// find the post to update
 			const post = await this.postModel.findOne<PostModel>({
 				where: { id: req.params.id }
 			});
@@ -165,14 +174,15 @@ class PostController {
 				res.status(404).json({ message: this.messages.notFound });
 				return;
 			}
-			// control 
-			if (post.UserId === req.body.userId) {
+			// ckeck if it is the author of the message 
+			if (post.UserId === tokenPayload.userId) {
 				post.content = req.body.content;
-				const newPost = await post.save();
+				// save new data
+				const newPost = await post.save<PostModel>();
 				res.status(200).json({ message: this.messages.modified, info: newPost });
 				return;
 			}
-			res.status(401).json({ message: this.messages.notAutho });
+			res.status(403).json({ message: this.messages.notAutho });				
 		} catch (err: any) {
 			res.status(500).json({ error: err.message });
 		}
@@ -184,6 +194,9 @@ class PostController {
 	 */
 	public async delete(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
+			// get userInfo
+			const tokenPayload = await authInstance.getTokenInfo(req);
+			// find the post to delete
 			const post = await this.postModel.findOne<PostModel>({
 				where: {id: req.params.id}
 			})
@@ -191,12 +204,13 @@ class PostController {
 				res.status(404).json({ message: this.messages.noPost });
 				return;
 			}
-			if (post.UserId === req.body.userId || req.body.isAdmin) {
+			// ckeck if it is the user || ckeck if is admin user
+			if ((post.UserId === tokenPayload.userId) || tokenPayload.isAdmin) {
 				const deletedPost = await post.destroy<PostModel>();
 				res.status(200).json({ message: this.messages.postDeleted, info: { idPostDeleted: deletedPost.id } });
-			} else {
-				res.status(401).json({ error: this.messages.postNotDeleted });
+				return;
 			}
+			res.status(403).json({ error: this.messages.postNotDeleted });
 		} catch (err: any) {
 			res.status(500).json({ error: err.message });
 		}		

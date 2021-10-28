@@ -20,6 +20,13 @@ export const router = (function (express_router): express.Router {
         .delete(
             (req, res, next) => authInstance.verifAuth(req, res, next),
             (req, res, next) => userController.delete(req, res, next)
+    );
+    
+    Router.route('/update/:email')
+        .put(
+            (req, res, next) => authInstance.verifAuth(req, res, next),
+            multer,
+            (req, res, next) => userController.update(req, res, next)
         );
 
     return Router;

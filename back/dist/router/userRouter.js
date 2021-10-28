@@ -12,5 +12,7 @@ exports.router = (function (express_router) {
     Router.route('/signin')
         .post(function (req, res, next) { return UserController_1["default"].signin(req, res, next); });
     Router.route('/delete/:email')["delete"](function (req, res, next) { return Auth_1["default"].verifAuth(req, res, next); }, function (req, res, next) { return UserController_1["default"]["delete"](req, res, next); });
+    Router.route('/update/:email')
+        .put(function (req, res, next) { return Auth_1["default"].verifAuth(req, res, next); }, multer_config_1["default"], function (req, res, next) { return UserController_1["default"].update(req, res, next); });
     return Router;
 })(express.Router);

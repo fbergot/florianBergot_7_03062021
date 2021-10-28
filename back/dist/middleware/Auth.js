@@ -56,32 +56,19 @@ var Auth = /** @class */ (function () {
      * @memberof Auth
      */
     Auth.prototype.verifAuth = function (req, res, next) {
-        var _a;
         return __awaiter(this, void 0, void 0, function () {
-            var token, secret, decodedToken, userUuid, e_1;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
+            var decodedToken, e_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
                     case 0:
-                        _b.trys.push([0, 2, , 3]);
-                        token = this.getTokenInHeader(req);
-                        secret = (_a = process.env.SECRET) !== null && _a !== void 0 ? _a : 'secret';
-                        return [4 /*yield*/, this.JSONWebTokenInst.verifyJWT(token, secret, {})];
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.getTokenInfo(req)];
                     case 1:
-                        decodedToken = _b.sent();
-                        userUuid = void 0;
-                        if (decodedToken) {
-                            userUuid = decodedToken.userUuid;
-                        }
-                        if (req.body.uuid && (req.body.uuid !== userUuid)) {
-                            res.status(403).json({ error: this.messages.unauthorized });
-                            return [2 /*return*/];
-                        }
-                        req.body.isAdmin = decodedToken.isAdmin;
-                        req.body.userId = decodedToken.userId;
+                        decodedToken = _a.sent();
                         next();
                         return [3 /*break*/, 3];
                     case 2:
-                        e_1 = _b.sent();
+                        e_1 = _a.sent();
                         res.status(401).json({ error: e_1.message });
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
@@ -102,6 +89,26 @@ var Auth = /** @class */ (function () {
         if (!token || token.length < 10)
             throw Error("" + this.messages.errorMessageToken);
         return token;
+    };
+    /**
+     * Get token payload
+     * @returns {(Promise<DecodedToken|undefined>)}
+     * @memberof Auth
+     */
+    Auth.prototype.getTokenInfo = function (req) {
+        var _a;
+        return __awaiter(this, void 0, void 0, function () {
+            var token, secret;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        token = this.getTokenInHeader(req);
+                        secret = (_a = process.env.SECRET) !== null && _a !== void 0 ? _a : 'secret';
+                        return [4 /*yield*/, this.JSONWebTokenInst.verifyJWT(token, secret, {})];
+                    case 1: return [2 /*return*/, _b.sent()];
+                }
+            });
+        });
     };
     return Auth;
 }());

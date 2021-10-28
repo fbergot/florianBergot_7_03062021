@@ -2,16 +2,16 @@ import { Request, Response, NextFunction } from 'express';
 const models = require("../../models");
 
 type CatModel = {
-	readonly id: number,
+	id: number,
 	name: string,
 	createdAt: string,
 	updatedAt: string
 } & methodModel;
 
 type PostModel = {
-	readonly id: number,
+	id: number,
 	content: string,
-	readonly userId: number,
+	userId: number,
 	attachment?: string,
 	createdAt: string,
 	updatedAt: string,

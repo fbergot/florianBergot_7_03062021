@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import authInstance from '../middleware/Auth';
 const models = require("../../models");
 
 type CommentModel = {
@@ -23,12 +24,12 @@ type CommentProperties = {
 }
 
 class CommentController {
-
     commentModel: CommentModel;
     messages: {
         notFound: string;
         comDeleted: string;
         comNotDeleted: string;
+        infoNotFound: string
     }
 
     constructor(commentModel: CommentModel) {
@@ -36,7 +37,8 @@ class CommentController {
 		this.messages = {
 			notFound: "Comment not found",
 			comDeleted: "Comment deleted",
-			comNotDeleted: "Comment not deleted"
+            comNotDeleted: "Comment not deleted",
+            infoNotFound: "Info user not found in token"
 		}
     }
     
@@ -44,15 +46,16 @@ class CommentController {
      * Create a comment for one post
      * @memberof CommentController
      */
-    public async create(req: Request, res: Response, next: NextFunction): Promise<void> {
-		const commentProp: CommentProperties = {
-			content: req.body.content,
-			UserId: req.body.userId,
-			PostId: parseInt(req.params.postId)
-		}
-
-		try {
-			const newComment = await this.commentModel.create<CommentModel>(commentProp);
+    public async create(req: Request, res: Response, next: NextFunction): Promise<void> {       
+        try {
+            // get userInfo
+            const tokenPayload = await authInstance.getTokenInfo(req);
+            const commentProp: CommentProperties = {
+                content: req.body.content,
+                UserId: tokenPayload.userId,
+                PostId: parseInt(req.params.postId)
+            }
+            const newComment = await this.commentModel.create<CommentModel>(commentProp);
 			res.status(201).json(newComment);
 		} catch (err: any) {
 			res.status(500).json({ error: err.message });
@@ -66,6 +69,9 @@ class CommentController {
 	 */
 	public async delete(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
+            // get userInfo
+            const tokenPayload = await authInstance.getTokenInfo(req);
+            // find comment to delete
             const comment = await this.commentModel.findOne<CommentModel>({
                 where: { id: req.params.commentId }
 			});
@@ -75,12 +81,11 @@ class CommentController {
                 return;
 			}
 			
-            if (comment.UserId === req.body.userId || req.body.isAdmin) {
+            if (comment.UserId === tokenPayload.userId || tokenPayload.isAdmin) {
 				const deletedComment = await comment.destroy<CommentModel>();
 				res.status(200).json({ message: this.messages.comDeleted, info: { idComDeleted: deletedComment.id } });
-			} else {
-				res.status(401).json({ error: this.messages.comNotDeleted });
 			}
+            res.status(403).json({ error: this.messages.comNotDeleted });			
         } catch (err: any) {
             res.status(500).json({ error: err.message });
         }

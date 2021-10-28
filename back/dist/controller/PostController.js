@@ -36,6 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
+var Auth_1 = require("../middleware/Auth");
 var models = require("../../models");
 var PostController = /** @class */ (function () {
     function PostController(postModel, categoryModel, userModel, commentModel, reactionModel) {
@@ -50,7 +51,8 @@ var PostController = /** @class */ (function () {
             postNotDeleted: 'Cannot delete this post, requires elevation of privilege',
             notFound: "Post not found",
             modified: "Post modified",
-            notAutho: 'Modification not authorized'
+            notAutho: 'Modification not authorized',
+            infoNotFound: "Info user not found in token"
         };
     }
     /**
@@ -59,38 +61,41 @@ var PostController = /** @class */ (function () {
      */
     PostController.prototype.create = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
-            var data, newPost, categoryOfPost, err_1;
+            var tokenPayload, data, newPost, categoryOfPost, err_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 4, , 5]);
+                        _a.trys.push([0, 5, , 6]);
+                        return [4 /*yield*/, Auth_1["default"].getTokenInfo(req)];
+                    case 1:
+                        tokenPayload = _a.sent();
                         data = {
                             title: req.body.title,
                             content: req.body.content,
-                            UserId: req.body.userId,
+                            UserId: tokenPayload.userId,
                             category: req.body.category
                         };
                         return [4 /*yield*/, this.postModel.create(data)];
-                    case 1:
+                    case 2:
                         newPost = _a.sent();
                         return [4 /*yield*/, this.categoryModel.findOrCreate({
                                 where: { name: req.body.category },
                                 "default": {
-                                    name: req.body.category
+                                    name: req.body.category || 'divers'
                                 }
                             })];
-                    case 2:
+                    case 3:
                         categoryOfPost = _a.sent();
                         return [4 /*yield*/, newPost.addCategory(categoryOfPost)];
-                    case 3:
+                    case 4:
                         _a.sent();
                         res.status(201).json(newPost);
-                        return [3 /*break*/, 5];
-                    case 4:
+                        return [3 /*break*/, 6];
+                    case 5:
                         err_1 = _a.sent();
                         res.status(500).json({ error: err_1.message });
-                        return [3 /*break*/, 5];
-                    case 5: return [2 /*return*/];
+                        return [3 /*break*/, 6];
+                    case 6: return [2 /*return*/];
                 }
             });
         });
@@ -143,35 +148,38 @@ var PostController = /** @class */ (function () {
      */
     PostController.prototype.update = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
-            var post, newPost, err_3;
+            var tokenPayload, post, newPost, err_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 4, , 5]);
+                        _a.trys.push([0, 5, , 6]);
+                        return [4 /*yield*/, Auth_1["default"].getTokenInfo(req)];
+                    case 1:
+                        tokenPayload = _a.sent();
                         return [4 /*yield*/, this.postModel.findOne({
                                 where: { id: req.params.id }
                             })];
-                    case 1:
+                    case 2:
                         post = _a.sent();
                         if (!post) {
                             res.status(404).json({ message: this.messages.notFound });
                             return [2 /*return*/];
                         }
-                        if (!(post.UserId === req.body.userId)) return [3 /*break*/, 3];
+                        if (!(post.UserId === tokenPayload.userId)) return [3 /*break*/, 4];
                         post.content = req.body.content;
                         return [4 /*yield*/, post.save()];
-                    case 2:
+                    case 3:
                         newPost = _a.sent();
                         res.status(200).json({ message: this.messages.modified, info: newPost });
                         return [2 /*return*/];
-                    case 3:
-                        res.status(401).json({ message: this.messages.notAutho });
-                        return [3 /*break*/, 5];
                     case 4:
+                        res.status(403).json({ message: this.messages.notAutho });
+                        return [3 /*break*/, 6];
+                    case 5:
                         err_3 = _a.sent();
                         res.status(500).json({ error: err_3.message });
-                        return [3 /*break*/, 5];
-                    case 5: return [2 /*return*/];
+                        return [3 /*break*/, 6];
+                    case 6: return [2 /*return*/];
                 }
             });
         });
@@ -182,30 +190,32 @@ var PostController = /** @class */ (function () {
      */
     PostController.prototype["delete"] = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
-            var post, deletedPost, err_4;
+            var tokenPayload, post, deletedPost, err_4;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 5, , 6]);
+                        return [4 /*yield*/, Auth_1["default"].getTokenInfo(req)];
+                    case 1:
+                        tokenPayload = _a.sent();
                         return [4 /*yield*/, this.postModel.findOne({
                                 where: { id: req.params.id }
                             })];
-                    case 1:
+                    case 2:
                         post = _a.sent();
                         if (!post) {
                             res.status(404).json({ message: this.messages.noPost });
                             return [2 /*return*/];
                         }
-                        if (!(post.UserId === req.body.userId || req.body.isAdmin)) return [3 /*break*/, 3];
+                        if (!((post.UserId === tokenPayload.userId) || tokenPayload.isAdmin)) return [3 /*break*/, 4];
                         return [4 /*yield*/, post.destroy()];
-                    case 2:
+                    case 3:
                         deletedPost = _a.sent();
                         res.status(200).json({ message: this.messages.postDeleted, info: { idPostDeleted: deletedPost.id } });
-                        return [3 /*break*/, 4];
-                    case 3:
-                        res.status(401).json({ error: this.messages.postNotDeleted });
-                        _a.label = 4;
-                    case 4: return [3 /*break*/, 6];
+                        return [2 /*return*/];
+                    case 4:
+                        res.status(403).json({ error: this.messages.postNotDeleted });
+                        return [3 /*break*/, 6];
                     case 5:
                         err_4 = _a.sent();
                         res.status(500).json({ error: err_4.message });

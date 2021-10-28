@@ -36,20 +36,8 @@ class Auth {
     public async verifAuth (req: Request, res: Response, next: CallableFunction): Promise<void> {
 		try {
 			// --- get token in header & verify if token is valid ---
-			const token = this.getTokenInHeader(req);
-			const secret = process.env.SECRET ?? 'secret';
-			const decodedToken: DecodedToken = await this.JSONWebTokenInst.verifyJWT(token, secret, {});           
-			let userUuid: undefined | string;
-			if (decodedToken) {
-				userUuid = decodedToken.userUuid;
-			}
-			if (req.body.uuid && (req.body.uuid !== userUuid)) {
-				res.status(403).json({ error: this.messages.unauthorized });
-				return;
-			}
-			req.body.isAdmin = decodedToken.isAdmin;
-			req.body.userId = decodedToken.userId;
-			next();             
+			const decodedToken = await this.getTokenInfo(req);           						
+			next();
 		} catch (e: any) {
 			res.status(401).json({ error: e.message})
 		}
@@ -66,6 +54,17 @@ class Auth {
 		const token = req.headers.authorization?.split(' ')[1];
 		if (!token || token.length < 10) throw Error(`${this.messages.errorMessageToken}`);
 		return token;
+	}
+
+	/**
+	 * Get token payload 
+	 * @returns {(Promise<DecodedToken|undefined>)}
+	 * @memberof Auth
+	 */
+	public async getTokenInfo(req: Request): Promise<DecodedToken> {		
+		const token = this.getTokenInHeader(req);
+		const secret = process.env.SECRET ?? 'secret';
+		return await this.JSONWebTokenInst.verifyJWT(token, secret, {});		
 	}
 }
 

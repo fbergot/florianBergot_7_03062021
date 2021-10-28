@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { bcryptInstance, Bcrypt } from '../class/Bcrypt';
 import { jwtInstance, JSONWebToken } from '../class/Jwt';
+import authInstance from "../middleware/Auth";
 import * as dotenv from 'dotenv';
 import * as fs from "fs";
 const models = require('../../models');
@@ -25,7 +26,8 @@ type MethodsModel = {
 		[key in keyof T]: T[key]
 	}): Promise<T>;
 	findOne<T>(filter: { where: any}): Promise<T|null>;
-	destroy<T>(): Promise<T>
+	destroy<T>(): Promise<T>;
+	save<T>(): Promise<T>;
 }
 
 class UserController {
@@ -40,6 +42,9 @@ class UserController {
 		readonly userDeleted: string,
 		readonly userNotDeleted: string,
 		readonly userNotFound: string,
+		readonly updatedSuccess: string,
+		readonly notUpdate: string,
+		readonly infoNotFound: string
 	}
 
     constructor(user: User, bcryptInst: Bcrypt, jwt: JSONWebToken) { 
@@ -52,7 +57,10 @@ class UserController {
 			alreadyUser: "This user already exist",
 			userDeleted: 'User deleted',
 			userNotDeleted: 'Cannot delete this user, requires elevation of privilege',
-			userNotFound: 'User not found'
+			userNotFound: 'User not found',
+			updatedSuccess: 'User data updated with success',
+			notUpdate: 'Update impossible, require elevated privileges',
+			infoNotFound: "Info user not found in token"
 		}
 	}
 	   
@@ -77,7 +85,7 @@ class UserController {
 			// build imageUrl if img exist
 			let imageUrl;
 			if (req.file) {
-				imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file?.filename}`;
+				imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
 			}
 			const newUser = await this.user.create<User>({ ...req.body, password: hashPassord, urlAvatar: imageUrl });            
 			res.status(201).json(newUser);
@@ -91,10 +99,9 @@ class UserController {
      * @memberof UserController
      */
 	public async signin(req: Request, res: Response, next: NextFunction): Promise<void> {
-		// --- find if user exist with his email --- 
-		var user;
 		try {
-			 user = await this.user.findOne<User>({
+			// --- find if user exist with this email --- 
+			const user = await this.user.findOne<User>({
 				where: { email: req.body.email }
 			});
 			if (!user) {
@@ -119,8 +126,10 @@ class UserController {
 	 * For delete account
 	 * @memberof UserController
 	 */
-	public async delete(req: Request, res: Response, next: NextFunction) {
+	public async delete(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
+			// get userInfo
+			const tokenPayload = await authInstance.getTokenInfo(req);
 			// find the user to delete
 			const user = await this.user.findOne<User>({
 				where: {email: req.params.email}
@@ -130,8 +139,8 @@ class UserController {
 				return;
 			}
 
-			// compare user to delete with user authenticated || ckeck if is admin user
-			if (user && user.id === req.body.userId || req.body.isAdmin) {
+			// ckeck if it is the user || ckeck if is admin user
+			if ((user.id === tokenPayload.userId )|| tokenPayload.isAdmin) {
 				// if img, delete image
 				if (user.urlAvatar) {
 					const fileName = user.urlAvatar.split("/images/")[1];
@@ -143,16 +152,60 @@ class UserController {
 				const userDeleted = await user.destroy<User>();
 				res.status(200).json({message: this.messages.userDeleted, info: {username: userDeleted.username}});
 				return;				
-			} else {
-				res.status(401).json({ message: this.messages.userNotDeleted });
 			}
-	
+			res.status(403).json({ message: this.messages.userNotDeleted });	
 		} catch (err: any) {
 			res.status(500).json({ error: err.message });
 		}
+	}
 
+	public async update(req: Request, res: Response, next: NextFunction): Promise<void> {
+		try {
+			// get userInfo
+			const tokenPayload = await authInstance.getTokenInfo(req);
+			// find the user to update
+			const user = await this.user.findOne<User>({
+				where: {email: req.params.email}
+			})
+			// if not user, delete new img
+			if (!user) {
+				if (req.file) {
+					fs.unlink(req.file.path, err => {
+						if (err) throw err;
+					})
+				}			
+				res.status(404).json({ message: this.messages.userNotFound });
+				return;
+			}
 
+			// if file, delete old img if exist and create new path to img 
+			let imageUrl;
+			if (req.file) {
+				if (user.urlAvatar) {
+					const fileName = user.urlAvatar.split("/images/")[1];
+					fs.unlink(`images/${fileName}`, err => {
+						if (err) throw err;
+					})					
+				}
+				imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
+			}
 
+			// ckeck if it is the good user 
+			if (user.id === tokenPayload.userId) {				
+				user.email = req.body.email ? req.body.email : user.email;
+				user.password = req.body.password ? req.body.password : user.password;
+				user.username = req.body.username ? req.body.username : user.username;
+				user.businessRole = req.body.businessRole ? req.body.businessRole : user.businessRole;
+				user.urlAvatar = imageUrl ? imageUrl : user.urlAvatar;
+				// save new data
+				const newPost = await user.save<User>();
+				res.status(200).json({ message: this.messages.updatedSuccess, info: newPost });
+				return;
+			}
+			res.status(403).json({ message: this.messages.notUpdate });
+		} catch (err: any) {
+			res.status(500).json({ error: err.message });
+		}
 	}
 }
 
