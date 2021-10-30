@@ -1,29 +1,35 @@
 "use strict";
 exports.__esModule = true;
+exports.postMulter = exports.avatarMulter = void 0;
 var multer = require("multer");
 var mimesTypes = {
     'image/jpg': 'jpg',
     'image/jpeg': 'jpg',
     'image/png': 'png'
 };
-var options = {
-    destination: function (req, file, callback) {
-        callback(null, 'images');
-    },
-    filename: function (req, file, callback) {
-        // transform space in _
-        var name = file.originalname.split(' ').join('_');
-        var extension;
-        var createNameWithExtension = '';
-        if (file.mimetype in mimesTypes) {
-            extension = mimesTypes[file.mimetype];
-            createNameWithExtension = "" + name + Date.now() + "." + extension;
-            callback(null, createNameWithExtension);
+var func = function (destination) {
+    return {
+        destination: function (req, file, callback) {
+            callback(null, destination);
+        },
+        filename: function (req, file, callback) {
+            // transform space in _
+            var name = file.originalname.split(' ').join('_');
+            var extension;
+            var createNameWithExtension = '';
+            // check mimesTypes
+            if (file.mimetype in mimesTypes) {
+                extension = mimesTypes[file.mimetype];
+                createNameWithExtension = "" + name + Date.now() + "." + extension;
+                callback(null, createNameWithExtension);
+            }
+            else {
+                callback(new Error('Bad mimetype'), "");
+            }
         }
-        else {
-            callback(new Error('Bad mimetype'), "");
-        }
-    }
+    };
 };
-var storage = multer.diskStorage(options);
-exports["default"] = multer({ storage: storage }).single('image');
+var storageAvatar = multer.diskStorage(func('imagesAvatar'));
+var storagePost = multer.diskStorage(func('imagesPost'));
+exports.avatarMulter = multer({ storage: storageAvatar }).single('image');
+exports.postMulter = multer({ storage: storagePost }).single('image');

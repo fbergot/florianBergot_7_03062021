@@ -25,14 +25,24 @@ type MethodsModel = {
 	create<T>(data: {
 		[key in keyof T]: T[key]
 	}): Promise<T>;
-	findOne<T>(filter: { where: any}): Promise<T|null>;
+	findOne<T>(data: any): Promise<T|null>;
 	destroy<T>(): Promise<T>;
 	save<T>(): Promise<T>;
 }
 
+type Post = {
+	id: number,
+	content: string,
+	UserId: number,
+	attachment?: string,
+	createdAt: string,
+	updatedAt: string,
+}
+
 class UserController {
 
-	private user: User;
+	private userModel: User;
+	private postModel: Post;
 	private bcryptInst: Bcrypt;
 	private jwtInst: JSONWebToken;
 	private messages: {
@@ -47,8 +57,9 @@ class UserController {
 		readonly infoNotFound: string
 	}
 
-    constructor(user: User, bcryptInst: Bcrypt, jwt: JSONWebToken) { 
-		this.user = user;
+    constructor(userModel: User, postModel: Post, bcryptInst: Bcrypt, jwt: JSONWebToken) { 
+		this.userModel = userModel;
+		this.postModel = postModel;
 		this.bcryptInst = bcryptInst;
 		this.jwtInst = jwt;
 		this.messages = {
@@ -71,7 +82,7 @@ class UserController {
 	public async signup(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			// verif if user already exist
-			const user = await this.user.findOne<User>({
+			const user = await this.userModel.findOne<User>({
 				where:  { email: req.body.email }
 			});
 			if (user) {
@@ -87,7 +98,7 @@ class UserController {
 			if (req.file) {
 				imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
 			}
-			const newUser = await this.user.create<User>({ ...req.body, password: hashPassord, urlAvatar: imageUrl });            
+			const newUser = await this.userModel.create<User>({ ...req.body, password: hashPassord, urlAvatar: imageUrl });            
 			res.status(201).json(newUser);
 		} catch (err: any) {
 			res.status(500).json({ err: err.message });
@@ -101,7 +112,7 @@ class UserController {
 	public async signin(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			// --- find if user exist with this email --- 
-			const user = await this.user.findOne<User>({
+			const user = await this.userModel.findOne<User>({
 				where: { email: req.body.email }
 			});
 			if (!user) {
@@ -131,7 +142,7 @@ class UserController {
 			// get userInfo
 			const tokenPayload = await authInstance.getTokenInfo(req);
 			// find the user to delete
-			const user = await this.user.findOne<User>({
+			const user = await this.userModel.findOne<User>({
 				where: {email: req.params.email}
 			})
 			if (!user) {
@@ -159,12 +170,16 @@ class UserController {
 		}
 	}
 
+	/**
+	 * Update data for an user
+	 * @memberof UserController
+	 */
 	public async update(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			// get userInfo
 			const tokenPayload = await authInstance.getTokenInfo(req);
 			// find the user to update
-			const user = await this.user.findOne<User>({
+			const user = await this.userModel.findOne<User>({
 				where: {email: req.params.email}
 			})
 			// if not user, delete new img
@@ -185,7 +200,7 @@ class UserController {
 					const fileName = user.urlAvatar.split("/images/")[1];
 					fs.unlink(`images/${fileName}`, err => {
 						if (err) throw err;
-					})					
+					});					
 				}
 				imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
 			}
@@ -207,8 +222,36 @@ class UserController {
 			res.status(500).json({ error: err.message });
 		}
 	}
+
+	/**
+	 * Get user infos with post(s)
+	 * @memberof UserController
+	 */
+	public async me(req: Request, res: Response, next: NextFunction): Promise<void> {
+		try {
+			// get userInfo
+			const tokenPayload = await authInstance.getTokenInfo(req);
+			// find user with posts associated
+			const user = await this.userModel.findOne<User>({
+				where: { id: tokenPayload.userId },
+				include: [
+					{
+						model: this.postModel
+					}
+				]
+			});
+
+			if (!user) {
+				res.status(404).json({ message: this.messages.userNotFound });
+				return;
+			}
+			res.status(200).json(user);
+		} catch (err: any) {
+			res.status(500).json({ error: err.message });
+		}
+	}
 }
 
-const userController = new UserController(models.User, bcryptInstance, jwtInstance);
+const userController = new UserController(models.User, models.Post, bcryptInstance, jwtInstance);
 
 export default userController;

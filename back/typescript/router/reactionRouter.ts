@@ -5,8 +5,11 @@ import authInstance from "../middleware/Auth";
 export const router = (function (express_router): express.Router {
 	const Router = express_router();
 
-	Router.route("/add")
-		.post((req, res, next) => reactionController.create(req, res, next));
+	Router.route("/add/:postId")
+		.post(
+			(req, res, next) => authInstance.verifAuth(req, res, next),
+			(req, res, next) => reactionController.create(req, res, next)
+		);
 
 	return Router;
 })(express.Router);

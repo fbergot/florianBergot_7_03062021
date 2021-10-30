@@ -55,8 +55,9 @@ var fs = require("fs");
 var models = require('../../models');
 dotenv.config();
 var UserController = /** @class */ (function () {
-    function UserController(user, bcryptInst, jwt) {
-        this.user = user;
+    function UserController(userModel, postModel, bcryptInst, jwt) {
+        this.userModel = userModel;
+        this.postModel = postModel;
         this.bcryptInst = bcryptInst;
         this.jwtInst = jwt;
         this.messages = {
@@ -83,7 +84,7 @@ var UserController = /** @class */ (function () {
                 switch (_b.label) {
                     case 0:
                         _b.trys.push([0, 4, , 5]);
-                        return [4 /*yield*/, this.user.findOne({
+                        return [4 /*yield*/, this.userModel.findOne({
                                 where: { email: req.body.email }
                             })];
                     case 1:
@@ -101,7 +102,7 @@ var UserController = /** @class */ (function () {
                         if (req.file) {
                             imageUrl = req.protocol + "://" + req.get('host') + "/images/" + req.file.filename;
                         }
-                        return [4 /*yield*/, this.user.create(__assign(__assign({}, req.body), { password: hashPassord, urlAvatar: imageUrl }))];
+                        return [4 /*yield*/, this.userModel.create(__assign(__assign({}, req.body), { password: hashPassord, urlAvatar: imageUrl }))];
                     case 3:
                         newUser = _b.sent();
                         res.status(201).json(newUser);
@@ -127,7 +128,7 @@ var UserController = /** @class */ (function () {
                 switch (_b.label) {
                     case 0:
                         _b.trys.push([0, 4, , 5]);
-                        return [4 /*yield*/, this.user.findOne({
+                        return [4 /*yield*/, this.userModel.findOne({
                                 where: { email: req.body.email }
                             })];
                     case 1:
@@ -173,7 +174,7 @@ var UserController = /** @class */ (function () {
                         return [4 /*yield*/, Auth_1["default"].getTokenInfo(req)];
                     case 1:
                         tokenPayload = _a.sent();
-                        return [4 /*yield*/, this.user.findOne({
+                        return [4 /*yield*/, this.userModel.findOne({
                                 where: { email: req.params.email }
                             })];
                     case 2:
@@ -208,6 +209,10 @@ var UserController = /** @class */ (function () {
             });
         });
     };
+    /**
+     * Update data for an user
+     * @memberof UserController
+     */
     UserController.prototype.update = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
             var tokenPayload, user, imageUrl, fileName, newPost, err_4;
@@ -218,7 +223,7 @@ var UserController = /** @class */ (function () {
                         return [4 /*yield*/, Auth_1["default"].getTokenInfo(req)];
                     case 1:
                         tokenPayload = _a.sent();
-                        return [4 /*yield*/, this.user.findOne({
+                        return [4 /*yield*/, this.userModel.findOne({
                                 where: { email: req.params.email }
                             })
                             // if not user, delete new img
@@ -270,7 +275,46 @@ var UserController = /** @class */ (function () {
             });
         });
     };
+    /**
+     * Get user infos with post(s)
+     * @memberof UserController
+     */
+    UserController.prototype.me = function (req, res, next) {
+        return __awaiter(this, void 0, void 0, function () {
+            var tokenPayload, user, err_5;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 3, , 4]);
+                        return [4 /*yield*/, Auth_1["default"].getTokenInfo(req)];
+                    case 1:
+                        tokenPayload = _a.sent();
+                        return [4 /*yield*/, this.userModel.findOne({
+                                where: { id: tokenPayload.userId },
+                                include: [
+                                    {
+                                        model: this.postModel
+                                    }
+                                ]
+                            })];
+                    case 2:
+                        user = _a.sent();
+                        if (!user) {
+                            res.status(404).json({ message: this.messages.userNotFound });
+                            return [2 /*return*/];
+                        }
+                        res.status(200).json(user);
+                        return [3 /*break*/, 4];
+                    case 3:
+                        err_5 = _a.sent();
+                        res.status(500).json({ error: err_5.message });
+                        return [3 /*break*/, 4];
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
     return UserController;
 }());
-var userController = new UserController(models.User, Bcrypt_1.bcryptInstance, Jwt_1.jwtInstance);
+var userController = new UserController(models.User, models.Post, Bcrypt_1.bcryptInstance, Jwt_1.jwtInstance);
 exports["default"] = userController;

@@ -38,9 +38,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 exports.__esModule = true;
 var models = require("../../models");
 var CategoryController = /** @class */ (function () {
-    function CategoryController(categoryModel, postModel) {
+    function CategoryController(categoryModel, postModel, categoryPostModel) {
         this.categoryModel = categoryModel;
         this.postModel = postModel;
+        this.categoryPostModel = categoryPostModel;
     }
     /**
      * Create one category
@@ -70,7 +71,7 @@ var CategoryController = /** @class */ (function () {
         });
     };
     /**
-     * Get all categories with posts associated
+     * Get all categories
      * @memberof CategoryController
      */
     CategoryController.prototype.getAll = function (req, res, next) {
@@ -80,13 +81,7 @@ var CategoryController = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.categoryModel.findAll({
-                                include: [
-                                    {
-                                        model: this.postModel
-                                    }
-                                ]
-                            })];
+                        return [4 /*yield*/, this.categoryModel.findAll({})];
                     case 1:
                         categories = _a.sent();
                         res.status(200).json(categories);
@@ -100,7 +95,39 @@ var CategoryController = /** @class */ (function () {
             });
         });
     };
+    /**
+     * Get all posts in category
+     * @memberof CategoryController
+     */
+    CategoryController.prototype.getPostsInCategory = function (req, res, next) {
+        return __awaiter(this, void 0, void 0, function () {
+            var categoryWithPost, err_3;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.categoryModel.findOne({
+                                where: { id: req.params.categoryId },
+                                include: [
+                                    {
+                                        model: this.postModel
+                                    }
+                                ]
+                            })];
+                    case 1:
+                        categoryWithPost = _a.sent();
+                        res.status(200).json(categoryWithPost);
+                        return [3 /*break*/, 3];
+                    case 2:
+                        err_3 = _a.sent();
+                        res.status(500).json({ error: err_3.message });
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
     return CategoryController;
 }());
-var categoryController = new CategoryController(models.Category, models.Post);
+var categoryController = new CategoryController(models.Category, models.Post, models.CategoryPost);
 exports["default"] = categoryController;

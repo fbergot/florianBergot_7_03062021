@@ -1,7 +1,7 @@
 import * as express from 'express';
 import userController from '../controller/UserController';
 import authInstance from "../middleware/Auth";
-import multer from '../middleware/multer-config';
+import {avatarMulter} from '../middleware/multer-config';
 
 export const router = (function (express_router): express.Router {
 
@@ -9,7 +9,7 @@ export const router = (function (express_router): express.Router {
 
     Router.route('/signup')
         .post(
-            multer,
+            avatarMulter,
             (req, res, next) => userController.signup(req, res, next)
         );
     
@@ -25,8 +25,14 @@ export const router = (function (express_router): express.Router {
     Router.route('/update/:email')
         .put(
             (req, res, next) => authInstance.verifAuth(req, res, next),
-            multer,
+            avatarMulter,
             (req, res, next) => userController.update(req, res, next)
+    );
+    
+    Router.route('/me')
+        .get(
+            (req, res, next) => authInstance.verifAuth(req, res, next),
+            (req, res, next) => userController.me(req, res, next)
         );
 
     return Router;
