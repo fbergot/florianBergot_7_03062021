@@ -38,10 +38,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 exports.__esModule = true;
 var models = require("../../models");
 var CategoryController = /** @class */ (function () {
-    function CategoryController(categoryModel, postModel, categoryPostModel) {
+    function CategoryController(categoryModel, postModel, userModel) {
         this.categoryModel = categoryModel;
         this.postModel = postModel;
-        this.categoryPostModel = categoryPostModel;
+        this.userModel = userModel;
     }
     /**
      * Create one category
@@ -110,7 +110,13 @@ var CategoryController = /** @class */ (function () {
                                 where: { id: req.params.categoryId },
                                 include: [
                                     {
-                                        model: this.postModel
+                                        model: this.postModel,
+                                        include: [
+                                            {
+                                                model: this.userModel,
+                                                attributes: ['username']
+                                            }
+                                        ]
                                     }
                                 ]
                             })];
@@ -129,5 +135,5 @@ var CategoryController = /** @class */ (function () {
     };
     return CategoryController;
 }());
-var categoryController = new CategoryController(models.Category, models.Post, models.CategoryPost);
+var categoryController = new CategoryController(models.Category, models.Post, models.User);
 exports["default"] = categoryController;

@@ -139,6 +139,7 @@ var UserController = /** @class */ (function () {
                         }
                         return [4 /*yield*/, this.bcryptInst.bcryptCompare(req.body.password, user.password)];
                     case 2:
+                        // check password & sign token
                         if (!(_b.sent())) {
                             res.status(401).json({ error: this.messages.badPass });
                             return [2 /*return*/];

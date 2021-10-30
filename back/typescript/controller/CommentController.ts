@@ -24,12 +24,12 @@ type CommentProperties = {
 }
 
 class CommentController {
-    commentModel: CommentModel;
-    messages: {
-        notFound: string;
-        comDeleted: string;
-        comNotDeleted: string;
-        infoNotFound: string
+    private commentModel: CommentModel;
+    private messages: {
+        readonly notFound: string;
+        readonly comDeleted: string;
+        readonly comNotDeleted: string;
+        readonly infoNotFound: string
     }
 
     constructor(commentModel: CommentModel) {

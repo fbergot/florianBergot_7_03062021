@@ -22,9 +22,7 @@ readonly id: number,
 } & MethodsModel
 
 type MethodsModel = {
-	create<T>(data: {
-		[key in keyof T]: T[key]
-	}): Promise<T>;
+	create<T>(data: any): Promise<T>;
 	findOne<T>(data: any): Promise<T|null>;
 	destroy<T>(): Promise<T>;
 	save<T>(): Promise<T>;
@@ -98,7 +96,7 @@ class UserController {
 			if (req.file) {
 				imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
 			}
-			const newUser = await this.userModel.create<User>({ ...req.body, password: hashPassord, urlAvatar: imageUrl });            
+			const newUser = await this.userModel.create<User>({ ...req.body, password: hashPassord, urlAvatar: imageUrl});            
 			res.status(201).json(newUser);
 		} catch (err: any) {
 			res.status(500).json({ err: err.message });
@@ -119,6 +117,7 @@ class UserController {
 				res.status(404).json({ error: this.messages.userNotExist });
 				return;
 			}
+			// check password & sign token
 			if (!await this.bcryptInst.bcryptCompare(req.body.password, user.password)) {
 				res.status(401).json({ error: this.messages.badPass });
 				return;
@@ -161,7 +160,7 @@ class UserController {
 				}
 				// del user
 				const userDeleted = await user.destroy<User>();
-				res.status(200).json({message: this.messages.userDeleted, info: {username: userDeleted.username}});
+				res.status(200).json({ message: this.messages.userDeleted, info: { username: userDeleted.username } });
 				return;				
 			}
 			res.status(403).json({ message: this.messages.userNotDeleted });	

@@ -23,24 +23,29 @@ type methodModel = {
 	findOne<T>(data: unknown): Promise<T>;
 }
 
-type CategoryPost = {
-	id: number;
-	PostId: number;
-	CategoryId: number;
-	createdAt: string;
-	updatedAt: string
+type User = {
+	uuid: string,
+	id: number,
+	email: string,
+	password: string,
+	username: string,
+	isAdmin: boolean,
+	businessRole: string,
+	urlAvatar?: string,
+	updatedAt: string,
+	createdAt: string
 }
 
 class CategoryController {
 
-	categoryModel: CatModel;
-	postModel: PostModel;
-	categoryPostModel: CategoryPost;
+	private categoryModel: CatModel;
+	private postModel: PostModel;
+	private userModel: User;
 
-	constructor(categoryModel: CatModel, postModel: PostModel, categoryPostModel: CategoryPost ) {
+	constructor(categoryModel: CatModel, postModel: PostModel, userModel: User) {
 		this.categoryModel = categoryModel;
 		this.postModel = postModel;
-		this.categoryPostModel = categoryPostModel;
+		this.userModel = userModel;
 	}
 	/**
 	 * Create one category
@@ -80,7 +85,13 @@ class CategoryController {
 				where: { id: req.params.categoryId },
 				include: [
 					{
-						model: this.postModel
+						model: this.postModel,
+						include: [
+							{
+								model: this.userModel,
+								attributes: ['username']
+							}
+						]
 					}
 				]
 			});
@@ -91,6 +102,6 @@ class CategoryController {
 	}
 }
 
-const categoryController = new CategoryController(models.Category, models.Post, models.CategoryPost);
+const categoryController = new CategoryController(models.Category, models.Post, models.User);
 
 export default categoryController;

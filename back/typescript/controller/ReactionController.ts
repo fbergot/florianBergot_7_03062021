@@ -30,8 +30,8 @@ type MethodModel = {
 
 class ReactionController {
 
-	reactionModel: Reaction;
-	postModel: Post;
+	private reactionModel: Reaction;
+	private postModel: Post;
 
 	constructor(reactionModel: Reaction, postModel: Post) { 
 		this.reactionModel = reactionModel;

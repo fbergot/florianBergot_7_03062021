@@ -66,19 +66,19 @@ type ReactionModel = {
 
 class PostController {
 
-	postModel: PostModel;
-	categoryModel: CatModel;
-	userModel: UserModel;
-	commentModel: CommentModel;
-	reactionModel: ReactionModel;
-	messages: {
-		noPost: string,
-		postDeleted: string,
-		postNotDeleted: string,
-		notFound: string,
-		modified: string,
-		notAutho: string,
-		infoNotFound: string
+	private postModel: PostModel;
+	private categoryModel: CatModel;
+	private userModel: UserModel;
+	private commentModel: CommentModel;
+	private reactionModel: ReactionModel;
+	private messages: {
+		readonly noPost: string,
+		readonly postDeleted: string,
+		readonly postNotDeleted: string,
+		readonly notFound: string,
+		readonly modified: string,
+		readonly notAutho: string,
+		readonly infoNotFound: string
 	}
 
 	constructor(postModel: PostModel, categoryModel: CatModel,
