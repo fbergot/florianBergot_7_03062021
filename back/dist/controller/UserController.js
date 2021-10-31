@@ -52,6 +52,7 @@ var Jwt_1 = require("../class/Jwt");
 var Auth_1 = require("../middleware/Auth");
 var dotenv = require("dotenv");
 var fs = require("fs");
+// import commonJS: in JS (sequelize models) (TS in allow JS)
 var models = require('../../models');
 dotenv.config();
 var UserController = /** @class */ (function () {
@@ -72,6 +73,17 @@ var UserController = /** @class */ (function () {
             infoNotFound: "Info user not found in token"
         };
     }
+    /**
+     * Erase img according to destImages path
+     * @memberof PostController
+     */
+    UserController.prototype.eraseImage = function (user, destImages) {
+        var fileName = user.urlAvatar.split("/" + destImages + "/")[1];
+        fs.unlink(destImages + "/" + fileName, function (err) {
+            if (err)
+                throw err;
+        });
+    };
     /**
      * Register an user (if not already exist)
      * @memberof UserController
@@ -163,13 +175,40 @@ var UserController = /** @class */ (function () {
         });
     };
     /**
+     * Get all posts with associations
+     * @memberof PostController
+     */
+    UserController.prototype.getAll = function (req, res, next) {
+        return __awaiter(this, void 0, void 0, function () {
+            var users, err_3;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.userModel.findAll({
+                                attributes: ["username", 'email', 'createdAt', "urlAvatar"]
+                            })];
+                    case 1:
+                        users = _a.sent();
+                        res.status(200).json(users);
+                        return [3 /*break*/, 3];
+                    case 2:
+                        err_3 = _a.sent();
+                        res.status(500).json({ error: err_3.messge });
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    /**
      * For delete account
      * @memberof UserController
      */
     UserController.prototype["delete"] = function (req, res, next) {
         var _a;
         return __awaiter(this, void 0, void 0, function () {
-            var tokenPayload, user, destImages, fileName, userDeleted, err_3;
+            var tokenPayload, user, destImages, userDeleted, err_4;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -189,11 +228,7 @@ var UserController = /** @class */ (function () {
                         if (!((user.id === tokenPayload.userId) || tokenPayload.isAdmin)) return [3 /*break*/, 4];
                         destImages = (_a = process.env.DEST_USERS_IMAGES) !== null && _a !== void 0 ? _a : "avatars_images";
                         if (user.urlAvatar) {
-                            fileName = user.urlAvatar.split("/" + destImages + "/")[1];
-                            fs.unlink(destImages + "/" + fileName, function (err) {
-                                if (err)
-                                    throw err;
-                            });
+                            this.eraseImage(user, destImages);
                         }
                         return [4 /*yield*/, user.destroy()];
                     case 3:
@@ -204,8 +239,8 @@ var UserController = /** @class */ (function () {
                         res.status(403).json({ message: this.messages.userNotDeleted });
                         return [3 /*break*/, 6];
                     case 5:
-                        err_3 = _b.sent();
-                        res.status(500).json({ error: err_3.message });
+                        err_4 = _b.sent();
+                        res.status(500).json({ error: err_4.message });
                         return [3 /*break*/, 6];
                     case 6: return [2 /*return*/];
                 }
@@ -219,7 +254,7 @@ var UserController = /** @class */ (function () {
     UserController.prototype.update = function (req, res, next) {
         var _a;
         return __awaiter(this, void 0, void 0, function () {
-            var tokenPayload, user, destImages, imageUrl, fileName, newPost, err_4;
+            var tokenPayload, user, destImages, imageUrl, newPost, err_5;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -250,11 +285,7 @@ var UserController = /** @class */ (function () {
                         if (req.file) {
                             destImages = (_a = process.env.DEST_USERS_IMAGES) !== null && _a !== void 0 ? _a : "avatars_images";
                             if (user.urlAvatar) {
-                                fileName = user.urlAvatar.split("/" + destImages + "/")[1];
-                                fs.unlink(destImages + "/" + fileName, function (err) {
-                                    if (err)
-                                        throw err;
-                                });
+                                this.eraseImage(user, destImages);
                             }
                             imageUrl = req.protocol + "://" + req.get('host') + "/" + destImages + "/" + req.file.filename;
                         }
@@ -273,8 +304,8 @@ var UserController = /** @class */ (function () {
                         res.status(403).json({ message: this.messages.notUpdate });
                         return [3 /*break*/, 6];
                     case 5:
-                        err_4 = _b.sent();
-                        res.status(500).json({ error: err_4.message });
+                        err_5 = _b.sent();
+                        res.status(500).json({ error: err_5.message });
                         return [3 /*break*/, 6];
                     case 6: return [2 /*return*/];
                 }
@@ -287,7 +318,7 @@ var UserController = /** @class */ (function () {
      */
     UserController.prototype.me = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
-            var tokenPayload, user, err_5;
+            var tokenPayload, user, err_6;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -312,8 +343,8 @@ var UserController = /** @class */ (function () {
                         res.status(200).json(user);
                         return [3 /*break*/, 4];
                     case 3:
-                        err_5 = _a.sent();
-                        res.status(500).json({ error: err_5.message });
+                        err_6 = _a.sent();
+                        res.status(500).json({ error: err_6.message });
                         return [3 /*break*/, 4];
                     case 4: return [2 /*return*/];
                 }

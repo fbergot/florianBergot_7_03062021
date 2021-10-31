@@ -1,48 +1,15 @@
 import { Request, Response, NextFunction } from 'express';
+import type { User, Post, Category, } from '../type/allTypes';
+// import commonJS: in JS (sequelize models) (TS in allow JS)
 const models = require("../../models");
-
-type CatModel = {
-	id: number,
-	name: string,
-	createdAt: string,
-	updatedAt: string
-} & methodModel;
-
-type PostModel = {
-	id: number,
-	content: string,
-	userId: number,
-	attachment?: string,
-	createdAt: string,
-	updatedAt: string,
-}
-
-type methodModel = {
-	create<T>(data: unknown): Promise<T>;
-	findAll<T>(objOption: { include: { model: any }[] } | {}): Promise<T>;
-	findOne<T>(data: unknown): Promise<T>;
-}
-
-type User = {
-	uuid: string,
-	id: number,
-	email: string,
-	password: string,
-	username: string,
-	isAdmin: boolean,
-	businessRole: string,
-	urlAvatar?: string,
-	updatedAt: string,
-	createdAt: string
-}
 
 class CategoryController {
 
-	private categoryModel: CatModel;
-	private postModel: PostModel;
+	private categoryModel: Category;
+	private postModel: Post;
 	private userModel: User;
 
-	constructor(categoryModel: CatModel, postModel: PostModel, userModel: User) {
+	constructor(categoryModel: Category, postModel: Post, userModel: User) {
 		this.categoryModel = categoryModel;
 		this.postModel = postModel;
 		this.userModel = userModel;
@@ -53,7 +20,7 @@ class CategoryController {
 	 */
 	public async create(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
-			const newCategory = await this.categoryModel.create<CatModel>({
+			const newCategory = await this.categoryModel.create<Category>({
 				name: req.body.name
 			});
 			res.status(201).json(newCategory);
@@ -68,7 +35,7 @@ class CategoryController {
 	 */
 	public async getAll(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
-			const categories = await this.categoryModel.findAll<CatModel>({});
+			const categories = await this.categoryModel.findAll<Category>({});
 			res.status(200).json(categories);
 		} catch (err: any) {
 			res.status(500).json({ error: err.message });
@@ -81,7 +48,7 @@ class CategoryController {
 	 */
 	public async getPostsInCategory(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
-			const categoryWithPost = await this.categoryModel.findOne({
+			const categoryWithPost = await this.categoryModel.findOne<Category>({
 				where: { id: req.params.categoryId },
 				include: [
 					{

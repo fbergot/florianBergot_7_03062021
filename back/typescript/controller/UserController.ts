@@ -4,38 +4,11 @@ import { jwtInstance, JSONWebToken } from '../class/Jwt';
 import authInstance from "../middleware/Auth";
 import * as dotenv from 'dotenv';
 import * as fs from "fs";
+import type { User, Post } from "../type/allTypes";
+// import commonJS: in JS (sequelize models) (TS in allow JS)
 const models = require('../../models');
 
 dotenv.config();
-
-type User = {
-readonly uuid: string,
-readonly id: number,
-	email: string,
-	password: string,
-	username: string,
-	isAdmin: boolean,
-	businessRole: string,
-	urlAvatar?: string,
-	updatedAt: string,
-	createdAt: string
-} & MethodsModel
-
-type MethodsModel = {
-	create<T>(data: any): Promise<T>;
-	findOne<T>(data: any): Promise<T|null>;
-	destroy<T>(): Promise<T>;
-	save<T>(): Promise<T>;
-}
-
-type Post = {
-	id: number,
-	content: string,
-	UserId: number,
-	attachment?: string,
-	createdAt: string,
-	updatedAt: string,
-}
 
 class UserController {
 
@@ -71,6 +44,17 @@ class UserController {
 			notUpdate: 'Update impossible, require elevated privileges',
 			infoNotFound: "Info user not found in token"
 		}
+	}
+
+	/**
+	 * Erase img according to destImages path
+	 * @memberof PostController
+	 */
+	private eraseImage(user: User, destImages: string) {
+		const fileName = user.urlAvatar.split(`/${destImages}/`)[1];
+		fs.unlink(`${destImages}/${fileName}`, (err: any )=> {
+			if (err) throw err;
+		});
 	}
 	   
     /**
@@ -134,6 +118,21 @@ class UserController {
 	}
 
 	/**
+	 * Get all posts with associations
+	 * @memberof PostController
+	 */
+	public async getAll(req: Request, res: Response, next: NextFunction): Promise<void> {
+		try {
+			const users = await this.userModel.findAll<User>({
+				attributes: ["username", 'email', 'createdAt', "urlAvatar"]
+			});
+			res.status(200).json(users);
+		} catch (err: any) {
+			res.status(500).json({ error: err.messge });
+		}
+	}
+
+	/**
 	 * For delete account
 	 * @memberof UserController
 	 */
@@ -155,10 +154,7 @@ class UserController {
 				// if img, delete image
 				const destImages = process.env.DEST_USERS_IMAGES ?? "avatars_images";
 				if (user.urlAvatar) {
-					const fileName = user.urlAvatar.split(`/${destImages}/`)[1];
-					fs.unlink(`${destImages}/${fileName}`, err => {
-						if (err) throw err;
-					})
+					this.eraseImage(user, destImages);
 				}
 				// del user
 				const userDeleted = await user.destroy<User>();
@@ -200,10 +196,7 @@ class UserController {
 			if (req.file) {
 				destImages = process.env.DEST_USERS_IMAGES ?? "avatars_images";
 				if (user.urlAvatar) {
-					const fileName = user.urlAvatar.split(`/${destImages}/`)[1];
-					fs.unlink(`${destImages}/${fileName}`, (err: any) => {
-						if (err) throw err;
-					});					
+					this.eraseImage(user, destImages);					
 				}
 				imageUrl = `${req.protocol}://${req.get('host')}/${destImages}/${req.file.filename}`;
 			}

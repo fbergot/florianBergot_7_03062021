@@ -3,8 +3,7 @@ import userController from '../controller/UserController';
 import authInstance from "../middleware/Auth";
 import {avatarMulter} from '../middleware/multer-config';
 
-export const router = (function (express_router): express.Router {
-
+export const router = (function (express_router: () => express.Router): express.Router {
     const Router = express_router();
 
     Router.route('/signup')
@@ -14,20 +13,28 @@ export const router = (function (express_router): express.Router {
         );
     
     Router.route('/signin')
-        .post((req, res, next) => userController.signin(req, res, next));
+        .post(
+            (req, res, next) => userController.signin(req, res, next)
+        );
+    
+    Router.route("/all")
+		.get(
+			(req, res, next) => authInstance.verifAuth(req, res, next),
+			(req, res, next) => userController.getAll(req, res, next)
+		);
     
     Router.route('/delete/:email')
         .delete(
             (req, res, next) => authInstance.verifAuth(req, res, next),
             (req, res, next) => userController.delete(req, res, next)
-    );
+        );
     
     Router.route('/update/:email')
         .put(
             (req, res, next) => authInstance.verifAuth(req, res, next),
             avatarMulter,
             (req, res, next) => userController.update(req, res, next)
-    );
+        );
     
     Router.route('/me')
         .get(

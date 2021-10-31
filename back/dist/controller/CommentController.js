@@ -37,6 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 exports.__esModule = true;
 var Auth_1 = require("../middleware/Auth");
+// import commonJS: in JS (sequelize models) (TS in allow JS)
 var models = require("../../models");
 var CommentController = /** @class */ (function () {
     function CommentController(commentModel) {

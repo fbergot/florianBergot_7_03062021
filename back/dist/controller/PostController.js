@@ -39,6 +39,7 @@ exports.__esModule = true;
 var Auth_1 = require("../middleware/Auth");
 var dotenv = require("dotenv");
 var fs = require("fs");
+// import commonJS: in JS (sequelize models) (TS in allow JS)
 var models = require("../../models");
 dotenv.config();
 var PostController = /** @class */ (function () {
@@ -58,6 +59,17 @@ var PostController = /** @class */ (function () {
             infoNotFound: "Info user not found in token"
         };
     }
+    /**
+     * Erase img according to destImages path
+     * @memberof PostController
+     */
+    PostController.prototype.eraseImage = function (post, destImages) {
+        var fileName = post.attachment.split("/" + destImages + "/")[1];
+        fs.unlink(destImages + "/" + fileName, function (err) {
+            if (err)
+                throw err;
+        });
+    };
     /**
      * Create a post with category
      * @memberof PostController
@@ -80,7 +92,7 @@ var PostController = /** @class */ (function () {
                             imageUrl = req.protocol + "://" + req.get('host') + "/" + destImages + "/" + req.file.filename;
                         }
                         data = {
-                            urlAvatar: imageUrl,
+                            attachment: imageUrl,
                             content: req.body.content,
                             UserId: tokenPayload.userId,
                             category: req.body.category
@@ -159,7 +171,7 @@ var PostController = /** @class */ (function () {
     PostController.prototype.update = function (req, res, next) {
         var _a;
         return __awaiter(this, void 0, void 0, function () {
-            var tokenPayload, post, destImages, imageUrl, fileName, newPost, err_3;
+            var tokenPayload, post, destImages, imageUrl, newPost, err_3;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -182,16 +194,12 @@ var PostController = /** @class */ (function () {
                         if (req.file) {
                             destImages = (_a = process.env.DEST_POSTS_ATTACHMENTS) !== null && _a !== void 0 ? _a : "posts_attachments";
                             if (post.attachment) {
-                                fileName = post.attachment.split("/" + destImages + "/")[1];
-                                fs.unlink(destImages + "/" + fileName, function (err) {
-                                    if (err)
-                                        throw err;
-                                });
+                                this.eraseImage(post, destImages);
                             }
                             imageUrl = req.protocol + "://" + req.get('host') + "/" + destImages + "/" + req.file.filename;
                         }
-                        post.attachment = imageUrl;
-                        post.content = req.body.content;
+                        post.attachment = imageUrl !== null && imageUrl !== void 0 ? imageUrl : "";
+                        post.content = req.body.content ? req.body.content : post.content;
                         return [4 /*yield*/, post.save()];
                     case 3:
                         newPost = _b.sent();
@@ -216,7 +224,7 @@ var PostController = /** @class */ (function () {
     PostController.prototype["delete"] = function (req, res, next) {
         var _a;
         return __awaiter(this, void 0, void 0, function () {
-            var tokenPayload, post, destImages, fileName, deletedPost, err_4;
+            var tokenPayload, post, destImages, deletedPost, err_4;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -237,11 +245,7 @@ var PostController = /** @class */ (function () {
                         destImages = void 0;
                         if (post.attachment) {
                             destImages = (_a = process.env.DEST_POSTS_ATTACHMENTS) !== null && _a !== void 0 ? _a : "post_attachments";
-                            fileName = post.attachment.split("/" + destImages + "/")[1];
-                            fs.unlink(destImages + "/" + fileName, function (err) {
-                                if (err)
-                                    throw err;
-                            });
+                            this.eraseImage(post, destImages);
                         }
                         return [4 /*yield*/, post.destroy()];
                     case 3:

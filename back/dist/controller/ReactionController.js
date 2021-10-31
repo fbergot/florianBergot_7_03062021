@@ -37,92 +37,135 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 exports.__esModule = true;
 var Auth_1 = require("../middleware/Auth");
+// import commonJS: in JS (sequelize models) (TS in allow JS)
 var models = require("../../models");
+// type Reaction = {
+// 	id: number;
+// 	UserId: number;
+// 	likeOrDislike: string;
+// 	createdAt: string;
+// 	updatedAt: string;
+// } & MethodModel;
+// type Post = {
+// 	id: number,
+// 	content: string,
+// 	UserId: number,
+// 	attachment?: string,
+// 	createdAt: string,
+// 	updatedAt: string,
+// } & {
+// 	findOne<T>(data: any): Promise<T | null>;
+// 	addReaction<T>(reaction: Reaction): Promise<T>;
+// }
+// type MethodModel = {
+// 	create<T>(data: any): Promise<T>;
+// 	findOne<T>(data: any): Promise<T | null>;
+// 	destroy<T>(): Promise<T>;
+// }
 var ReactionController = /** @class */ (function () {
     function ReactionController(reactionModel, postModel) {
         this.reactionModel = reactionModel;
         this.postModel = postModel;
     }
     /**
+     * Analyse reaction and state of old reaction (if exist)
+     * @memberof ReactionController
+     */
+    ReactionController.prototype.analyseReaction = function (oldReaction, likeOrDislike, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _a;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        if (!oldReaction) return [3 /*break*/, 8];
+                        _a = likeOrDislike;
+                        switch (_a) {
+                            case "like": return [3 /*break*/, 1];
+                            case 'dislike': return [3 /*break*/, 5];
+                        }
+                        return [3 /*break*/, 8];
+                    case 1:
+                        if (!(oldReaction.likeOrDislike === 'like')) return [3 /*break*/, 2];
+                        res.status(409).json({ message: "User already liked" });
+                        return [2 /*return*/];
+                    case 2:
+                        if (!(oldReaction.likeOrDislike === 'dislike')) return [3 /*break*/, 4];
+                        return [4 /*yield*/, oldReaction.destroy()];
+                    case 3:
+                        _b.sent();
+                        res.status(200).json({ message: 'Dislike deleted' });
+                        return [2 /*return*/];
+                    case 4: return [3 /*break*/, 8];
+                    case 5:
+                        if (!(oldReaction.likeOrDislike === 'dislike')) return [3 /*break*/, 6];
+                        res.status(409).json({ message: "User already disliked" });
+                        return [2 /*return*/];
+                    case 6:
+                        if (!(oldReaction.likeOrDislike === 'like')) return [3 /*break*/, 8];
+                        return [4 /*yield*/, oldReaction.destroy()];
+                    case 7:
+                        _b.sent();
+                        res.status(200).json({ message: 'Like deleted' });
+                        return [2 /*return*/];
+                    case 8: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    /**
      * Create one reaction for a post
      * @memberof ReactionController
      */
     ReactionController.prototype.create = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
-            var tokenPayload, oldReaction, _a, newReaction, post, $React, err_1;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
+            var tokenPayload, post, oldReaction, newReaction, $React, err_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
                     case 0:
-                        _b.trys.push([0, 14, , 15]);
+                        _a.trys.push([0, 6, , 7]);
                         if (req.body.likeOrDislike !== "like" && req.body.likeOrDislike !== "dislike") {
                             res.status(400).json({ message: "Bad key (accepted: like/dislike) given: " + req.body.likeOrDislike });
                             return [2 /*return*/];
                         }
                         return [4 /*yield*/, Auth_1["default"].getTokenInfo(req)];
                     case 1:
-                        tokenPayload = _b.sent();
-                        return [4 /*yield*/, this.reactionModel.findOne({
-                                where: { userId: tokenPayload.userId }
-                            })];
-                    case 2:
-                        oldReaction = _b.sent();
-                        if (!oldReaction) return [3 /*break*/, 10];
-                        _a = req.body.likeOrDislike;
-                        switch (_a) {
-                            case "like": return [3 /*break*/, 3];
-                            case 'dislike': return [3 /*break*/, 7];
-                        }
-                        return [3 /*break*/, 10];
-                    case 3:
-                        if (!(oldReaction.likeOrDislike === 'like')) return [3 /*break*/, 4];
-                        res.status(409).json({ message: "User already liked" });
-                        return [2 /*return*/];
-                    case 4:
-                        if (!(oldReaction.likeOrDislike === 'dislike')) return [3 /*break*/, 6];
-                        return [4 /*yield*/, oldReaction.destroy()];
-                    case 5:
-                        _b.sent();
-                        res.status(200).json({ message: 'Dislike deleted' });
-                        return [2 /*return*/];
-                    case 6: return [3 /*break*/, 10];
-                    case 7:
-                        if (!(oldReaction.likeOrDislike === 'dislike')) return [3 /*break*/, 8];
-                        res.status(409).json({ message: "User already disliked" });
-                        return [2 /*return*/];
-                    case 8:
-                        if (!(oldReaction.likeOrDislike === 'like')) return [3 /*break*/, 10];
-                        return [4 /*yield*/, oldReaction.destroy()];
-                    case 9:
-                        _b.sent();
-                        res.status(200).json({ message: 'Like deleted' });
-                        return [2 /*return*/];
-                    case 10: return [4 /*yield*/, this.reactionModel.create({
-                            UserId: tokenPayload.userId,
-                            likeOrDislike: req.body.likeOrDislike
-                        })
-                        // find the post for add reaction			 
-                    ];
-                    case 11:
-                        newReaction = _b.sent();
+                        tokenPayload = _a.sent();
                         return [4 /*yield*/, this.postModel.findOne({
                                 where: { id: req.params.postId }
                             })];
-                    case 12:
-                        post = _b.sent();
+                    case 2:
+                        post = _a.sent();
                         if (!post) {
                             res.status(404).json({ message: "Post not found" });
                             return [2 /*return*/];
                         }
+                        return [4 /*yield*/, this.reactionModel.findOne({
+                                where: { userId: tokenPayload.userId }
+                            })
+                            // if old rection, analyse 
+                        ];
+                    case 3:
+                        oldReaction = _a.sent();
+                        // if old rection, analyse 
+                        this.analyseReaction(oldReaction, req.body.likeOrDislike, res);
+                        return [4 /*yield*/, this.reactionModel.create({
+                                UserId: tokenPayload.userId,
+                                likeOrDislike: req.body.likeOrDislike
+                            })
+                            // add 
+                        ];
+                    case 4:
+                        newReaction = _a.sent();
                         return [4 /*yield*/, post.addReaction(newReaction)];
-                    case 13:
-                        $React = _b.sent();
+                    case 5:
+                        $React = _a.sent();
                         res.status(201).json($React);
-                        return [3 /*break*/, 15];
-                    case 14:
-                        err_1 = _b.sent();
+                        return [3 /*break*/, 7];
+                    case 6:
+                        err_1 = _a.sent();
                         res.status(500).json({ error: err_1.message });
-                        return [3 /*break*/, 15];
-                    case 15: return [2 /*return*/];
+                        return [3 /*break*/, 7];
+                    case 7: return [2 /*return*/];
                 }
             });
         });

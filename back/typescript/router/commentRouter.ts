@@ -2,7 +2,7 @@ import * as express from "express";
 import commentController from "../controller/CommentController";
 import authInstance from "../middleware/Auth";
 
-export const router = (function (express_router): express.Router {
+export const router = (function (express_router: () => express.Router): express.Router {
 	const Router = express_router();
 
 	Router.route("/add/:postId")

@@ -3,7 +3,7 @@ import postController from "../controller/PostController";
 import authInstance from "../middleware/Auth";
 import { postMulter } from "../../dist/middleware/multer-config";
 
-export const router = (function (express_router): express.Router {
+export const router = (function (express_router: () => express.Router): express.Router {
 	const Router = express_router();
 
 	Router.route("/add")
@@ -17,14 +17,14 @@ export const router = (function (express_router): express.Router {
 		.get(
 			(req, res, next) => authInstance.verifAuth(req, res, next),
 			(req, res, next) => postController.getAll(req, res, next)
-	);
+		);
 
 	Router.route("/update/:id")
 		.put(
 			(req, res, next) => authInstance.verifAuth(req, res, next),
 			postMulter,
 			(req, res, next) => postController.update(req, res, next)
-	);
+		);
 	
 	Router.route("/delete/:id")
 		.delete(

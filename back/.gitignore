@@ -1,3 +1,4 @@
 node_modules
 .env
-images
+images/posts_attachments
+images/users_avatars

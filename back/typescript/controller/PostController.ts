@@ -1,80 +1,20 @@
 import { NextFunction, Request, Response } from "express";
+import type { Post, Category, User, Comment, Reaction } from "../type/allTypes";
 import authInstance from '../middleware/Auth';
 import * as dotenv from 'dotenv';
 import * as fs from 'fs';
+// import commonJS: in JS (sequelize models) (TS in allow JS)
 const models = require("../../models");
 
 dotenv.config();
 
-
-type PostModel = {
-	id: number,
-	content: string,
-	UserId: number,
-	attachment?: string,
-	createdAt: string,
-	updatedAt: string,
-} & MethodsModel;
-
-type PostModelData = {
-	content: PostModel['content'],
-	UserId: PostModel['UserId'],
-	attachment?: PostModel['attachment']
-}
-
-type MethodsModel = {
-	create<T>(data: PostModelData): Promise<T>;
-	findOne<T>(data: any): Promise<T | null>;
-	addCategory(data: any): Promise<any>;
-	findAll<T>(options: { include: {}[] }): Promise<T[] | null>;
-	findOrCreate<T>(data: any): Promise<T>;
-	destroy<T>(): Promise<T>;
-	save<T>(): Promise<T>;
-};
-
-type CatModel = {
-	id: number,
-	name: string,
-	createdAt: string,
-	updatedAt: string
-} & MethodsModel;
-
-type UserModel = {
-	uuid: string,
-	id: number,
-	email: string,
-	password: string,
-	username: string,
-	isAdmin: boolean,
-	businessRole: string,
-	updatedAt: string,
-	createdAt: string
-}
-
-type CommentModel = {
-	id: number,
-	constent: string,
-	userId: number,
-	postId: number,
-	createdAt: string,
-	updatedAt: string
-}
-
-type ReactionModel = {
-	id: number,
-	userId: number,
-	likeOrDislike: string,
-	createdAt: string,
-	updatedAt: string
-}
-
 class PostController {
 
-	private postModel: PostModel;
-	private categoryModel: CatModel;
-	private userModel: UserModel;
-	private commentModel: CommentModel;
-	private reactionModel: ReactionModel;
+	private postModel: Post;
+	private categoryModel: Category;
+	private userModel: User;
+	private commentModel: Comment;
+	private reactionModel: Reaction;
 	private messages: {
 		readonly noPost: string,
 		readonly postDeleted: string,
@@ -85,8 +25,8 @@ class PostController {
 		readonly infoNotFound: string
 	}
 
-	constructor(postModel: PostModel, categoryModel: CatModel,
-		userModel: UserModel, commentModel: CommentModel, reactionModel: ReactionModel) {
+	constructor(postModel: Post, categoryModel: Category,
+		userModel: User, commentModel: Comment, reactionModel: Reaction) {
 		this.postModel = postModel;
 		this.categoryModel = categoryModel;
 		this.userModel = userModel;
@@ -104,6 +44,17 @@ class PostController {
 	}
 
 	/**
+	 * Erase img according to destImages path
+	 * @memberof PostController
+	 */
+	private eraseImage(post: Post, destImages: string) {
+		const fileName = post.attachment.split(`/${destImages}/`)[1];
+		fs.unlink(`${destImages}/${fileName}`, (err: any )=> {
+			if (err) throw err;
+		});
+	}
+
+	/**
 	 * Create a post with category
 	 * @memberof PostController
 	 */
@@ -118,14 +69,14 @@ class PostController {
 				imageUrl = `${req.protocol}://${req.get('host')}/${destImages}/${req.file.filename}`;				
 			}
 			const data = {
-				urlAvatar: imageUrl,
+				attachment: imageUrl,
 				content: req.body.content,
 				UserId: tokenPayload.userId,
 				category: req.body.category
 			}
 			// create post & find or create the category
-			const newPost = await this.postModel.create<PostModel>(data);
-			const categoryOfPost = await this.categoryModel.findOrCreate<CatModel>({
+			const newPost = await this.postModel.create<Post>(data);
+			const categoryOfPost = await this.categoryModel.findOrCreate<Category>({
 				where: { name: req.body.category },
 				default: {
 					name: req.body.category || 'divers'
@@ -144,7 +95,7 @@ class PostController {
 	 */
 	public async getAll(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
-			const posts = await this.postModel.findAll<PostModel>({
+			const posts = await this.postModel.findAll<Post>({
 				include: [
 					{
 						model: this.userModel,
@@ -177,7 +128,7 @@ class PostController {
 			// get userInfo
 			const tokenPayload = await authInstance.getTokenInfo(req);
 			// find the post to update
-			const post = await this.postModel.findOne<PostModel>({
+			const post = await this.postModel.findOne<Post>({
 				where: { id: req.params.id }
 			});
 			if (!post) {
@@ -193,17 +144,14 @@ class PostController {
 				if (req.file) {
 					destImages = process.env.DEST_POSTS_ATTACHMENTS ?? "posts_attachments";
 					if (post.attachment) {
-						const fileName = post.attachment.split(`/${destImages}/`)[1];
-						fs.unlink(`${destImages}/${fileName}`, (err: any )=> {
-							if (err) throw err;
-						});					
+						this.eraseImage(post, destImages);					
 					}
 					imageUrl = `${req.protocol}://${req.get('host')}/${destImages}/${req.file.filename}`;
 				}
-				post.attachment = imageUrl;
-				post.content = req.body.content;
+				post.attachment = imageUrl ?? "";
+				post.content = req.body.content ? req.body.content : post.content;
 				// save new data
-				const newPost = await post.save<PostModel>();
+				const newPost = await post.save<Post>();
 				res.status(200).json({ message: this.messages.modified, info: newPost });
 				return;
 			}
@@ -222,7 +170,7 @@ class PostController {
 			// get userInfo
 			const tokenPayload = await authInstance.getTokenInfo(req);
 			// find the post to delete
-			const post = await this.postModel.findOne<PostModel>({
+			const post = await this.postModel.findOne<Post>({
 				where: {id: req.params.id}
 			})
 			if (!post) {
@@ -230,19 +178,16 @@ class PostController {
 				return;
 			}
 
-			// ckeck if it is the user || ckeck if is admin user
+			// ckeck if it is the author || admin user
 			if ((post.UserId === tokenPayload.userId) || tokenPayload.isAdmin) {
 				// if img, delete img
 				let destImages: undefined | string;
 				if (post.attachment) {
 					destImages = process.env.DEST_POSTS_ATTACHMENTS ?? "post_attachments";
-					const fileName = post.attachment.split(`/${destImages}/`)[1];
-					fs.unlink(`${destImages}/${fileName}`, (err: any) => {
-						if (err) throw err;
-					})
+					this.eraseImage(post, destImages);
 				}
 				// del post
-				const deletedPost = await post.destroy<PostModel>();
+				const deletedPost = await post.destroy<Post>();
 				res.status(200).json({ message: this.messages.postDeleted, info: { idPostDeleted: deletedPost.id } });
 				return;
 			}

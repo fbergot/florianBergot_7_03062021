@@ -36,6 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
+// import commonJS: in JS (sequelize models) (TS in allow JS)
 var models = require("../../models");
 var CategoryController = /** @class */ (function () {
     function CategoryController(categoryModel, postModel, userModel) {
