@@ -176,6 +176,7 @@ var PostController = /** @class */ (function () {
                             res.status(404).json({ message: this.messages.notFound });
                             return [2 /*return*/];
                         }
+                        if (!(post.UserId === tokenPayload.userId)) return [3 /*break*/, 4];
                         destImages = void 0;
                         imageUrl = void 0;
                         if (req.file) {
@@ -189,7 +190,6 @@ var PostController = /** @class */ (function () {
                             }
                             imageUrl = req.protocol + "://" + req.get('host') + "/" + destImages + "/" + req.file.filename;
                         }
-                        if (!(post.UserId === tokenPayload.userId)) return [3 /*break*/, 4];
                         post.attachment = imageUrl;
                         post.content = req.body.content;
                         return [4 /*yield*/, post.save()];

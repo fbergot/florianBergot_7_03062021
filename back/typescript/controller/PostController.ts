@@ -185,21 +185,21 @@ class PostController {
 				return;
 			}
 
-			// if file, delete old img if exist and create new path to img
-			let destImages: undefined | string;
-			let imageUrl: undefined | string;
-			if (req.file) {
-				destImages = process.env.DEST_POSTS_ATTACHMENTS ?? "posts_attachments";
-				if (post.attachment) {
-					const fileName = post.attachment.split(`/${destImages}/`)[1];
-					fs.unlink(`${destImages}/${fileName}`, (err: any )=> {
-						if (err) throw err;
-					});					
-				}
-				imageUrl = `${req.protocol}://${req.get('host')}/${destImages}/${req.file.filename}`;
-			}
 			// ckeck if it is the author of the message 
 			if (post.UserId === tokenPayload.userId) {
+				// if file, delete old img if exist and create new path to img
+				let destImages: undefined | string;
+				let imageUrl: undefined | string;
+				if (req.file) {
+					destImages = process.env.DEST_POSTS_ATTACHMENTS ?? "posts_attachments";
+					if (post.attachment) {
+						const fileName = post.attachment.split(`/${destImages}/`)[1];
+						fs.unlink(`${destImages}/${fileName}`, (err: any )=> {
+							if (err) throw err;
+						});					
+					}
+					imageUrl = `${req.protocol}://${req.get('host')}/${destImages}/${req.file.filename}`;
+				}
 				post.attachment = imageUrl;
 				post.content = req.body.content;
 				// save new data
@@ -232,7 +232,7 @@ class PostController {
 
 			// ckeck if it is the user || ckeck if is admin user
 			if ((post.UserId === tokenPayload.userId) || tokenPayload.isAdmin) {
-				// if img, delete image
+				// if img, delete img
 				let destImages: undefined | string;
 				if (post.attachment) {
 					destImages = process.env.DEST_POSTS_ATTACHMENTS ?? "post_attachments";
