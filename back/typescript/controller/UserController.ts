@@ -92,9 +92,10 @@ class UserController {
 			const password: string = req.body.password;
 			const hashPassord = await this.bcryptInst.bcryptHash(password, salt);
 			// build imageUrl if img exist
-			let imageUrl;
+			const destImages = process.env.DEST_USERS_IMAGES ?? "avatars_images";
+			let imageUrl: undefined | string;
 			if (req.file) {
-				imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
+				imageUrl = `${req.protocol}://${req.get('host')}/${destImages}/${req.file.filename}`;
 			}
 			const newUser = await this.userModel.create<User>({ ...req.body, password: hashPassord, urlAvatar: imageUrl});            
 			res.status(201).json(newUser);
@@ -152,9 +153,10 @@ class UserController {
 			// ckeck if it is the user || ckeck if is admin user
 			if ((user.id === tokenPayload.userId )|| tokenPayload.isAdmin) {
 				// if img, delete image
+				const destImages = process.env.DEST_USERS_IMAGES ?? "avatars_images";
 				if (user.urlAvatar) {
-					const fileName = user.urlAvatar.split("/images/")[1];
-					fs.unlink(`images/${fileName}`, err => {
+					const fileName = user.urlAvatar.split(`/${destImages}/`)[1];
+					fs.unlink(`${destImages}/${fileName}`, err => {
 						if (err) throw err;
 					})
 				}
@@ -192,16 +194,18 @@ class UserController {
 				return;
 			}
 
-			// if file, delete old img if exist and create new path to img 
-			let imageUrl;
+			// if file, delete old img (if exist )and create new path to img
+			let destImages: undefined | string;
+			let imageUrl: undefined | string;
 			if (req.file) {
+				destImages = process.env.DEST_USERS_IMAGES ?? "avatars_images";
 				if (user.urlAvatar) {
-					const fileName = user.urlAvatar.split("/images/")[1];
-					fs.unlink(`images/${fileName}`, err => {
+					const fileName = user.urlAvatar.split(`/${destImages}/`)[1];
+					fs.unlink(`${destImages}/${fileName}`, (err: any) => {
 						if (err) throw err;
 					});					
 				}
-				imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
+				imageUrl = `${req.protocol}://${req.get('host')}/${destImages}/${req.file.filename}`;
 			}
 
 			// ckeck if it is the good user 

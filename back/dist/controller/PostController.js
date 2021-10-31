@@ -37,7 +37,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 exports.__esModule = true;
 var Auth_1 = require("../middleware/Auth");
+var dotenv = require("dotenv");
+var fs = require("fs");
 var models = require("../../models");
+dotenv.config();
 var PostController = /** @class */ (function () {
     function PostController(postModel, categoryModel, userModel, commentModel, reactionModel) {
         this.postModel = postModel;
@@ -60,24 +63,31 @@ var PostController = /** @class */ (function () {
      * @memberof PostController
      */
     PostController.prototype.create = function (req, res, next) {
+        var _a;
         return __awaiter(this, void 0, void 0, function () {
-            var tokenPayload, data, newPost, categoryOfPost, err_1;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var tokenPayload, destImages, imageUrl, data, newPost, categoryOfPost, err_1;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
-                        _a.trys.push([0, 5, , 6]);
+                        _b.trys.push([0, 5, , 6]);
                         return [4 /*yield*/, Auth_1["default"].getTokenInfo(req)];
                     case 1:
-                        tokenPayload = _a.sent();
+                        tokenPayload = _b.sent();
+                        destImages = void 0;
+                        imageUrl = void 0;
+                        if (req.file) {
+                            destImages = (_a = process.env.DEST_POSTS_ATTACHMENTS) !== null && _a !== void 0 ? _a : "posts_attachments";
+                            imageUrl = req.protocol + "://" + req.get('host') + "/" + destImages + "/" + req.file.filename;
+                        }
                         data = {
-                            title: req.body.title,
+                            urlAvatar: imageUrl,
                             content: req.body.content,
                             UserId: tokenPayload.userId,
                             category: req.body.category
                         };
                         return [4 /*yield*/, this.postModel.create(data)];
                     case 2:
-                        newPost = _a.sent();
+                        newPost = _b.sent();
                         return [4 /*yield*/, this.categoryModel.findOrCreate({
                                 where: { name: req.body.category },
                                 "default": {
@@ -85,14 +95,14 @@ var PostController = /** @class */ (function () {
                                 }
                             })];
                     case 3:
-                        categoryOfPost = _a.sent();
+                        categoryOfPost = _b.sent();
                         return [4 /*yield*/, newPost.addCategory(categoryOfPost)];
                     case 4:
-                        _a.sent();
+                        _b.sent();
                         res.status(201).json(newPost);
                         return [3 /*break*/, 6];
                     case 5:
-                        err_1 = _a.sent();
+                        err_1 = _b.sent();
                         res.status(500).json({ error: err_1.message });
                         return [3 /*break*/, 6];
                     case 6: return [2 /*return*/];
@@ -147,36 +157,51 @@ var PostController = /** @class */ (function () {
      * @memberof PostController
      */
     PostController.prototype.update = function (req, res, next) {
+        var _a;
         return __awaiter(this, void 0, void 0, function () {
-            var tokenPayload, post, newPost, err_3;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var tokenPayload, post, destImages, imageUrl, fileName, newPost, err_3;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
-                        _a.trys.push([0, 5, , 6]);
+                        _b.trys.push([0, 5, , 6]);
                         return [4 /*yield*/, Auth_1["default"].getTokenInfo(req)];
                     case 1:
-                        tokenPayload = _a.sent();
+                        tokenPayload = _b.sent();
                         return [4 /*yield*/, this.postModel.findOne({
                                 where: { id: req.params.id }
                             })];
                     case 2:
-                        post = _a.sent();
+                        post = _b.sent();
                         if (!post) {
                             res.status(404).json({ message: this.messages.notFound });
                             return [2 /*return*/];
                         }
+                        destImages = void 0;
+                        imageUrl = void 0;
+                        if (req.file) {
+                            destImages = (_a = process.env.DEST_POSTS_ATTACHMENTS) !== null && _a !== void 0 ? _a : "posts_attachments";
+                            if (post.attachment) {
+                                fileName = post.attachment.split("/" + destImages + "/")[1];
+                                fs.unlink(destImages + "/" + fileName, function (err) {
+                                    if (err)
+                                        throw err;
+                                });
+                            }
+                            imageUrl = req.protocol + "://" + req.get('host') + "/" + destImages + "/" + req.file.filename;
+                        }
                         if (!(post.UserId === tokenPayload.userId)) return [3 /*break*/, 4];
+                        post.attachment = imageUrl;
                         post.content = req.body.content;
                         return [4 /*yield*/, post.save()];
                     case 3:
-                        newPost = _a.sent();
+                        newPost = _b.sent();
                         res.status(200).json({ message: this.messages.modified, info: newPost });
                         return [2 /*return*/];
                     case 4:
                         res.status(403).json({ message: this.messages.notAutho });
                         return [3 /*break*/, 6];
                     case 5:
-                        err_3 = _a.sent();
+                        err_3 = _b.sent();
                         res.status(500).json({ error: err_3.message });
                         return [3 /*break*/, 6];
                     case 6: return [2 /*return*/];
@@ -189,35 +214,45 @@ var PostController = /** @class */ (function () {
      * @memberof PostController
      */
     PostController.prototype["delete"] = function (req, res, next) {
+        var _a;
         return __awaiter(this, void 0, void 0, function () {
-            var tokenPayload, post, deletedPost, err_4;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var tokenPayload, post, destImages, fileName, deletedPost, err_4;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
-                        _a.trys.push([0, 5, , 6]);
+                        _b.trys.push([0, 5, , 6]);
                         return [4 /*yield*/, Auth_1["default"].getTokenInfo(req)];
                     case 1:
-                        tokenPayload = _a.sent();
+                        tokenPayload = _b.sent();
                         return [4 /*yield*/, this.postModel.findOne({
                                 where: { id: req.params.id }
                             })];
                     case 2:
-                        post = _a.sent();
+                        post = _b.sent();
                         if (!post) {
                             res.status(404).json({ message: this.messages.noPost });
                             return [2 /*return*/];
                         }
                         if (!((post.UserId === tokenPayload.userId) || tokenPayload.isAdmin)) return [3 /*break*/, 4];
+                        destImages = void 0;
+                        if (post.attachment) {
+                            destImages = (_a = process.env.DEST_POSTS_ATTACHMENTS) !== null && _a !== void 0 ? _a : "post_attachments";
+                            fileName = post.attachment.split("/" + destImages + "/")[1];
+                            fs.unlink(destImages + "/" + fileName, function (err) {
+                                if (err)
+                                    throw err;
+                            });
+                        }
                         return [4 /*yield*/, post.destroy()];
                     case 3:
-                        deletedPost = _a.sent();
+                        deletedPost = _b.sent();
                         res.status(200).json({ message: this.messages.postDeleted, info: { idPostDeleted: deletedPost.id } });
                         return [2 /*return*/];
                     case 4:
                         res.status(403).json({ error: this.messages.postNotDeleted });
                         return [3 /*break*/, 6];
                     case 5:
-                        err_4 = _a.sent();
+                        err_4 = _b.sent();
                         res.status(500).json({ error: err_4.message });
                         return [3 /*break*/, 6];
                     case 6: return [2 /*return*/];

@@ -77,18 +77,18 @@ var UserController = /** @class */ (function () {
      * @memberof UserController
      */
     UserController.prototype.signup = function (req, res, next) {
-        var _a;
+        var _a, _b;
         return __awaiter(this, void 0, void 0, function () {
-            var user, salt, password, hashPassord, imageUrl, newUser, err_1;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
+            var user, salt, password, hashPassord, destImages, imageUrl, newUser, err_1;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
                     case 0:
-                        _b.trys.push([0, 4, , 5]);
+                        _c.trys.push([0, 4, , 5]);
                         return [4 /*yield*/, this.userModel.findOne({
                                 where: { email: req.body.email }
                             })];
                     case 1:
-                        user = _b.sent();
+                        user = _c.sent();
                         if (user) {
                             res.status(409).json({ error: this.messages.alreadyUser });
                             return [2 /*return*/];
@@ -97,18 +97,19 @@ var UserController = /** @class */ (function () {
                         password = req.body.password;
                         return [4 /*yield*/, this.bcryptInst.bcryptHash(password, salt)];
                     case 2:
-                        hashPassord = _b.sent();
+                        hashPassord = _c.sent();
+                        destImages = (_b = process.env.DEST_USERS_IMAGES) !== null && _b !== void 0 ? _b : "avatars_images";
                         imageUrl = void 0;
                         if (req.file) {
-                            imageUrl = req.protocol + "://" + req.get('host') + "/images/" + req.file.filename;
+                            imageUrl = req.protocol + "://" + req.get('host') + "/" + destImages + "/" + req.file.filename;
                         }
                         return [4 /*yield*/, this.userModel.create(__assign(__assign({}, req.body), { password: hashPassord, urlAvatar: imageUrl }))];
                     case 3:
-                        newUser = _b.sent();
+                        newUser = _c.sent();
                         res.status(201).json(newUser);
                         return [3 /*break*/, 5];
                     case 4:
-                        err_1 = _b.sent();
+                        err_1 = _c.sent();
                         res.status(500).json({ err: err_1.message });
                         return [3 /*break*/, 5];
                     case 5: return [2 /*return*/];
@@ -166,43 +167,44 @@ var UserController = /** @class */ (function () {
      * @memberof UserController
      */
     UserController.prototype["delete"] = function (req, res, next) {
+        var _a;
         return __awaiter(this, void 0, void 0, function () {
-            var tokenPayload, user, fileName, userDeleted, err_3;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var tokenPayload, user, destImages, fileName, userDeleted, err_3;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
-                        _a.trys.push([0, 5, , 6]);
+                        _b.trys.push([0, 5, , 6]);
                         return [4 /*yield*/, Auth_1["default"].getTokenInfo(req)];
                     case 1:
-                        tokenPayload = _a.sent();
+                        tokenPayload = _b.sent();
                         return [4 /*yield*/, this.userModel.findOne({
                                 where: { email: req.params.email }
                             })];
                     case 2:
-                        user = _a.sent();
+                        user = _b.sent();
                         if (!user) {
                             res.status(404).json({ message: this.messages.userNotFound });
                             return [2 /*return*/];
                         }
                         if (!((user.id === tokenPayload.userId) || tokenPayload.isAdmin)) return [3 /*break*/, 4];
-                        // if img, delete image
+                        destImages = (_a = process.env.DEST_USERS_IMAGES) !== null && _a !== void 0 ? _a : "avatars_images";
                         if (user.urlAvatar) {
-                            fileName = user.urlAvatar.split("/images/")[1];
-                            fs.unlink("images/" + fileName, function (err) {
+                            fileName = user.urlAvatar.split("/" + destImages + "/")[1];
+                            fs.unlink(destImages + "/" + fileName, function (err) {
                                 if (err)
                                     throw err;
                             });
                         }
                         return [4 /*yield*/, user.destroy()];
                     case 3:
-                        userDeleted = _a.sent();
+                        userDeleted = _b.sent();
                         res.status(200).json({ message: this.messages.userDeleted, info: { username: userDeleted.username } });
                         return [2 /*return*/];
                     case 4:
                         res.status(403).json({ message: this.messages.userNotDeleted });
                         return [3 /*break*/, 6];
                     case 5:
-                        err_3 = _a.sent();
+                        err_3 = _b.sent();
                         res.status(500).json({ error: err_3.message });
                         return [3 /*break*/, 6];
                     case 6: return [2 /*return*/];
@@ -215,22 +217,23 @@ var UserController = /** @class */ (function () {
      * @memberof UserController
      */
     UserController.prototype.update = function (req, res, next) {
+        var _a;
         return __awaiter(this, void 0, void 0, function () {
-            var tokenPayload, user, imageUrl, fileName, newPost, err_4;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var tokenPayload, user, destImages, imageUrl, fileName, newPost, err_4;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
-                        _a.trys.push([0, 5, , 6]);
+                        _b.trys.push([0, 5, , 6]);
                         return [4 /*yield*/, Auth_1["default"].getTokenInfo(req)];
                     case 1:
-                        tokenPayload = _a.sent();
+                        tokenPayload = _b.sent();
                         return [4 /*yield*/, this.userModel.findOne({
                                 where: { email: req.params.email }
                             })
                             // if not user, delete new img
                         ];
                     case 2:
-                        user = _a.sent();
+                        user = _b.sent();
                         // if not user, delete new img
                         if (!user) {
                             if (req.file) {
@@ -242,16 +245,18 @@ var UserController = /** @class */ (function () {
                             res.status(404).json({ message: this.messages.userNotFound });
                             return [2 /*return*/];
                         }
+                        destImages = void 0;
                         imageUrl = void 0;
                         if (req.file) {
+                            destImages = (_a = process.env.DEST_USERS_IMAGES) !== null && _a !== void 0 ? _a : "avatars_images";
                             if (user.urlAvatar) {
-                                fileName = user.urlAvatar.split("/images/")[1];
-                                fs.unlink("images/" + fileName, function (err) {
+                                fileName = user.urlAvatar.split("/" + destImages + "/")[1];
+                                fs.unlink(destImages + "/" + fileName, function (err) {
                                     if (err)
                                         throw err;
                                 });
                             }
-                            imageUrl = req.protocol + "://" + req.get('host') + "/images/" + req.file.filename;
+                            imageUrl = req.protocol + "://" + req.get('host') + "/" + destImages + "/" + req.file.filename;
                         }
                         if (!(user.id === tokenPayload.userId)) return [3 /*break*/, 4];
                         user.email = req.body.email ? req.body.email : user.email;
@@ -261,14 +266,14 @@ var UserController = /** @class */ (function () {
                         user.urlAvatar = imageUrl ? imageUrl : user.urlAvatar;
                         return [4 /*yield*/, user.save()];
                     case 3:
-                        newPost = _a.sent();
+                        newPost = _b.sent();
                         res.status(200).json({ message: this.messages.updatedSuccess, info: newPost });
                         return [2 /*return*/];
                     case 4:
                         res.status(403).json({ message: this.messages.notUpdate });
                         return [3 /*break*/, 6];
                     case 5:
-                        err_4 = _a.sent();
+                        err_4 = _b.sent();
                         res.status(500).json({ error: err_4.message });
                         return [3 /*break*/, 6];
                     case 6: return [2 /*return*/];

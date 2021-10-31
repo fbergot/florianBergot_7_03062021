@@ -1,6 +1,7 @@
 import * as express from "express";
 import postController from "../controller/PostController";
 import authInstance from "../middleware/Auth";
+import { postMulter } from "../../dist/middleware/multer-config";
 
 export const router = (function (express_router): express.Router {
 	const Router = express_router();
@@ -8,6 +9,7 @@ export const router = (function (express_router): express.Router {
 	Router.route("/add")
 		.post(
 			(req, res, next) => authInstance.verifAuth(req, res, next),
+			postMulter,
 			(req, res, next) => postController.create(req, res, next)
 		);
 	
@@ -20,6 +22,7 @@ export const router = (function (express_router): express.Router {
 	Router.route("/update/:id")
 		.put(
 			(req, res, next) => authInstance.verifAuth(req, res, next),
+			postMulter,
 			(req, res, next) => postController.update(req, res, next)
 	);
 	

@@ -1,7 +1,11 @@
 import { NextFunction, Request, Response } from "express";
 import authInstance from '../middleware/Auth';
-
+import * as dotenv from 'dotenv';
+import * as fs from 'fs';
 const models = require("../../models");
+
+dotenv.config();
+
 
 type PostModel = {
 	id: number,
@@ -107,8 +111,14 @@ class PostController {
 		try {
 			// get user info
 			const tokenPayload = await authInstance.getTokenInfo(req);
+			let destImages: undefined | string;
+			let imageUrl: undefined | string;
+			if (req.file) {
+				destImages = process.env.DEST_POSTS_ATTACHMENTS ?? "posts_attachments";
+				imageUrl = `${req.protocol}://${req.get('host')}/${destImages}/${req.file.filename}`;				
+			}
 			const data = {
-				title: req.body.title,
+				urlAvatar: imageUrl,
 				content: req.body.content,
 				UserId: tokenPayload.userId,
 				category: req.body.category
@@ -174,8 +184,23 @@ class PostController {
 				res.status(404).json({ message: this.messages.notFound });
 				return;
 			}
+
+			// if file, delete old img if exist and create new path to img
+			let destImages: undefined | string;
+			let imageUrl: undefined | string;
+			if (req.file) {
+				destImages = process.env.DEST_POSTS_ATTACHMENTS ?? "posts_attachments";
+				if (post.attachment) {
+					const fileName = post.attachment.split(`/${destImages}/`)[1];
+					fs.unlink(`${destImages}/${fileName}`, (err: any )=> {
+						if (err) throw err;
+					});					
+				}
+				imageUrl = `${req.protocol}://${req.get('host')}/${destImages}/${req.file.filename}`;
+			}
 			// ckeck if it is the author of the message 
 			if (post.UserId === tokenPayload.userId) {
+				post.attachment = imageUrl;
 				post.content = req.body.content;
 				// save new data
 				const newPost = await post.save<PostModel>();
@@ -204,8 +229,19 @@ class PostController {
 				res.status(404).json({ message: this.messages.noPost });
 				return;
 			}
+
 			// ckeck if it is the user || ckeck if is admin user
 			if ((post.UserId === tokenPayload.userId) || tokenPayload.isAdmin) {
+				// if img, delete image
+				let destImages: undefined | string;
+				if (post.attachment) {
+					destImages = process.env.DEST_POSTS_ATTACHMENTS ?? "post_attachments";
+					const fileName = post.attachment.split(`/${destImages}/`)[1];
+					fs.unlink(`${destImages}/${fileName}`, (err: any) => {
+						if (err) throw err;
+					})
+				}
+				// del post
 				const deletedPost = await post.destroy<PostModel>();
 				res.status(200).json({ message: this.messages.postDeleted, info: { idPostDeleted: deletedPost.id } });
 				return;
