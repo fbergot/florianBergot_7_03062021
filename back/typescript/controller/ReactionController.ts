@@ -4,32 +4,6 @@ import authInstance from "../middleware/Auth";
 // import commonJS: in JS (sequelize models) (TS in allow JS)
 const models = require("../../models");
 
-// type Reaction = {
-// 	id: number;
-// 	UserId: number;
-// 	likeOrDislike: string;
-// 	createdAt: string;
-// 	updatedAt: string;
-// } & MethodModel;
-
-// type Post = {
-// 	id: number,
-// 	content: string,
-// 	UserId: number,
-// 	attachment?: string,
-// 	createdAt: string,
-// 	updatedAt: string,
-// } & {
-// 	findOne<T>(data: any): Promise<T | null>;
-// 	addReaction<T>(reaction: Reaction): Promise<T>;
-// }
-
-// type MethodModel = {
-// 	create<T>(data: any): Promise<T>;
-// 	findOne<T>(data: any): Promise<T | null>;
-// 	destroy<T>(): Promise<T>;
-// }
-
 class ReactionController {
 
 	private reactionModel: Reaction;
@@ -50,23 +24,23 @@ class ReactionController {
 				case "like":
 					if (oldReaction.likeOrDislike === 'like') {
 						res.status(409).json({ message: "User already liked" });
-						return;
+						return true;
 					} else if (oldReaction.likeOrDislike === 'dislike') {
 						await oldReaction.destroy<Reaction>();
 						res.status(200).json({ message: 'Dislike deleted' });
-						return;
+						return true;
 					}
 					break;					
 				case 'dislike':
 					if (oldReaction.likeOrDislike === 'dislike') {
 						res.status(409).json({ message: "User already disliked" });
-						return;
+						return true;
 					} else if (oldReaction.likeOrDislike === 'like') {
 						await oldReaction.destroy<Reaction>();
 						res.status(200).json({ message: 'Like deleted' });
-						return;
+						return true;
 					}										
-			}
+				}
 			}
 	}
     
@@ -96,7 +70,8 @@ class ReactionController {
 				where: {userId: tokenPayload.userId}
 			})
 			// if old rection, analyse 
-			this.analyseReaction(oldReaction, req.body.likeOrDislike, res);
+			const state = await this.analyseReaction(oldReaction, req.body.likeOrDislike, res);
+			if (state) return;
 			const newReaction = await this.reactionModel.create<Reaction>({
 				UserId: tokenPayload.userId,
 				likeOrDislike: req.body.likeOrDislike
