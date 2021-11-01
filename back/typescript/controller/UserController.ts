@@ -118,8 +118,8 @@ class UserController {
 	}
 
 	/**
-	 * Get all posts with associations
-	 * @memberof PostController
+	 * Get all users
+	 * @memberof UserController
 	 */
 	public async getAll(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {

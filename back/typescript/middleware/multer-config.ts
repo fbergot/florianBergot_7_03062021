@@ -1,15 +1,9 @@
-import * as multer from 'multer';
 import { Request } from 'express';
+import type { File } from '../type/allTypes';
+import * as multer from 'multer';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
-
-type File = {
-    fieldname: string,
-    originalname: string,
-    encoding: string,
-    mimetype: string
-}
 
 const mimesTypes: any = {
     'image/jpg': 'jpg',
@@ -22,10 +16,10 @@ const mimesTypes: any = {
  */
 const buildOptions = (destination: string) => {
     return {
-		destination: (req: Request, file: File, callback: Function) => {
+		destination: (req: Request, file: File, callback: (p: Error | null, p2: string) => any) => {
 			callback(null, destination);
 		},
-		filename: (req: Request, file: File, callback: Function) => {
+		filename: (req: Request, file: File, callback: (p: Error | null, p2: string) => any) => {
 			// transform space in _
 			const name = file.originalname.split(' ').join('_');
 			let extension;

@@ -71,3 +71,12 @@ export type Reaction = {
 	createdAt: string;
 	updatedAt: string;
 } & MethodsModel;
+
+// ---------- /other/ --------------
+
+export type File = {
+	fieldname: string;
+	originalname: string;
+	encoding: string;
+	mimetype: string;
+};

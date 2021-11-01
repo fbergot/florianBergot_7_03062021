@@ -8,10 +8,26 @@ class ReactionController {
 
 	private reactionModel: Reaction;
 	private postModel: Post;
+	private messages: {
+		readonly alreadyLiked: string;
+		readonly alreadyDisliked: string;
+		readonly delDislike: string;
+		readonly delLiked: string;
+		readonly badKey: string;
+		readonly postNotFound: string;
+	}
 
 	constructor(reactionModel: Reaction, postModel: Post) { 
 		this.reactionModel = reactionModel;
 		this.postModel = postModel;
+		this.messages = {
+			alreadyLiked : "User already liked",
+			alreadyDisliked: "User already disliked",
+			delDislike: 'Dislike deleted',
+			delLiked: "Like deleted",
+			badKey: "Bad key (accepted: like/dislike)",
+			postNotFound: "Post not found"
+		}
 	}
 
 	/**
@@ -23,25 +39,26 @@ class ReactionController {
 			switch (likeOrDislike) {
 				case "like":
 					if (oldReaction.likeOrDislike === 'like') {
-						res.status(409).json({ message: "User already liked" });
+						res.status(409).json({ message: this.messages.alreadyLiked });
 						return true;
 					} else if (oldReaction.likeOrDislike === 'dislike') {
 						await oldReaction.destroy<Reaction>();
-						res.status(200).json({ message: 'Dislike deleted' });
+						res.status(200).json({ message: this.messages.delDislike });
 						return true;
 					}
 					break;					
 				case 'dislike':
 					if (oldReaction.likeOrDislike === 'dislike') {
-						res.status(409).json({ message: "User already disliked" });
+						res.status(409).json({ message: this.messages.alreadyDisliked });
 						return true;
 					} else if (oldReaction.likeOrDislike === 'like') {
 						await oldReaction.destroy<Reaction>();
-						res.status(200).json({ message: 'Like deleted' });
+						res.status(200).json({ message: this.messages.delLiked });
 						return true;
 					}										
-				}
 			}
+		}
+		return undefined;
 	}
     
     /**
@@ -51,32 +68,31 @@ class ReactionController {
     public async create(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			if (req.body.likeOrDislike !== "like" && req.body.likeOrDislike !== "dislike") {
-				res.status(400).json({ message: `Bad key (accepted: like/dislike) given: ${req.body.likeOrDislike}` });
+				res.status(400).json({ message: this.messages.badKey });
 				return;	
-			}
-			
+			}			
 			// get userInfo
 			const tokenPayload = await authInstance.getTokenInfo(req);
-			// check if already liked/disliked
 			// find the post for add reaction			 
 			const post = await this.postModel.findOne<Post>({
 				where: { id: req.params.postId }
 			})
 			if (!post) {
-				res.status(404).json({ message: "Post not found" });
+				res.status(404).json({ message: this.messages.postNotFound });
 				return;
 			}
+			// check if already liked/disliked
 			const oldReaction = await this.reactionModel.findOne<Reaction>({
 				where: {userId: tokenPayload.userId}
 			})
-			// if old rection, analyse 
+			// if old reaction, analyse 
 			const state = await this.analyseReaction(oldReaction, req.body.likeOrDislike, res);
 			if (state) return;
+			// if not old reaction, create & add new reaction
 			const newReaction = await this.reactionModel.create<Reaction>({
 				UserId: tokenPayload.userId,
 				likeOrDislike: req.body.likeOrDislike
 			})
-			// add 
 			const $React = await post.addReaction<Reaction>(newReaction);
 			res.status(201).json($React);
 		} catch (err: any) {

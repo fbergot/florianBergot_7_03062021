@@ -175,8 +175,8 @@ var UserController = /** @class */ (function () {
         });
     };
     /**
-     * Get all posts with associations
-     * @memberof PostController
+     * Get all users
+     * @memberof UserController
      */
     UserController.prototype.getAll = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
