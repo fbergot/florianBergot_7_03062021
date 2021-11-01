@@ -16,10 +16,10 @@ const mimesTypes: any = {
  */
 const buildOptions = (destination: string) => {
     return {
-		destination: (req: Request, file: File, callback: (p: Error | null, p2: string) => any) => {
+		destination: (req: Request, file: File, callback: (p: Error | null, destination: string) => any) => {
 			callback(null, destination);
 		},
-		filename: (req: Request, file: File, callback: (p: Error | null, p2: string) => any) => {
+		filename: (req: Request, file: File, callback: (p: Error | null, fileName: string) => any) => {
 			// transform space in _
 			const name = file.originalname.split(' ').join('_');
 			let extension;

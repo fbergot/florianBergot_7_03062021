@@ -86,7 +86,7 @@ var Auth = /** @class */ (function () {
         var _a;
         // --- split autho string by space => ["Bearer", "1e254354d85sf.."] ---
         var token = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(' ')[1];
-        if (!token || token.length < 10)
+        if (!token)
             throw Error("" + this.messages.errorMessageToken);
         return token;
     };
