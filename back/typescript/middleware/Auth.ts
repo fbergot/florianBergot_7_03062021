@@ -36,7 +36,7 @@ class Auth {
     public async verifAuth (req: Request, res: Response, next: CallableFunction): Promise<void> {
 		try {
 			// --- get token in header & verify if token is valid ---
-			const decodedToken = await this.getTokenInfo(req);           						
+			const decodedToken = await this.getTokenInfo(req);          						
 			next();
 		} catch (e: any) {
 			res.status(401).json({ error: e.message})
