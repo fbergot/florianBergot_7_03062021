@@ -1,6 +1,10 @@
 import './App.css';
+import React from 'react';
+type Props = {
 
-function App() {
+}
+
+const App: React.FC<Props> = () =>  {
   return (
     <div className="App">
       <header className="App-header">
