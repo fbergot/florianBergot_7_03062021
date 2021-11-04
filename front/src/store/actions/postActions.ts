@@ -1,25 +1,27 @@
 import { postTypes } from "../types/postTypes";
 
+type R = { type: string; payload?: string };
+
 export const postActions = {
-    postAdd() {
+    add(): R {
         return {
             type: postTypes.postAdd
         }
     },
 
-    postDelete() {
+    delete(): R {
         return {
             type: postTypes.postDelete
         }
     },
 
-    postUpdate() {
+    update(): R {
         return {
             type: postTypes.postUpdate
         }
     },
 
-    postGetAll() {
+    getAll(): R {
         return {
             type: postTypes.postGetAll
         }

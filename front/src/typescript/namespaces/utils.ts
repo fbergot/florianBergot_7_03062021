@@ -1,6 +1,3 @@
-import JSONTransformInstance from '../../class/utils/JSONTransform';
-
-
 namespace UtilsNamespace {
     // JSONTransform
     export interface JS_Transform_Interface {

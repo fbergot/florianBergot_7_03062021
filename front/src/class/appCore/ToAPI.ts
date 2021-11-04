@@ -1,34 +1,34 @@
-import axios, {Axios, AxiosRequestConfig} from 'axios';
+import axios, { Axios, AxiosRequestConfig } from 'axios';
 import UtilsNamespace from '../../typescript/namespaces/utils';
 import JSONTransformInstance from '../utils/JSONTransform';
 
-type JS_TR = UtilsNamespace.JS_Transform_Interface;
+type J = UtilsNamespace.JS_Transform_Interface;
 type Methods = readonly ['GET', 'POST', 'DELETE', 'PUT'];
-type M = {} & keyof Methods;;
+type M = {} & keyof Methods;
 
 /**
- * For all interactions with back API
+ * For all interactions with back (API)
  * @class ToAPI
  */
 class ToAPI {
 
 	private readonly axiosModule: Axios;
 	private readonly baseUrlAPI: string;
-	private readonly JSONTransformInstance: JS_TR;
+	private readonly JSONTransformInstance: J;
 	private readonly messages: {
-		badMethod: string;
+		badHTTPMethod: string;
 	}
 
 	/**
 	 * Creates an instance of ToAPI.
 	 * @memberof ToAPI
 	 */
-	constructor(axiosModule: Axios, JSONTransformInstance: JS_TR, baseUrlAPI: string) {
+	constructor(axiosModule: Axios, JSONTransformInstance: J, baseUrlAPI: string) {
 		this.axiosModule = axiosModule;
 		this.baseUrlAPI = baseUrlAPI;
 		this.JSONTransformInstance = JSONTransformInstance;
 		this.messages = {
-			badMethod: "Method is invalid"
+			badHTTPMethod: "Method is invalid"
 		}
 	}
 
@@ -36,14 +36,13 @@ class ToAPI {
 	 * For operation to API
 	 * @memberof ToAPI
 	 */
-	async toApi(method: M, url: string, body: {}, configOptions: AxiosRequestConfig): Promise<any> {
+	public async toApi(method: M, url: string, body: {}, configOptions: AxiosRequestConfig): Promise<any>  {
 		try {
 			let returnAPI;
 			switch (method) {
 				case 'GET':
-					returnAPI = await this.axiosModule.get(url, { ...configOptions, data: {...body} });
-					const parsedData = this.JSONTransformInstance.stringyfyOrParse(returnAPI, 'toOBJ');
-					return parsedData;
+					returnAPI = await this.axiosModule.get(url, { ...configOptions, data: { ...body } });
+					return this.JSONTransformInstance.stringyfyOrParse(returnAPI, 'toOBJ');
 				
 				case 'POST':
 					returnAPI = await this.axiosModule.post(`${this.baseUrlAPI}${url}`, { ...body }, { ...configOptions });
@@ -58,7 +57,7 @@ class ToAPI {
 					return returnAPI;
 
 				default:
-					throw Error('Bad method');
+					throw Error(this.messages.badHTTPMethod);
 			}
 		} catch (err: any) {
 			console.error(err.message);
@@ -67,6 +66,6 @@ class ToAPI {
 	}
 }
 
-const toApiInstance = new ToAPI(axios, JSONTransformInstance, 'http://localhost:3000');
+const toApiInstance = new ToAPI(axios, JSONTransformInstance, 'http://localhost:3000/api/');
 
 export default toApiInstance;

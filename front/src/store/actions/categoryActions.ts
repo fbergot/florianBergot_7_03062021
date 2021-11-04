@@ -1,19 +1,21 @@
 import { categoryTypes } from "../types/categoryTypes";
 
+type R = { type: string; payload?: string };
+
 export const categoryActions = {
-    categoryAdd() {
+    add(): R {
         return {
             type: categoryTypes.categoryAdd
         }
     },
 
-    categoryGetAll() {
+    getAll(): R {
         return {
             type: categoryTypes.categoryGetAll
         }
     },
 
-    categoryAllPosts() {
+    allPosts(): R {
         return {
             type: categoryTypes.categoryAllPosts
         }

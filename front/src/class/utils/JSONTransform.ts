@@ -2,8 +2,9 @@ import UtilsNamespace from "../../typescript/namespaces/utils";
 
 type D = UtilsNamespace.Data;
 type R = (string | Object) | null;
+type T = UtilsNamespace.JS_Transform_Interface;
 
-class JSONTransform implements UtilsNamespace.JS_Transform_Interface {
+class JSONTransform implements T {
 
     private readonly messagesError: {
         badValue: string;
@@ -23,7 +24,7 @@ class JSONTransform implements UtilsNamespace.JS_Transform_Interface {
 	 * @throw error if bad key or bad type of parameters
 	 * @memberof JSONTransform
 	 */
-	stringyfyOrParse(data: D, swt: string): R {
+	public stringyfyOrParse(data: D, swt: string): R {
 		switch (swt) {
 			case 'toJS':
 				if (typeof data !== "string") {

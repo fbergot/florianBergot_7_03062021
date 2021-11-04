@@ -1,7 +1,7 @@
 import UtilsNamespace from "../../typescript/namespaces/utils";
 import JSONTransformInstance from "./JSONTransform";
 
-type JS_TR = UtilsNamespace.JS_Transform_Interface;
+type J = UtilsNamespace.JS_Transform_Interface;
 type I = UtilsNamespace.ItemToStringify;
 
 /**
@@ -10,13 +10,13 @@ type I = UtilsNamespace.ItemToStringify;
  */
 class ToLocalStorage {
 
-    private readonly JSONTransform: JS_TR;
+    private readonly JSONTransform: J;
 
     /**
 	 * Creates an instance of ToLocalStorage.
 	 * @memberof ToLocalStorage
 	 */
-	constructor(JSONTransform: JS_TR) {
+	constructor(JSONTransform: J) {
         this.JSONTransform = JSONTransform;
     }
 
@@ -24,7 +24,7 @@ class ToLocalStorage {
 	 * Transform & set item in localStorage
 	 * @memberof ToLocalStorage
 	 */
-	tranformAndSetItem(item: I, key: string): boolean | null {
+	public tranformAndSetItem(item: I, key: string): boolean | null {
 		try {
 			const parseData = this.JSONTransform.stringyfyOrParse(item, 'toJS');
 			if (typeof parseData === 'string') {
@@ -42,7 +42,7 @@ class ToLocalStorage {
 	*  get item in localStorage & Transform in js object
 	* @memberof ToLocalStorage
 	*/
-	getItemAndTransform(key: string): null | I {
+	public getItemAndTransform(key: string): null | I {
 		try {
 			const brutItem = window.localStorage.getItem(key);
 			return this.JSONTransform.stringyfyOrParse(brutItem, 'toOBJ');
