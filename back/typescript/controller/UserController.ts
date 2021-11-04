@@ -4,8 +4,8 @@ import { jwtInstance, JSONWebToken } from '../class/Jwt';
 import authInstance from "../middleware/Auth";
 import * as dotenv from 'dotenv';
 import * as fs from "fs";
-import type { User, Post } from "../type/allTypes";
-// import commonJS: in JS (sequelize models) (TS in allow JS)
+import type { User, Post, Messages } from "../type/allTypes";
+// import commonJS: sequelize models is in JS => (TS in allow JS)
 const models = require('../../models');
 
 dotenv.config();
@@ -17,15 +17,7 @@ class UserController {
 	private bcryptInst: Bcrypt;
 	private jwtInst: JSONWebToken;
 	private messages: {
-		readonly badPass: string,
-		readonly userNotExist: string,
-		readonly alreadyUser: string,
-		readonly userDeleted: string,
-		readonly userNotDeleted: string,
-		readonly userNotFound: string,
-		readonly updatedSuccess: string,
-		readonly notUpdate: string,
-		readonly infoNotFound: string
+		+readonly [key in keyof Messages]: Messages[key];
 	}
 
     constructor(userModel: User, postModel: Post, bcryptInst: Bcrypt, jwt: JSONWebToken) { 

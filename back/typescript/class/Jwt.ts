@@ -1,19 +1,21 @@
 import * as jwt from 'jsonwebtoken';
+import { JWT_Interface } from '../interface/all_Iterfaces';
+import { JWT } from '../type/allTypes';
 
 /**
  * For sign & verify token
  * @export
  * @class JSONWebToken
  */
-export class JSONWebToken {
+export class JSONWebToken implements JWT_Interface {
 
-    private JWT: typeof jwt;
+    private readonly JWT: JWT;
 
     /**
      *Creates an instance of JSONWebToken.
      * @memberof JSONWebToken
      */
-    constructor(module: typeof jwt) {
+    constructor(module: JWT) {
         this.JWT = module;
     }
     
@@ -33,7 +35,7 @@ export class JSONWebToken {
      * Verify a token
      * @memberof JSONWebToken
      */
-    public verifyJWT(token: string, secret: jwt.Secret | jwt.GetPublicKeyOrSecret, options: any): Promise<any> {
+    public verifyJWT(token: string, secret: jwt.Secret | jwt.GetPublicKeyOrSecret, options: jwt.VerifyOptions): Promise<any> {
         return new Promise((resolve, reject) => {
             this.JWT.verify(token, secret, options, (err, decoded) => {
                 err ? reject(err) : resolve(decoded);

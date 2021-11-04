@@ -1,3 +1,5 @@
+import { SignOptions, Secret, GetPublicKeyOrSecret, VerifyOptions, Jwt } from 'jsonwebtoken';
+
 type MethodsModel = {
 	create<T>(data: any): Promise<T>;
 	findOne<T>(filter: {}): Promise<T | null>;
@@ -6,6 +8,7 @@ type MethodsModel = {
 	save<T>(): Promise<T>;
 };
 // ---------- /User types/ --------------
+
 export type User = {
 	readonly uuid: string;
 	readonly id: number;
@@ -72,7 +75,7 @@ export type Reaction = {
 	updatedAt: string;
 } & MethodsModel;
 
-// ---------- /other/ --------------
+// ---------- / Middleware (multer-config) / --------------
 
 export type File = {
 	fieldname: string;
@@ -80,3 +83,36 @@ export type File = {
 	encoding: string;
 	mimetype: string;
 };
+
+// ---------- / Messages (constructor UserController) / -------------- 
+
+export type Messages = {
+	badPass: string,
+	userNotExist: string,
+	alreadyUser: string,
+	userDeleted: string,
+	userNotDeleted: string,
+	userNotFound: string,
+	updatedSuccess: string,
+	notUpdate: string,
+	infoNotFound: string
+}
+
+// ---------- / JWT (class) / -------------- 
+
+export type JWT = {
+    sign(
+        payload: { userUuid: string },
+        secret: string,
+        options: any,
+		callback: (err: any, token: any) => void
+	): string;
+	
+	verify(
+		token: string,
+		secret: Secret | GetPublicKeyOrSecret,
+		options: VerifyOptions,
+		callback: (err: any, decoded: any) => void
+	): string | Jwt;
+    
+}

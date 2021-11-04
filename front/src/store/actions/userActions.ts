@@ -59,6 +59,7 @@ export const userActions = {
             type: userTypes.getAll.GET_ALL_ERROR
         }
     },
+
     // ----- USER_DELETE -----
     delete(): R {
         return {
@@ -77,6 +78,7 @@ export const userActions = {
             type: userTypes.delete.USER_ERROR
         }
     },
+    
     // ----- ME -----
     me(): R {
         return {
