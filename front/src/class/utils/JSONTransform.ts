@@ -1,14 +1,9 @@
-export interface JS_Transform_Interface {
-	stringyfyOrJSON: (data: any, swt: string)=> (string | Object) | null;	
-}
+import UtilsNamespace from "../../typescript/namespaces/utils";
 
-type Data = Exclude<[] | {} | number | string, string> | string;
+type D = UtilsNamespace.Data;
+type R = (string | Object) | null;
 
-/**
- * to manage local_storage
- * @class ToLocalStorage
- */
-class JSONTransform implements JS_Transform_Interface {
+class JSONTransform implements UtilsNamespace.JS_Transform_Interface {
 
     private readonly messagesError: {
         badValue: string;
@@ -19,7 +14,6 @@ class JSONTransform implements JS_Transform_Interface {
         this.messagesError = {
             badValue: "swt is incorrect, accepted: ('toJS'|'toOBJ)",
             badTypeData: "Type of data is incorrect",
-
         }
     }
 
@@ -29,7 +23,7 @@ class JSONTransform implements JS_Transform_Interface {
 	 * @throw error if bad key or bad type of parameters
 	 * @memberof JSONTransform
 	 */
-	stringyfyOrJSON(data: Data, swt: string): (string | Object) | null {
+	stringyfyOrParse(data: D, swt: string): R {
 		switch (swt) {
 			case 'toJS':
 				if (typeof data !== "string") {
