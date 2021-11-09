@@ -8,7 +8,8 @@ const Home: React.FC = () => {
     return (
         <div>
             <Header/>
-            {!status && <SigninOrSignup/>}
+            {!status && <SigninOrSignup />}
+            
         </div>
     )
 }

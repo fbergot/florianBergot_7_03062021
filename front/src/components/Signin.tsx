@@ -3,8 +3,8 @@ import toApiInstance from "../class/appCore/ToAPI";
 import toLocalStorageInst from "../class/utils/ToLocalStorage";
 
 const Signin: React.FC = () => {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const [email, setEmail] = useState<string>("");
+    const [password, setPassword] = useState<string>("");
 
     const handle = (e: React.ChangeEvent<HTMLInputElement>) => {
         switch (e.target.name) {
@@ -18,7 +18,6 @@ const Signin: React.FC = () => {
     }
 
     const onSubmit = async () => {
-
         const data = {
             email: email,
             password: password
