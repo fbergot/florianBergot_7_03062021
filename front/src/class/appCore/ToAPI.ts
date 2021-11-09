@@ -3,8 +3,7 @@ import UtilsNamespace from '../../typescript/namespaces/utils';
 import JSONTransformInstance from '../utils/JSONTransform';
 
 type J = UtilsNamespace.JS_Transform_Interface;
-type Methods = readonly ['GET', 'POST', 'DELETE', 'PUT'];
-type M = {} & keyof Methods;
+
 
 /**
  * For all interactions with back (API)
@@ -36,16 +35,16 @@ class ToAPI {
 	 * For operation to API
 	 * @memberof ToAPI
 	 */
-	public async toApi(method: M, url: string, body: {}, configOptions: AxiosRequestConfig): Promise<any>  {
+	public async toApi(method: string, url: string, data: any, configOptions: AxiosRequestConfig): Promise<any>  {
 		try {
 			let returnAPI;
 			switch (method) {
 				case 'GET':
-					returnAPI = await this.axiosModule.get(url, { ...configOptions, data: { ...body } });
+					returnAPI = await this.axiosModule.get(url, { ...configOptions, data: { ...data } });
 					return this.JSONTransformInstance.stringyfyOrParse(returnAPI, 'toOBJ');
 				
 				case 'POST':
-					returnAPI = await this.axiosModule.post(`${this.baseUrlAPI}${url}`, { ...body }, { ...configOptions });
+					returnAPI = await this.axiosModule.post(`${this.baseUrlAPI}${url}`, data, { ...configOptions });
 					return returnAPI;
 				
 				case 'DELETE':
@@ -53,7 +52,7 @@ class ToAPI {
 					return returnAPI;
 				
 				case 'PUT':
-					returnAPI = await this.axiosModule.put(`${this.baseUrlAPI}${url}`, { ...body }, { ...configOptions });
+					returnAPI = await this.axiosModule.put(`${this.baseUrlAPI}${url}`, { ...data }, { ...configOptions });
 					return returnAPI;
 
 				default:

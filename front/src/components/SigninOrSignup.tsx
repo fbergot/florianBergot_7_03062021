@@ -4,7 +4,10 @@ import Signup from "./Signup";
 
 const SigninOrSignup: React.FC = () => {
     const [state, setState] = useState('signup');
-    const display = state === 'signin' ? <Signin/> : <Signup/>;
+    const redirect = () => {
+        setState('signin');
+    }
+    const display = state === 'signin' ? <Signin /> : <Signup onRedirect={redirect}/>;
     const mess = state === 'signin' ? "M'enregister" : "Me connecter";
 
     const handle = () => {
