@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import toApiInstance from "../class/appCore/ToAPI";
-import toLocalStorageInst from "../class/utils/ToLocalStorage";
+import toApiInstance from "../../../../class/appCore/ToAPI";
+import toLocalStorageInst from "../../../../class/utils/ToLocalStorage";
 
 const Signin: React.FC = () => {
     const [email, setEmail] = useState<string>("");

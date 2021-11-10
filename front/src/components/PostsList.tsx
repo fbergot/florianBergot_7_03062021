@@ -10,9 +10,10 @@ type PropsType = {
     posts: PostAction,
 }
 
-const PostsList: React.FC<PropsType> = () => {
+const PostsList: React.FC<PropsType> = ({posts}) => {
     return (
         <div>
+            {JSON.stringify(posts)}
         </div>
     )
 }

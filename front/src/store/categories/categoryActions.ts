@@ -1,25 +1,26 @@
 import { CATEGORY_GET_ALL, CATEGORY_GET_ALL_ERROR, CATEGORY_GET_ALL_SUCCESS } from "./categoryTypes";
+import { Dispatch } from "redux";
 import toLocalStorageInst from "../../class/utils/ToLocalStorage";
 import toApiInstance from "../../class/appCore/ToAPI";
 
 type R = { type: string; payload?: any };
 
+type CallAction<Action> = (data?: any) => Action;
 
-
-const getAll = (): R => {
+const getAll: CallAction<R> = () => {
         return {
             type: CATEGORY_GET_ALL
         }
 }
     
-const getAllSuccess = (categories: []): R => {
+const getAllSuccess: CallAction<R> = (categories: []) => {
         return {
             type: CATEGORY_GET_ALL_SUCCESS,
             payload: categories
         }
 }
 
-const getAllError = (errorMessage: string): R => {
+const getAllError: CallAction<R> = (errorMessage: string) => {
         return {
             type: CATEGORY_GET_ALL_ERROR,
             payload: errorMessage
@@ -36,8 +37,8 @@ export const apiCallCategories = () => {
         console.error('Aucune infos utilisateur (token..)')
     }
     
-    return async (dispatch: any) => {
-        dispatch(getAll());
+    return async (dispatch: Dispatch) => {
+        dispatch<R>(getAll());
         const res = await toApiInstance.toApi("GET", "categories/all", {},
             {
                 headers: {
@@ -48,9 +49,9 @@ export const apiCallCategories = () => {
         )
 
         if (typeof res === 'string') {
-            dispatch(getAllError(res));
+            dispatch<R>(getAllError(res));
         } else {
-            dispatch(getAllSuccess(res.data))
+            dispatch<R>(getAllSuccess(res.data))
         }
 
     }

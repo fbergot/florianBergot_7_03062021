@@ -1,25 +1,26 @@
 import { USER_GET_ALL, USER_GET_ALL_ERROR, USER_GET_ALL_SUCCESS } from "./userTypes";
 import toLocalStorageInst from "../../class/utils/ToLocalStorage";
 import toApiInstance from "../../class/appCore/ToAPI";
+import { Dispatch } from "redux";
 
 type R = { type: string; payload?: any };
 
+type CallAction<Action> = (data?: any) => Action;
 
-
-const getAll = (): R => {
+const getAll: CallAction<R> = () => {
         return {
             type: USER_GET_ALL
         }
 }
     
-const getAllSuccess = (posts: []): R => {
+const getAllSuccess: CallAction<R> = (posts: []) => {
         return {
             type: USER_GET_ALL_SUCCESS,
             payload: posts
         }
 }
 
-const getAllError = (errorMessage: string): R => {
+const getAllError: CallAction<R> = (errorMessage: string) => {
         return {
             type: USER_GET_ALL_ERROR,
             payload: errorMessage
@@ -36,8 +37,8 @@ export const apiCallUsers = () => {
         console.error('Aucune infos utilisateur (token..)')
     }
     
-    return async (dispatch: any) => {
-        dispatch(getAll());
+    return async (dispatch: Dispatch) => {
+        dispatch<R>(getAll());
         const res = await toApiInstance.toApi("GET", "users/all", {},
             {
                 headers: {
@@ -47,9 +48,9 @@ export const apiCallUsers = () => {
             })
         
         if (typeof res === 'string') {
-            dispatch(getAllError(res));
+            dispatch<R>(getAllError(res));
         } else {
-            dispatch(getAllSuccess(res.data))
+            dispatch<R>(getAllSuccess(res.data))
         }
 
     }

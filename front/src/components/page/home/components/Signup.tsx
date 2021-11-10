@@ -1,5 +1,5 @@
 import React, { useState, createRef } from "react";
-import toApiInstance from "../class/appCore/ToAPI";
+import toApiInstance from "../../../../class/appCore/ToAPI";
 
 type T = {
     onRedirect: () => void

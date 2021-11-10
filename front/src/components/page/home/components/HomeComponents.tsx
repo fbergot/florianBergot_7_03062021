@@ -1,28 +1,46 @@
 import React, {useEffect} from "react";
 import { connect } from "react-redux";
-import { apiCallPosts } from "../store/posts/postActions";
-import { apiCallCategories } from "../store/categories/categoryActions";
-import { apiCallUsers } from "../store/users/userActions";
+import { apiCallPosts } from "../../../../store/posts/postActions";
+import { apiCallCategories } from "../../../../store/categories/categoryActions";
+import { apiCallUsers } from "../../../../store/users/userActions";
 import CategoriesList from './CategoriesList';
-import PostsList from "./PostsList";
+import PostsList from "../../../PostsList";
 import UsersList from "./UsersList";
+
+type PostAction = {
+    isLoading: boolean,
+    posts: any[],
+    error: string
+}
+
+type UserAction = {
+    isLoading: boolean,
+    users: any[],
+    error: string
+}
+
+type CategoryAction = {
+    isLoading: boolean,
+    categories: any[],
+    error: string
+}
 
 type Props = {
 	postsApi: () => any,
 	usersApi: () => any,
 	categoriesApi: () => any,
-	posts: PropsType,
-	users: any,
-	categories: any
+	posts: PostAction,
+	users: UserAction,
+	categories: CategoryAction
 
 }
 const HomeComponents: React.FC<Props> = ({ postsApi, usersApi, categoriesApi, posts, users, categories }) => {
-	// au montage du composant
 	useEffect(() => {
 		postsApi();
 		usersApi();
 		categoriesApi();
 	}, [postsApi, usersApi, categoriesApi]);
+
 	console.log(posts);
 	console.log(users);
 	console.log(categories);
@@ -35,19 +53,15 @@ const HomeComponents: React.FC<Props> = ({ postsApi, usersApi, categoriesApi, po
 		</div>
 	)
 }
-type PropsType = {
-    isLoading: boolean,
-    posts: [],
-    error: string
+
+
+type State = {
+	post: PostAction,
+	user: UserAction,
+	category: CategoryAction
 }
 
-type T = {
-	post: PropsType,
-	user: any,
-	category: any
-}
-// pour get store in component per props
-const mapStateToProps = (state: T) => {
+const mapStateToProps = (state: State) => {
     return {
         posts: state.post,
         users: state.user,
@@ -55,7 +69,7 @@ const mapStateToProps = (state: T) => {
     }
 }
 
-const mapDispatchToProps = (dispatch: any) => {
+const mapDispatchToProps = (dispatch: (func: any) => any ) => {
     return {
         postsApi: () => dispatch(apiCallPosts()),
         usersApi: () => dispatch(apiCallUsers()),

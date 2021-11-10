@@ -1,7 +1,7 @@
 import React from "react";
-import Header from "../Header";
-import SigninOrSignup from "../SigninOrSignup";
-import HomeComponents from "../HomeComponents";
+import Header from "../../Header";
+import SigninOrSignup from "./components/SigninOrSignup";
+import HomeComponents from "./components/HomeComponents";
 
 const Home: React.FC = () => {
     const status = window.localStorage.getItem('user') ? true : false;
