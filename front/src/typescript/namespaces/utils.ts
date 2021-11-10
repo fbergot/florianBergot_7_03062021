@@ -7,7 +7,7 @@ namespace UtilsNamespace {
     export type Data = Exclude<[] | {} | number | string, string> | string;
 
     // ToLocalStorage
-    export type ItemToStringify = Exclude<[] | {} | number | string, string>;
+    export type ItemToStringify = any;
 }
 
 export default UtilsNamespace;

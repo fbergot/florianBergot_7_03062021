@@ -40,8 +40,8 @@ class ToAPI {
 			let returnAPI;
 			switch (method) {
 				case 'GET':
-					returnAPI = await this.axiosModule.get(url, { ...configOptions, data: { ...data } });
-					return this.JSONTransformInstance.stringyfyOrParse(returnAPI, 'toOBJ');
+					returnAPI = await this.axiosModule.get(`${this.baseUrlAPI}${url}`, { ...configOptions, data: { ...data } });
+					return returnAPI;
 				
 				case 'POST':
 					returnAPI = await this.axiosModule.post(`${this.baseUrlAPI}${url}`, data, { ...configOptions });
@@ -60,7 +60,7 @@ class ToAPI {
 			}
 		} catch (err: any) {
 			console.error(err.message);
-			return false;
+			return err.message;
 		}
 	}
 }

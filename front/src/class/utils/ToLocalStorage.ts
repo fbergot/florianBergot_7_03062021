@@ -45,7 +45,8 @@ class ToLocalStorage {
 	public getItemAndTransform(key: string): null | I {
 		try {
 			const brutItem = window.localStorage.getItem(key);
-			return this.JSONTransform.stringyfyOrParse(brutItem, 'toOBJ');
+			const result = this.JSONTransform.stringyfyOrParse(brutItem, "toOBJ");
+			return result;
 		} catch (err: any) {
 			console.error(err.message);
 			return null;

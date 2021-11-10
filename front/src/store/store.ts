@@ -1,17 +1,13 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
-import userReducer from '../store/reducers/userReducer';
-import postReducer from '../store/reducers/postReducer';
-import commentReducer from '../store/reducers/commentReducer';
-import categoryReducer from '../store/reducers/categoryReducer';
-import reactionReducer from '../store/reducers/reactionReducer';
+import userReducer from './users/userReducer';
+import postReducer from './posts/postReducer';
+import categoryReducer from './categories/categoryReducer';
 
 const rootReducer = combineReducers({
-    user: userReducer,
-    post: postReducer,
-    comment: commentReducer,
-    category: categoryReducer,
-    reaction: reactionReducer
+	post: postReducer,
+	user: userReducer,
+	category: categoryReducer
 })
 
 const store = createStore(rootReducer, applyMiddleware(thunk));

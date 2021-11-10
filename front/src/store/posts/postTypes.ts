@@ -1,0 +1,3 @@
+export const POST_GET_ALL = "POST_GET_ALL";
+export const POST_GET_ALL_SUCCESS = "POST_GET_ALL_SUCCESS";
+export const POST_GET_ALL_ERROR = "POST_GET_ALL_ERROR";

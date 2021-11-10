@@ -31,7 +31,7 @@ class JSONTransform implements T {
 					return JSON.stringify(data);	
 				}
 				throw Error(this.messagesError.badTypeData);
-			case 'toObj':
+			case 'toOBJ':
 				if (typeof data === 'string') {
 					return JSON.parse(data);
 				}
