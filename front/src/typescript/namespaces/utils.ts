@@ -4,7 +4,7 @@ namespace UtilsNamespace {
         stringyfyOrParse: (data: any, swt: string) => (string | Object) | null;
     }
 
-    export type Data = Exclude<[] | {} | number | string, string> | string;
+    export type Data = string | number | [] | {};
 
     // ToLocalStorage
     export type ItemToStringify = any;

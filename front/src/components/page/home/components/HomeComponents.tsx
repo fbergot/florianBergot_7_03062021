@@ -4,25 +4,25 @@ import { apiCallPosts } from "../../../../store/posts/postActions";
 import { apiCallCategories } from "../../../../store/categories/categoryActions";
 import { apiCallUsers } from "../../../../store/users/userActions";
 import CategoriesList from './CategoriesList';
-import PostsList from "../../../PostsList";
+import PostsList from "./PostsList";
 import UsersList from "./UsersList";
 
 type PostAction = {
-    isLoading: boolean,
-    posts: any[],
-    error: string
+	isLoading: boolean,
+	posts: any[],
+	error: string
 }
 
 type UserAction = {
-    isLoading: boolean,
-    users: any[],
-    error: string
+	isLoading: boolean,
+	users: any[],
+	error: string
 }
 
 type CategoryAction = {
-    isLoading: boolean,
-    categories: any[],
-    error: string
+	isLoading: boolean,
+	categories: any[],
+	error: string
 }
 
 type Props = {
@@ -32,18 +32,14 @@ type Props = {
 	posts: PostAction,
 	users: UserAction,
 	categories: CategoryAction
-
 }
+
 const HomeComponents: React.FC<Props> = ({ postsApi, usersApi, categoriesApi, posts, users, categories }) => {
 	useEffect(() => {
 		postsApi();
 		usersApi();
 		categoriesApi();
 	}, [postsApi, usersApi, categoriesApi]);
-
-	console.log(posts);
-	console.log(users);
-	console.log(categories);
 
 	return (
 		<div>
@@ -54,7 +50,6 @@ const HomeComponents: React.FC<Props> = ({ postsApi, usersApi, categoriesApi, po
 	)
 }
 
-
 type State = {
 	post: PostAction,
 	user: UserAction,
@@ -62,19 +57,19 @@ type State = {
 }
 
 const mapStateToProps = (state: State) => {
-    return {
-        posts: state.post,
-        users: state.user,
-        categories: state.category
-    }
+	return {
+		posts: state.post,
+		users: state.user,
+		categories: state.category
+	}
 }
 
-const mapDispatchToProps = (dispatch: (func: any) => any ) => {
-    return {
-        postsApi: () => dispatch(apiCallPosts()),
-        usersApi: () => dispatch(apiCallUsers()),
-        categoriesApi: () => dispatch(apiCallCategories()),
-    }
+const mapDispatchToProps = (dispatch: (dispatch: any) => Promise<void> ) => {
+	return {
+		postsApi: () => dispatch(apiCallPosts()),
+		usersApi: () => dispatch(apiCallUsers()),
+		categoriesApi: () => dispatch(apiCallCategories()),
+	}
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomeComponents);
