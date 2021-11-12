@@ -2,14 +2,14 @@ import React from "react";
 import User from "./User";
 
 
-type UserAction = {
+type UserState = {
     isLoading: boolean,
     users: any[],
     error: string
 }
 
 type PropsType = {
-    users: UserAction
+    users: UserState
 }
 
 const UsersList: React.FC<PropsType> = ({ users }) => {

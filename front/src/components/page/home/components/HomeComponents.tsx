@@ -7,19 +7,19 @@ import CategoriesList from './CategoriesList';
 import PostsList from "./PostsList";
 import UsersList from "./UsersList";
 
-type PostAction = {
+type PostState = {
 	isLoading: boolean,
 	posts: any[],
 	error: string
 }
 
-type UserAction = {
+type UserState = {
 	isLoading: boolean,
 	users: any[],
 	error: string
 }
 
-type CategoryAction = {
+type CategoryState = {
 	isLoading: boolean,
 	categories: any[],
 	error: string
@@ -29,9 +29,9 @@ type Props = {
 	postsApi: () => any,
 	usersApi: () => any,
 	categoriesApi: () => any,
-	posts: PostAction,
-	users: UserAction,
-	categories: CategoryAction
+	posts: PostState,
+	users: UserState,
+	categories: CategoryState
 }
 
 const HomeComponents: React.FC<Props> = ({ postsApi, usersApi, categoriesApi, posts, users, categories }) => {
@@ -51,9 +51,9 @@ const HomeComponents: React.FC<Props> = ({ postsApi, usersApi, categoriesApi, po
 }
 
 type State = {
-	post: PostAction,
-	user: UserAction,
-	category: CategoryAction
+	post: PostState,
+	user: UserState,
+	category: CategoryState
 }
 
 const mapStateToProps = (state: State) => {

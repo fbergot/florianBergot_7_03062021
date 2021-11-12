@@ -1,14 +1,14 @@
 import React from "react";
 import Post from "../../../Post";
 
-type PostAction = {
+type PostState = {
     isLoading: boolean,
     posts: any[],
     error: string
 }
 
 type PropsType = {
-    posts: PostAction,
+    posts: PostState,
 }
 
 const PostsList: React.FC<PropsType> = ({ posts }) => {
