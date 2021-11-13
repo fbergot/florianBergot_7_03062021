@@ -1,6 +1,5 @@
 import React, {useEffect} from "react";
-import { Link } from "react-router-dom";
-import { connect } from "react-redux";
+import { connect } from 'react-redux';
 import { apiCallPosts } from "../../../../store/posts/postActions";
 import { apiCallCategories } from "../../../../store/categories/categoryActions";
 import { apiCallUsers } from "../../../../store/users/userActions";

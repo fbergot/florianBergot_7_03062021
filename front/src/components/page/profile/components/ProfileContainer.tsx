@@ -1,14 +1,27 @@
 import React, { useEffect } from "react";
-import { connect, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { apiCallCurrentUserInfos } from "../../../../store/profile/profileActions";
+
+type RootState = {
+    profileInfos: {
+        isLoading: false,
+		infos: [],
+		error: ""
+    };
+}
 
 const ProfileContainer: React.FC = () => {
+	const stateCurrentUserInfos = useSelector((states: RootState) => states.profileInfos);
+	const dispatch = useDispatch();
 
-	const currentUserInfos = useSelector(state => state.user);
-	console.log(currentUserInfos);
-
+	useEffect(() => {
+		apiCallCurrentUserInfos(dispatch);
+	}, [dispatch]);
+	
 	return (
 		<div>
 			<h1>Mon profile</h1>
+			<p>{JSON.stringify(stateCurrentUserInfos)}</p>
 		</div>
 	)
 }

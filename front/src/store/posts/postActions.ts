@@ -43,7 +43,7 @@ export const apiCallPosts = () => {
             {
                 headers: {
                     'accept': 'application/json',
-                    'Authorization' : `Bearer ${token}`
+                    'Authorization' : `Bearer ${ token }`
                 }
             }
         )
