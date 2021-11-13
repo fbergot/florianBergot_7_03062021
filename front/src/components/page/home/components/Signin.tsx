@@ -25,6 +25,7 @@ const Signin: React.FC = () => {
 
         const result = await toApiInstance.toApi('POST', 'users/signin', data, {})
         if (result) {
+            // add infos user in localStor
             const status = toLocalStorageInst.tranformAndSetItem(result.data, 'user');
             if (status) {
                 window.location.assign('/');

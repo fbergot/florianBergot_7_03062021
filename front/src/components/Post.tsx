@@ -5,7 +5,6 @@ type Props = {
 }
 
 const Post: React.FC<Props> = ({ postData }) => {
-	console.log(postData);
 	const img = postData.attachment ? <img className="card-img-top" src={postData.attachment} alt="Pièce jointe du post" /> : null;
 	return (
 		<div className="card">

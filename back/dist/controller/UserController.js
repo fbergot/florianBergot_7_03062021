@@ -52,7 +52,7 @@ var Jwt_1 = require("../class/Jwt");
 var Auth_1 = require("../middleware/Auth");
 var dotenv = require("dotenv");
 var fs = require("fs");
-// import commonJS: in JS (sequelize models) (TS in allow JS)
+// import commonJS: sequelize models is in JS => (TS in allow JS)
 var models = require('../../models');
 dotenv.config();
 var UserController = /** @class */ (function () {
@@ -163,7 +163,7 @@ var UserController = /** @class */ (function () {
                         return [4 /*yield*/, this.jwtInst.signJWT(payload, secret, options)];
                     case 3:
                         signedPayload = _b.sent();
-                        res.status(200).json({ uuid: user.uuid, token: signedPayload });
+                        res.status(200).json({ uuid: user.uuid, username: user.username, token: signedPayload });
                         return [3 /*break*/, 5];
                     case 4:
                         err_2 = _b.sent();

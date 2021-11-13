@@ -1,15 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 import Header from "../../Header";
 import SigninOrSignup from "./components/SigninOrSignup";
-import HomeComponents from "./components/HomeComponents";
+import HomeContainer from "./components/HomeContainer";
 
 const Home: React.FC = () => {
+    const [state, setState] = useState<boolean>(false);
+    const changeStateHeader = () => {
+        setState(true);
+    }
     const status = window.localStorage.getItem('user') ? true : false;
-    const body = status ? <HomeComponents /> : <SigninOrSignup />;
+    const body = status ? <HomeContainer changeHeader={changeStateHeader} /> : <SigninOrSignup />;
     return (
         <div>
-            <Header/>
-            {body}
+            <Header headerProfile={ state }/>
+            { body }
         </div>
     )
 }

@@ -8,9 +8,9 @@ const User: React.FC<PropsType> = ({ userData }) => {
     const img = userData.urlAvatar ? <img src={userData.urlAvatar} alt="avatar user" /> : null;
     return (
         <div>
-            <h2>{userData.username}</h2>
+            <h2>{ userData.username }</h2>
             {img}
-            <p>{ userData.email}</p>           
+            <p>{userData.email}</p>           
         </div>
     )
 }

@@ -1,4 +1,5 @@
 import React, {useEffect} from "react";
+import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { apiCallPosts } from "../../../../store/posts/postActions";
 import { apiCallCategories } from "../../../../store/categories/categoryActions";
@@ -26,20 +27,24 @@ type CategoryState = {
 }
 
 type Props = {
-	postsApi: () => any,
-	usersApi: () => any,
-	categoriesApi: () => any,
+	changeHeader: () => void,
+	postsApi: () => Promise<void>,
+	usersApi: () => Promise<void>,
+	categoriesApi: () => Promise<void>,
 	posts: PostState,
 	users: UserState,
 	categories: CategoryState
 }
 
-const HomeComponents: React.FC<Props> = ({ postsApi, usersApi, categoriesApi, posts, users, categories }) => {
+const HomeContainer: React.FC<Props> = ({changeHeader, postsApi, usersApi, categoriesApi, posts, users, categories }) => {
 	useEffect(() => {
-		postsApi();
-		usersApi();
-		categoriesApi();
-	}, [postsApi, usersApi, categoriesApi]);
+		Promise.all([usersApi(), postsApi(), categoriesApi()])
+			.then($ => {
+				changeHeader();
+			})
+			.catch((err) => {
+			})
+	}, [postsApi, usersApi, categoriesApi, changeHeader]);
 
 	return (
 		<div>
@@ -50,13 +55,13 @@ const HomeComponents: React.FC<Props> = ({ postsApi, usersApi, categoriesApi, po
 	)
 }
 
-type State = {
+type States = {
 	post: PostState,
 	user: UserState,
 	category: CategoryState
 }
 
-const mapStateToProps = (state: State) => {
+const mapStateToProps = (state: States) => {
 	return {
 		posts: state.post,
 		users: state.user,
@@ -72,4 +77,4 @@ const mapDispatchToProps = (dispatch: (dispatch: any) => Promise<void> ) => {
 	}
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(HomeComponents);
+export default connect(mapStateToProps, mapDispatchToProps)(HomeContainer);

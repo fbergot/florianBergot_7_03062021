@@ -12,8 +12,8 @@ type PropsType = {
 }
 
 const PostsList: React.FC<PropsType> = ({ posts }) => {
-    const stateOrData = posts.isLoading ? "Chargement..." : posts.posts && posts.posts.map((elem, index) => {
-        return <Post key={index} postData={elem}/>
+    const stateOrData = posts.isLoading ? "Chargement..." : posts.posts && posts.posts.map((post, index) => {
+        return <Post key={index} postData={post}/>
     })
     return (
         <div>

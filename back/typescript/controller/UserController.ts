@@ -103,7 +103,7 @@ class UserController {
 			const options = { expiresIn: '6h' };
 			const payload = { userUuid: user.uuid, userId: user.id, isAdmin: user.isAdmin };
 			const signedPayload = await this.jwtInst.signJWT(payload, secret, options);
-			res.status(200).json({ uuid: user.uuid, token: signedPayload });
+			res.status(200).json({ uuid: user.uuid, username: user.username, token: signedPayload });
 		} catch (err: any) {
 			res.status(500).json({ err: err.message });
 		}  

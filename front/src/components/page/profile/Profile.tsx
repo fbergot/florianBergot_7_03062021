@@ -1,12 +1,13 @@
 import React from "react";
-import Header from "../../Footer";
+import Header from '../../Header';
+import ProfileContainer from './components/ProfileContainer';
 
 
 const Profile: React.FC = () => {
     return (
         <div>
             <Header/>
-            <p>Ceci est la page profile</p>
+            <ProfileContainer/>
         </div>
     )
 }
