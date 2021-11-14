@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, { useEffect, useRef } from "react";
 import { connect } from 'react-redux';
 import { apiCallPosts } from "../../../../store/posts/postActions";
 import { apiCallCategories } from "../../../../store/categories/categoryActions";
@@ -35,16 +35,18 @@ type Props = {
 	categories: CategoryState
 }
 
-const HomeContainer: React.FC<Props> = ({changeHeader, postsApi, usersApi, categoriesApi, posts, users, categories }) => {
+const HomeContainer: React.FC<Props> = ({ changeHeader, postsApi, usersApi, categoriesApi, posts, users, categories }) => {
+	const error = useRef(undefined);
 	useEffect(() => {
 		Promise.all([usersApi(), postsApi(), categoriesApi()])
 			.then($ => {
 				changeHeader();
 			})
 			.catch((err) => {
+				error.current = err.message
 			})
 	}, [postsApi, usersApi, categoriesApi, changeHeader]);
-
+	// traiter la variable d'erreur en affichant une erreur
 	return (
 		<div>
 			<UsersList users={ users }/>

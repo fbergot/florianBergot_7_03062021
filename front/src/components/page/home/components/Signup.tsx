@@ -1,5 +1,8 @@
 import React, { useState, createRef } from "react";
 import toApiInstance from "../../../../class/appCore/ToAPI";
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 type T = {
 	onRedirect: () => void
@@ -26,9 +29,13 @@ const Signup: React.FC<T> = (props) => {
 			case 'password':
 				setPassword(e.target.value);
 		}
-    }
-    let status;
+	}
+	
+	let status;
+	
     const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+		const uriToApi_usersSignup = process.env.REACT_APP_URI_USERS_SIGNUP;
+		if (!uriToApi_usersSignup) throw Error('URI to API (users signup route) is missing');
 		e.preventDefault();
 
 		const formData = new FormData();
@@ -39,7 +46,7 @@ const Signup: React.FC<T> = (props) => {
 		formData.append('password', password);
 		formData.append("image", fileInput.current.files[0]);
 
-		const result = await toApiInstance.toApi('POST', 'users/signup', formData, { headers: {
+		const result = await toApiInstance.toApi('POST', uriToApi_usersSignup, formData, { headers: {
 			'accept': 'application/json',
 			'Content-Type': `multipart/form-data`,
 		}})

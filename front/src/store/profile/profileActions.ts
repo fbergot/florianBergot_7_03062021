@@ -24,10 +24,10 @@ const getMeInfosSuccess: CallAction<R> = (infos: any) => {
 }
 
 const getMeError: CallAction<R> = (errorMessage: string) => {
-		return {
-			type: ME_GET_INFOS_ERROR,
-			payload: errorMessage
-		}
+	return {
+		type: ME_GET_INFOS_ERROR,
+		payload: errorMessage
+	}
 }
 
 export const apiCallCurrentUserInfos = async (dispatch: Dispatch) => {

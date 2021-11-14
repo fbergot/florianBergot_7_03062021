@@ -26,5 +26,4 @@ const ProfileContainer: React.FC = () => {
 	)
 }
 
-
 export default ProfileContainer;
