@@ -2,6 +2,9 @@ import { POST_GET_ALL, POST_GET_ALL_ERROR, POST_GET_ALL_SUCCESS } from "./postTy
 import toLocalStorageInst from "../../class/utils/ToLocalStorage";
 import toApiInstance from "../../class/appCore/ToAPI";
 import { Dispatch } from "redux";
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 type R = { type: string; payload?: any };
 
@@ -29,7 +32,10 @@ const getAllError: CallAction<R> = (errorMessage: string) => {
 
 export const apiCallPosts = () => {
     const userInfos = toLocalStorageInst.getItemAndTransform('user');
-    let token: any;
+    const uriToApi = process.env.REACT_APP_URI_TO_All_POSTS;
+    if (!uriToApi) throw Error('URI to API missing in env var');
+
+    let token: undefined | string;
 
     if (userInfos) {
         token = userInfos.token
@@ -39,7 +45,7 @@ export const apiCallPosts = () => {
 
     return async (dispatch: Dispatch) => {
         dispatch<R>(getAll());
-        const res = await toApiInstance.toApi("GET", "posts/all", {},
+        const res = await toApiInstance.toApi("GET", uriToApi, {},
             {
                 headers: {
                     'accept': 'application/json',

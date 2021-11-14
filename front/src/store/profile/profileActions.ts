@@ -2,6 +2,9 @@ import { ME_GET_INFOS, ME_GET_INFOS_SUCCESS, ME_GET_INFOS_ERROR } from './profil
 import { Dispatch } from "redux";
 import toLocalStorageInst from "../../class/utils/ToLocalStorage";
 import toApiInstance from "../../class/appCore/ToAPI";
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 type R = { type: string; payload?: any };
 
@@ -27,7 +30,9 @@ const getMeError: CallAction<R> = (errorMessage: string) => {
 		}
 }
 
-export const apiCallCurrentUserInfos = async (dispatch: any) => {
+export const apiCallCurrentUserInfos = async (dispatch: Dispatch) => {
+	const uriToApi = process.env.REACT_APP_URI_TO_ME;
+	if (!uriToApi) throw Error('URI to API missing in env var');
 	const userInfos = toLocalStorageInst.getItemAndTransform('user');
 	let token: any;
 
@@ -38,7 +43,7 @@ export const apiCallCurrentUserInfos = async (dispatch: any) => {
 	}
 
 	dispatch(getMeInfos());
-	const res = await toApiInstance.toApi("GET", "users/me", {},
+	const res = await toApiInstance.toApi("GET", uriToApi, {},
 		{
 			headers: {
 				'accept': 'application/json',

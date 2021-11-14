@@ -2,6 +2,9 @@ import { USER_GET_ALL, USER_GET_ALL_ERROR, USER_GET_ALL_SUCCESS } from "./userTy
 import toLocalStorageInst from "../../class/utils/ToLocalStorage";
 import toApiInstance from "../../class/appCore/ToAPI";
 import { Dispatch } from "redux";
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 type R = { type: string; payload?: any };
 
@@ -29,21 +32,25 @@ const getAllError: CallAction<R> = (errorMessage: string) => {
 
 export const apiCallUsers = () => {
     const userInfos = toLocalStorageInst.getItemAndTransform('user');
-    let token: any;
+    const uriToApi = process.env.REACT_APP_URI_TO_All_USERS;
+    console.log(process.env);
+    if (!uriToApi) throw Error('URI to API missing in env var');
+
+    let token: undefined | string;
 
     if (userInfos) {
-        token = userInfos.token
+        token = userInfos.token;
     } else {
         console.error('Aucune infos utilisateur (token..)')
     }
     
     return async (dispatch: Dispatch) => {
         dispatch<R>(getAll());
-        const res = await toApiInstance.toApi("GET", "users/all", {},
+        const res = await toApiInstance.toApi("GET", uriToApi, {},
             {
                 headers: {
                     'accept': 'application/json',
-                    'Authorization' : `Bearer ${token}`
+                    'Authorization' : `Bearer ${ token }`
                 }
             })
         

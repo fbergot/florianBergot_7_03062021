@@ -1,9 +1,7 @@
 import axios, { Axios, AxiosRequestConfig } from 'axios';
-import UtilsNamespace from '../../typescript/namespaces/utils';
-import JSONTransformInstance from '../utils/JSONTransform';
+import * as dotenv from 'dotenv';
 
-type J = UtilsNamespace.JS_Transform_Interface;
-
+dotenv.config();
 
 /**
  * For all interactions with back (API)
@@ -13,7 +11,6 @@ class ToAPI {
 
 	private readonly axiosModule: Axios;
 	private readonly baseUrlAPI: string;
-	private readonly JSONTransformInstance: J;
 	private readonly messages: {
 		badHTTPMethod: string;
 	}
@@ -22,10 +19,9 @@ class ToAPI {
 	 * Creates an instance of ToAPI.
 	 * @memberof ToAPI
 	 */
-	constructor(axiosModule: Axios, JSONTransformInstance: J, baseUrlAPI: string) {
+	constructor(axiosModule: Axios, baseUrlAPI: string) {
 		this.axiosModule = axiosModule;
 		this.baseUrlAPI = baseUrlAPI;
-		this.JSONTransformInstance = JSONTransformInstance;
 		this.messages = {
 			badHTTPMethod: "Method is invalid"
 		}
@@ -65,6 +61,11 @@ class ToAPI {
 	}
 }
 
-const toApiInstance = new ToAPI(axios, JSONTransformInstance, 'http://localhost:3000/api/');
+// get & check url api
+const urlToApi: string | undefined = process.env.REACT_APP_BASE_URL_TO_API;
+console.log(process.env);
+if (!urlToApi) throw Error("Url to API missing in env var");
+
+const toApiInstance = new ToAPI(axios, urlToApi);
 
 export default toApiInstance;
