@@ -63,7 +63,6 @@ class ToAPI {
 
 // get & check url api
 const urlToApi: string | undefined = process.env.REACT_APP_BASE_URL_TO_API;
-console.log(process.env);
 if (!urlToApi) throw Error("Url to API missing in env var");
 
 const toApiInstance = new ToAPI(axios, urlToApi);

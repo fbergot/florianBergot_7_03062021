@@ -9,8 +9,9 @@ const User: React.FC<PropsType> = ({ userData }) => {
     return (
         <div>
             <h2>{ userData.username }</h2>
-            {img}
-            <p>{userData.email}</p>           
+            { img }
+            <p>{ userData.email }</p>
+            <p>{ userData.businessRole }</p>
         </div>
     )
 }

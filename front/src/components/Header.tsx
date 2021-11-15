@@ -1,6 +1,8 @@
 import React from "react";
 import ProfileInfos from './page/home/components/ProfileInfos';
-import logo from "../assets/imagesAndIcones/icon/icon-above-font.png";
+import logo from "../assets/imagesAndIcones/icon/icon-above-font.svg";
+import { Link } from "react-router-dom";
+import { BsFillHouseDoorFill, BsFillChatTextFill, BsBoxArrowInRight, BsFillPersonFill } from "react-icons/bs";
 
 type Props = {
     headerProfile?: boolean;
@@ -8,13 +10,33 @@ type Props = {
 
 const Header: React.FC<Props> = ({ headerProfile }) => {
     return (
-        <div>
-            <header className="header">
-                <img className="headerLogo" src={ logo } alt="logo" />
-                { headerProfile && <ProfileInfos/> }
-            </header>
-        </div>
-    )
+		<div>
+			<header className="header">
+				<img className="headerLogo" src={logo} alt="logo" />
+				<div>
+					{headerProfile && <ProfileInfos />}
+					<nav className="headerNav">
+						<Link className="linkNavbar" to="/">
+							<BsFillHouseDoorFill />
+						</Link>
+
+						<Link className="linkNavbar" to="/">
+							<BsFillChatTextFill />
+						</Link>
+
+						<Link className="linkNavbar" to="/profile">
+							<BsFillPersonFill />
+						</Link>
+
+						<Link className="linkNavbar" to="/">
+							<BsBoxArrowInRight />
+						</Link>
+					</nav>
+				</div>
+			</header>
+
+		</div>
+    );
 }
 
 export default Header;

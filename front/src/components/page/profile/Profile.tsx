@@ -4,11 +4,11 @@ import ProfileContainer from './components/ProfileContainer';
 
 const Profile: React.FC = () => {
     return (
-        <div>
-            <Header/>
-            <ProfileContainer/>
-        </div>
-    )
+      <div>
+            <Header headerProfile={ true }/>
+            <ProfileContainer />
+      </div>
+    );
 }
 
 export default Profile;

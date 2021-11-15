@@ -30,9 +30,7 @@ const Signup: React.FC<T> = (props) => {
 				setPassword(e.target.value);
 		}
 	}
-	
-	let status;
-	
+
     const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		const uriToApi_usersSignup = process.env.REACT_APP_URI_USERS_SIGNUP;
 		if (!uriToApi_usersSignup) throw Error('URI to API (users signup route) is missing');
@@ -51,7 +49,7 @@ const Signup: React.FC<T> = (props) => {
 			'Content-Type': `multipart/form-data`,
 		}})
 		// pas de re-rendu pour le moment pour l'affichage erreur (voir gestion d'erreur ensuite) --
-		status = result ? props.onRedirect() : "Une erreur s'est produite";           
+		const status = result ? props.onRedirect() : "Une erreur s'est produite";           
 	} 
     
     return (

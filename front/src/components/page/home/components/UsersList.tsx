@@ -18,7 +18,7 @@ const UsersList: React.FC<PropsType> = ({ users }) => {
         return <User key={ index } userData={ user }/>
     })
     return (
-        <div>
+        <div className='usersListContainer'>
             { stateOrData }
         </div>
     )

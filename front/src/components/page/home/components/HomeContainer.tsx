@@ -48,11 +48,11 @@ const HomeContainer: React.FC<Props> = ({ changeHeader, postsApi, usersApi, cate
 	}, [postsApi, usersApi, categoriesApi, changeHeader]);
 	// traiter la variable d'erreur en affichant une erreur
 	return (
-		<div>
+		<main className="mainContainer">
 			<UsersList users={ users }/>
 			<PostsList posts={ posts }/>
 			<CategoriesList categories={ categories }/>            
-		</div>
+		</main>
 	)
 }
 

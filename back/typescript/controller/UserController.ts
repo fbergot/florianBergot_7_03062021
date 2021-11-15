@@ -116,7 +116,7 @@ class UserController {
 	public async getAll(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			const users = await this.userModel.findAll<User>({
-				attributes: ["username", 'email', 'createdAt', "urlAvatar"]
+				attributes: ["username", 'email', 'createdAt', "urlAvatar", "businessRole"]
 			});
 			res.status(200).json(users);
 		} catch (err: any) {

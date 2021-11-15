@@ -1,11 +1,125 @@
+/* ---------------------- header */
+
 .header {
 	display: flex;
-	justify-content: center;
+	justify-content: space-between;
+	width: 100%;
+	border-bottom: 2px solid #f0684d;;
+}
+
+.headerLogo {
+	width: 190px;
+	height: 150px;
+	object-fit: cover;
+	margin-left: 0.5rem;
+}
+
+.headerNav {
+	margin-top: 2rem;
+	margin-right: .5rem;
+}
+
+.linkNavbar {
+	text-decoration: none;
+	color: #fd2d01;
+	padding: .5rem;
+	font-size: 1.2rem;
+}
+
+.linkHeaderProfile {
+	text-decoration: none;
+}
+
+.headerProfileContainer {
+	/* border: 1px solid black; */
+	display: flex;
+	justify-content: right;
+	align-items: center;
+	padding: .5rem;
+}
+
+.nameCurrentUser {
+	font-size: .9rem;
+	color: #000;
+	font-weight: 600;
+	margin-top: 0.1rem;
+	padding-right: 0.5rem
+}
+.avatarImg {
+	width: 40px;
+	height: 40px;
+	object-fit: cover;
+	border-radius: 2em;
+}
+
+/* ---------------------- main */
+
+.mainContainer {
+	margin-top: 1rem;
+	display: grid;
+	grid-template-columns: 20% 60% 20%;
+	grid-template-areas: "userscontainer postscontainer categoriescontainer";
+}
+/* categoriesList */
+.categoriesContainer {
+	border: 1px solid black;
+	grid-area: categoriescontainer;
+	background-color: #e4482d;
+
+}
+
+.bubbleCategory {
+	color: #FFF;
+	border-radius: 2rem;
+	background-color: #e95d44;
+}
+
+.categoryName {
+	padding: .5rem;
+}
+
+/* usersList */
+
+.usersListContainer {
+	border: 1px solid blue;
+	grid-area: userscontainer;
+}
+
+/* postList */
+
+.postsListContainer {
+	border: 1px solid red;
+	grid-area: postscontainer;
+	display: flex;
+	flex-direction: column;
 	align-items: center;
 }
 
+.postsContainer {
+	margin-top: 1rem;
+	/* border: 1px solid yellow; */
+}
 
-.headerLogo {
-	width: 150px;
+.card {
+	border: 1px solid rgb(194, 197, 194);
+	width: 500px;
+	margin-top: 1rem;
+	padding: .5rem;
+	box-shadow: 3px 3px 6px rgb(173, 171, 171);
+	border-radius: 13px;
+}
+
+.card-identifier {
+	width: 30px;
 	height: auto;
+	object-fit: cover;
+}
+.card-category {
+	text-align: right;
+}
+
+.card-img {
+	width: 100%;
+	height: auto;
+	object-fit: cover;
 }

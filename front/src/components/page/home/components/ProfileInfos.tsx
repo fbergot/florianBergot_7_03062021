@@ -33,11 +33,10 @@ const ProfileInfos: React.FC = () => {
 	})
 	return (
 		<div>
-			<Link to="/profile">
-				<p>ProfileInfos</p>
-				<p>{infosCurrentUser && infosCurrentUser.username}</p>
-				{ infosCurrentUser && <img src={infosCurrentUser.urlAvatar} alt="avatar" /> }
-			</Link>
+			<div className="headerProfileContainer">
+				<p className='nameCurrentUser'>{infosCurrentUser && infosCurrentUser.username}</p>
+				{ infosCurrentUser && <img className="avatarImg" src={infosCurrentUser.urlAvatar} alt="avatar" /> }
+			</div>
 		</div>
 	)
 }
