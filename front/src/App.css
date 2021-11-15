@@ -4,7 +4,6 @@
 	display: flex;
 	justify-content: space-between;
 	width: 100%;
-	border-bottom: 2px solid #f0684d;;
 }
 
 .headerLogo {
@@ -52,17 +51,32 @@
 	border-radius: 2em;
 }
 
+.titleContainer {
+	padding-top: 2rem;
+	padding-bottom: 1.5rem;
+	width: 50%;
+}
 /* ---------------------- main */
+.title {
+	text-align: center;
+	font-size: 1.6rem;
+}
+
+.title-p {
+	padding-top: 2rem;
+	padding-bottom: 1.5rem;
+	text-align: center;
+	font-size: 1.2rem;
+}
 
 .mainContainer {
-	margin-top: 1rem;
 	display: grid;
-	grid-template-columns: 20% 60% 20%;
+	grid-template-columns: 15% 65% 20%;
 	grid-template-areas: "userscontainer postscontainer categoriescontainer";
 }
 /* categoriesList */
 .categoriesContainer {
-	border: 1px solid black;
+	/* border: 1px solid black; */
 	grid-area: categoriescontainer;
 	background-color: #e4482d;
 
@@ -81,45 +95,122 @@
 /* usersList */
 
 .usersListContainer {
-	border: 1px solid blue;
 	grid-area: userscontainer;
+	border-right: 2px solid #e4482d;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	background-color: #e4482d;;
+}
+
+.list-users {
+	margin-top: 1rem;
+}
+
+.bubble-user {
+	display: flex;
+	border: 1px solid grey;
+	margin-top: .5rem;
+	width: 90%;
+	/* box-shadow: 3px 3px 6px rgb(173, 171, 171); */
+	border-radius: 5px;
+	background-color: #FFF;
+
+}
+
+.bubble-name {
+
+}
+
+.bubble-buisinessRole {
+
+}
+
+.img-bubble {
+	width: 30px;
+	height: 30px;
+	object-fit: cover;
+	border-radius: 2rem;
+}
+
+.avatar-bubble {
+	font-size: 1.7rem;
 }
 
 /* postList */
 
 .postsListContainer {
-	border: 1px solid red;
+	/* border: 1px solid red; */
 	grid-area: postscontainer;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 }
 
+.title-area {
+	width: 100%;
+	text-align: center;
+	background-color: #e4482d;
+	color: #FFF;
+	font-weight: 400;
+	padding: .5rem 0 .5rem 0;
+	font-size: 1rem;
+}
 .postsContainer {
 	margin-top: 1rem;
+	min-width: 400px;
+	max-width: 600px;
+	width: 80%;
+	
 	/* border: 1px solid yellow; */
 }
 
 .card {
 	border: 1px solid rgb(194, 197, 194);
-	width: 500px;
+	width: 100%;
 	margin-top: 1rem;
-	padding: .5rem;
 	box-shadow: 3px 3px 6px rgb(173, 171, 171);
 	border-radius: 13px;
+}
+
+.card-user-identifierCont {
+	display: flex;
+
 }
 
 .card-identifier {
 	width: 30px;
 	height: auto;
 	object-fit: cover;
+	margin: .2rem;
 }
+
+.card-title {
+	padding-top: .5rem;
+	margin-left: .1rem;
+	font-weight: 400;
+	text-align: center;
+}
+
+.card-text {
+	padding-top: .5rem;
+	margin-left: .5rem;
+	font-weight: 300;
+}
+
 .card-category {
 	text-align: right;
+	padding: .5rem;
+}
+
+.category-name {
+	font-weight: 400;
 }
 
 .card-img {
+	margin-top: .5rem;
 	width: 100%;
 	height: auto;
 	object-fit: cover;
+	border-radius: 0 0 13px 13px;
 }

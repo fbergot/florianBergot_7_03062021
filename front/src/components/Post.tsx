@@ -10,12 +10,12 @@ const Post: React.FC<Props> = ({ postData }) => {
 	return (
 		<article className="card">
 			<div className="card-body">
-				<div>
-					<h3 className="card-title">Par {postData.User.username}</h3>
+				<div className="card-user-identifierCont">
 					<img className="card-identifier" src={ cardImg } alt="post identifier" />
+					<h3 className="card-title">{postData.User.username}</h3>
 				</div>
 				<p className="card-text">{ postData.content}</p>
-				<p className="card-category"><strong>Categorie : </strong>{ postData.Categories[0].name}</p>
+				<p className="card-category">Categorie <span className="category-name">{ postData.Categories[0].name }</span></p>
 			</div>
 			{ img }
 		</article>

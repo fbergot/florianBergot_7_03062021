@@ -11,6 +11,7 @@ const AppRouter: React.FC = () => {
                 <Route path="/" exact component={Home}></Route>
                 <Route path="/profile" exact component={Profile}></Route>
                 <Route path="/createPost" exact component={CreationPost}></Route>
+                <Route path="/out" exact component={CreationPost}></Route>
                 <Route path="*" component={Home}></Route>
             </Switch>
         </Router>

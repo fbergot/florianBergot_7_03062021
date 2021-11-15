@@ -18,10 +18,13 @@ const UsersList: React.FC<PropsType> = ({ users }) => {
         return <User key={ index } userData={ user }/>
     })
     return (
-        <div className='usersListContainer'>
-            { stateOrData }
-        </div>
-    )
+      <div className="usersListContainer">
+            <h2 className="title-area">Tous nos utilisateurs</h2>
+            <div className="list-users">
+                {stateOrData}
+            </div>
+      </div>
+    );
 }
 
 export default UsersList;

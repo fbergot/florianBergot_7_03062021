@@ -17,7 +17,7 @@ const PostsList: React.FC<PropsType> = ({ posts }) => {
 	})
 	return (
 		<div className="postsListContainer">
-			<h2>Les derniers posts</h2>
+			<h2 className="title-area">Les derniers posts</h2>
 			<div className="postsContainer">
 				{ stateOrData }
 			</div>

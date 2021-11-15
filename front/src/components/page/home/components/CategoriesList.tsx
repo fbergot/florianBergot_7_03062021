@@ -14,9 +14,12 @@ type PropsType = {
 const CategoriesList: React.FC<PropsType> = ({ categories }) => {
     return (
         <div className="categoriesContainer">
-            { categories.categories.map((category, index) => {
-                return <Category key={ index } categoryData={ category }/>
-            }) }
+            <h2 className="title-area">Catégories</h2>
+            <div className="">
+                { categories.categories.map((category, index) => {
+                    return <Category key={ index } categoryData={ category }/>
+                }) }
+            </div>
         </div>
     )
 }

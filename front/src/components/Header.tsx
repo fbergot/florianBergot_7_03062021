@@ -13,6 +13,9 @@ const Header: React.FC<Props> = ({ headerProfile }) => {
 		<div>
 			<header className="header">
 				<img className="headerLogo" src={logo} alt="logo" />
+				<div className='titleContainer'>
+					<h1 className="title">Le nouveau mini réseau social de l'entreprise Groupomania !</h1>
+            	</div>
 				<div>
 					{headerProfile && <ProfileInfos />}
 					<nav className="headerNav">
@@ -20,7 +23,7 @@ const Header: React.FC<Props> = ({ headerProfile }) => {
 							<BsFillHouseDoorFill />
 						</Link>
 
-						<Link className="linkNavbar" to="/">
+						<Link className="linkNavbar" to="/createPost">
 							<BsFillChatTextFill />
 						</Link>
 
@@ -28,7 +31,7 @@ const Header: React.FC<Props> = ({ headerProfile }) => {
 							<BsFillPersonFill />
 						</Link>
 
-						<Link className="linkNavbar" to="/">
+						<Link className="linkNavbar" to="/out">
 							<BsBoxArrowInRight />
 						</Link>
 					</nav>
