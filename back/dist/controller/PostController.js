@@ -134,6 +134,9 @@ var PostController = /** @class */ (function () {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
                         return [4 /*yield*/, this.postModel.findAll({
+                                order: [
+                                    ["id", "DESC"]
+                                ],
                                 include: [
                                     {
                                         model: this.userModel,

@@ -35,6 +35,15 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
+};
 exports.__esModule = true;
 // import commonJS: in JS (sequelize models) (TS in allow JS)
 var models = require("../../models");
@@ -43,6 +52,9 @@ var CategoryController = /** @class */ (function () {
         this.categoryModel = categoryModel;
         this.postModel = postModel;
         this.userModel = userModel;
+        this.message = {
+            notPost: "Zero post in this category"
+        };
     }
     /**
      * Create one category
@@ -112,18 +124,28 @@ var CategoryController = /** @class */ (function () {
                                 include: [
                                     {
                                         model: this.postModel,
+                                        order: ["id", "ASC"],
                                         include: [
                                             {
                                                 model: this.userModel,
                                                 attributes: ['username']
-                                            }
+                                            },
+                                            {
+                                                model: this.categoryModel,
+                                                attributes: ['name']
+                                            },
                                         ]
                                     }
                                 ]
                             })];
                     case 1:
                         categoryWithPost = _a.sent();
-                        res.status(200).json(categoryWithPost);
+                        if (categoryWithPost) {
+                            res.status(200).json(__spreadArray([], categoryWithPost.Posts, true));
+                        }
+                        else {
+                            res.status(200).json({ message: this.message.notPost, posts: [] });
+                        }
                         return [3 /*break*/, 3];
                     case 2:
                         err_3 = _a.sent();

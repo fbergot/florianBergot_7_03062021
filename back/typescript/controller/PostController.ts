@@ -96,6 +96,9 @@ class PostController {
 	public async getAll(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			const posts = await this.postModel.findAll<Post>({
+				order: [
+					["id", "DESC"]
+				],
 				include: [
 					{
 						model: this.userModel,

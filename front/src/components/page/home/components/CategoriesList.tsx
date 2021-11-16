@@ -9,15 +9,16 @@ type CategoryAction = {
 
 type PropsType = {
     categories: CategoryAction,
+    callPostPerCategory: (idCategory: string) => void;
 }
 
-const CategoriesList: React.FC<PropsType> = ({ categories }) => {
+const CategoriesList: React.FC<PropsType> = ({ categories, callPostPerCategory }) => {
     return (
         <div className="categoriesContainer">
             <h2 className="title-area">Catégories</h2>
-            <div className="">
+            <div className="list-categories">
                 { categories.categories.map((category, index) => {
-                    return <Category key={ index } categoryData={ category }/>
+                    return <Category handlerPostPerCategory={ callPostPerCategory } key={ index } categoryData={ category }/>
                 }) }
             </div>
         </div>

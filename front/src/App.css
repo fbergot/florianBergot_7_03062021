@@ -7,14 +7,14 @@
 }
 
 .headerLogo {
-	width: 190px;
-	height: 150px;
+	width: 170px;
+	height: 120px;
 	object-fit: cover;
 	margin-left: 0.5rem;
 }
 
 .headerNav {
-	margin-top: 2rem;
+	margin-top: 1rem;
 	margin-right: .5rem;
 }
 
@@ -56,22 +56,19 @@
 	padding-bottom: 1.5rem;
 	width: 50%;
 }
-/* ---------------------- main */
+
 .title {
 	text-align: center;
 	font-size: 1.6rem;
+	margin-top: 2rem;
+	color: rgb(95, 73, 73);
 }
+/* ---------------------- main */
 
-.title-p {
-	padding-top: 2rem;
-	padding-bottom: 1.5rem;
-	text-align: center;
-	font-size: 1.2rem;
-}
 
 .mainContainer {
 	display: grid;
-	grid-template-columns: 15% 65% 20%;
+	grid-template-columns: 15% 70% 15%;
 	grid-template-areas: "userscontainer postscontainer categoriescontainer";
 }
 /* categoriesList */
@@ -79,17 +76,33 @@
 	/* border: 1px solid black; */
 	grid-area: categoriescontainer;
 	background-color: #e4482d;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 
 }
 
+.list-categories {
+	margin-top: .5rem;
+	width: 90%;
+}
+
 .bubbleCategory {
-	color: #FFF;
 	border-radius: 2rem;
+	margin-top: .5rem;
+}
+
+.button-bubbleCategory {
+	border-radius: 2rem;
+	color: #FFF;
 	background-color: #e95d44;
+	width: 100%;
+	height: 100%;
 }
 
 .categoryName {
 	padding: .5rem;
+	text-align: center;
 }
 
 /* usersList */
@@ -104,36 +117,51 @@
 }
 
 .list-users {
-	margin-top: 1rem;
+	margin-top: .5rem;
+	width: 90%;
 }
 
 .bubble-user {
+	font-family: 'Roboto';
 	display: flex;
+	width: 100%;
+	height: 40px;
 	border: 1px solid grey;
 	margin-top: .5rem;
-	width: 90%;
 	/* box-shadow: 3px 3px 6px rgb(173, 171, 171); */
 	border-radius: 5px;
 	background-color: #FFF;
+	position: relative;
 
 }
 
 .bubble-name {
-
+	font-family: 'Roboto';
+	padding-top: .6rem;
+	padding-left: .8rem;
+	font-size: 1rem;
+	font-weight: 500;
 }
 
 .bubble-buisinessRole {
-
+	font-family: 'Roboto';
+	position: absolute;
+	top: 1rem;
+	right: 0;
+	padding: .2rem;
+	font-size: .8rem;
+	font-weight: 500;
 }
 
 .img-bubble {
-	width: 30px;
-	height: 30px;
+	width: 20%;
+	height: 100%;
 	object-fit: cover;
-	border-radius: 2rem;
+	border-radius: 5px;
 }
 
 .avatar-bubble {
+	margin-top: .4rem;
 	font-size: 1.7rem;
 }
 
@@ -157,11 +185,10 @@
 	font-size: 1rem;
 }
 .postsContainer {
-	margin-top: 1rem;
+	/* margin-top: 1rem; */
 	min-width: 400px;
 	max-width: 1000px;
-	width: 90%;
-	
+	width: 90%;	
 	/* border: 1px solid yellow; */
 }
 

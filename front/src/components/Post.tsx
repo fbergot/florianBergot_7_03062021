@@ -14,7 +14,8 @@ const Post: React.FC<Props> = ({ postData }) => {
 					<img className="card-identifier" src={ cardImg } alt="post identifier" />
 					<h3 className="card-title">{postData.User.username}</h3>
 				</div>
-				<p className="card-text">{ postData.content}</p>
+				<p className="card-text">{postData.content}</p>
+				<p>{ postData.createdAt }</p>
 				<p className="card-category">Categorie <span className="category-name">{ postData.Categories[0].name }</span></p>
 			</div>
 			{ img }

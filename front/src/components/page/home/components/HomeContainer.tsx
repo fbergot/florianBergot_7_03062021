@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { connect } from 'react-redux';
-import { apiCallPosts } from "../../../../store/posts/postActions";
+import { apiCallPosts, apiCallPostsPerCategory } from "../../../../store/posts/postActions";
 import { apiCallCategories } from "../../../../store/categories/categoryActions";
 import { apiCallUsers } from "../../../../store/users/userActions";
 import CategoriesList from './CategoriesList';
@@ -30,12 +30,15 @@ type Props = {
 	postsApi: () => Promise<void>,
 	usersApi: () => Promise<void>,
 	categoriesApi: () => Promise<void>,
+	postsPerCategory: (idCategory: string) => void;
 	posts: PostState,
 	users: UserState,
 	categories: CategoryState
 }
 
-const HomeContainer: React.FC<Props> = ({ changeHeader, postsApi, usersApi, categoriesApi, posts, users, categories }) => {
+const HomeContainer: React.FC<Props> = ({ changeHeader, postsApi, postsPerCategory,
+		usersApi, categoriesApi, posts, users, categories }) => {
+		
 	const error = useRef(undefined);
 	useEffect(() => {
 		Promise.all([usersApi(), postsApi(), categoriesApi()])
@@ -46,12 +49,17 @@ const HomeContainer: React.FC<Props> = ({ changeHeader, postsApi, usersApi, cate
 				error.current = err.message
 			})
 	}, [postsApi, usersApi, categoriesApi, changeHeader]);
+
+	const postsPerCategoryCall = (idCategory: string) => {
+		postsPerCategory(idCategory);
+	}
+	console.log(posts);
 	// traiter la variable d'erreur en affichant une erreur
 	return (
 		<main className="mainContainer">
 			<UsersList users={ users }/>
 			<PostsList posts={ posts }/>
-			<CategoriesList categories={ categories }/>            
+			<CategoriesList categories={categories} callPostPerCategory={ postsPerCategoryCall }/>            
 		</main>
 	)
 }
@@ -72,6 +80,7 @@ const mapStateToProps = (state: States) => {
 
 const mapDispatchToProps = (dispatch: (dispatch: any) => Promise<void> ) => {
 	return {
+		postsPerCategory: (idCategory: string) => dispatch(apiCallPostsPerCategory(idCategory)),
 		postsApi: () => dispatch(apiCallPosts()),
 		usersApi: () => dispatch(apiCallUsers()),
 		categoriesApi: () => dispatch(apiCallCategories()),

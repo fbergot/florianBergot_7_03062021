@@ -44,6 +44,7 @@ export type Category = {
 	name: string;
 	createdAt: string;
 	updatedAt: string;
+	Posts: any[];
 } & MethodsModel & {
 	findOrCreate<T>(data: any): Promise<T>;
 }

@@ -8,11 +8,17 @@ class CategoryController {
 	private categoryModel: Category;
 	private postModel: Post;
 	private userModel: User;
+	private message: {
+		notPost: string
+	};
 
 	constructor(categoryModel: Category, postModel: Post, userModel: User) {
 		this.categoryModel = categoryModel;
 		this.postModel = postModel;
 		this.userModel = userModel;
+		this.message = {
+			notPost: "Zero post in this category"
+		}
 	}
 	/**
 	 * Create one category
@@ -53,16 +59,28 @@ class CategoryController {
 				include: [
 					{
 						model: this.postModel,
+						order: 
+							["id", "ASC"]
+						,
 						include: [
 							{
 								model: this.userModel,
 								attributes: ['username']
-							}
+							},
+							{
+								model: this.categoryModel,
+								attributes: ['name']
+							},
+
 						]
 					}
 				]
 			});
-			res.status(200).json(categoryWithPost);
+			if (categoryWithPost) {				
+				res.status(200).json([...categoryWithPost.Posts]);
+			} else {
+				res.status(200).json({ message: this.message.notPost, posts: [] });
+			}
 		} catch (err: any) {
 			res.status(500).json({ error: err.message });
 		}

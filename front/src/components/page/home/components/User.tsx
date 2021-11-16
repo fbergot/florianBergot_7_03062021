@@ -14,8 +14,10 @@ const User: React.FC<PropsType> = ({ userData }) => {
     return (
         <div className='bubble-user'>
             { img }
-            <p className="bubble-name">{ userData.username }</p>
-            <p className="bubble-buisinessRole">{ userData.businessRole }</p>
+			<div>
+				<p className="bubble-name">{ userData.username }</p>
+				<p className="bubble-buisinessRole">{ userData.businessRole }</p>      
+			</div>
         </div>
     )
 }
