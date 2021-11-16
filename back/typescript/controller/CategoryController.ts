@@ -60,7 +60,7 @@ class CategoryController {
 					{
 						model: this.postModel,
 						order: 
-							["id", "ASC"]
+							["id", "DESC"]
 						,
 						include: [
 							{

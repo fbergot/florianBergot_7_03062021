@@ -126,10 +126,12 @@
 	display: flex;
 	width: 100%;
 	height: 40px;
-	border: 1px solid grey;
+	border-right: 1px solid rgb(84, 82, 82);
+	border-top: 1px solid rgb(84, 82, 82);
+	border-bottom: 1px solid rgb(84, 82, 82);
 	margin-top: .5rem;
 	/* box-shadow: 3px 3px 6px rgb(173, 171, 171); */
-	border-radius: 5px;
+	border-radius: 20px;
 	background-color: #FFF;
 	position: relative;
 
@@ -137,7 +139,7 @@
 
 .bubble-name {
 	font-family: 'Roboto';
-	padding-top: .6rem;
+	padding-top: .65rem;
 	padding-left: .8rem;
 	font-size: 1rem;
 	font-weight: 500;
@@ -147,27 +149,36 @@
 	font-family: 'Roboto';
 	position: absolute;
 	top: 1rem;
-	right: 0;
+	right: 10px;
 	padding: .2rem;
 	font-size: .8rem;
 	font-weight: 500;
 }
 
 .img-bubble {
-	width: 20%;
+	border-right: 1px solid rgb(84, 82, 82);
+	width: 42px;
 	height: 100%;
 	object-fit: cover;
-	border-radius: 5px;
+	border-radius: 20px;
+}
+
+.avatarCont {
+	border-right: 1px solid rgb(84, 82, 82);
+	border-radius: 20px;
+	padding-right: .25rem;
 }
 
 .avatar-bubble {
-	margin-top: .4rem;
-	font-size: 1.7rem;
+	margin-top: .2rem;
+	margin-left: .4rem;
+	font-size: 2rem;
 }
 
 /* postList */
 
 .postsListContainer {
+	background-color: #f27e54;
 	/* border: 1px solid red; */
 	grid-area: postscontainer;
 	display: flex;
@@ -185,14 +196,14 @@
 	font-size: 1rem;
 }
 .postsContainer {
-	/* margin-top: 1rem; */
 	min-width: 400px;
-	max-width: 1000px;
-	width: 90%;	
+	max-width: 1100px;
+	width: 95%;	
 	/* border: 1px solid yellow; */
 }
-
+/* card */
 .card {
+	background-color: #FFF;
 	font-family: "Roboto";
 	border: 1px solid rgb(194, 197, 194);
 	width: 100%;
@@ -203,7 +214,6 @@
 
 .card-user-identifierCont {
 	display: flex;
-
 }
 
 .card-identifier {
@@ -220,6 +230,11 @@
 	text-align: center;
 }
 
+.card-timeAgo {
+	margin-left: .5rem;
+	font-size: .9rem;
+	font-weight: 300;
+}
 .card-text {
 	padding-top: .5rem;
 	margin-left: .5rem;
@@ -236,7 +251,6 @@
 }
 
 .card-img {
-	margin-top: .5rem;
 	width: 100%;
 	height: auto;
 	object-fit: cover;

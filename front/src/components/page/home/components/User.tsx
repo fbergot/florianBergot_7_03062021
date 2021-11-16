@@ -6,19 +6,21 @@ type PropsType = {
 }
 
 const User: React.FC<PropsType> = ({ userData }) => {
-    const img = userData.urlAvatar ? (
-      <img className="img-bubble" src={userData.urlAvatar} alt="avatar user" />
+	const img = userData.urlAvatar ? (
+			<img className="img-bubble" src={ userData.urlAvatar } alt="avatar user" />     		
     ) : (
-      <BsPerson className="avatar-bubble"/>
+		<div className="avatarCont">
+			<BsPerson className="avatar-bubble"/>
+		</div>
     );
     return (
-        <div className='bubble-user'>
-            { img }
+		<div className='bubble-user'>
+			{ img }
 			<div>
 				<p className="bubble-name">{ userData.username }</p>
 				<p className="bubble-buisinessRole">{ userData.businessRole }</p>      
 			</div>
-        </div>
+		</div>
     )
 }
 
