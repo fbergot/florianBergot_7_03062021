@@ -14,5 +14,7 @@ exports.router = (function (express_router) {
     Router.route("/update/:id")
         .put(function (req, res, next) { return Auth_1["default"].verifAuth(req, res, next); }, multer_config_1.postMulter, function (req, res, next) { return PostController_1["default"].update(req, res, next); });
     Router.route("/delete/:id")["delete"](function (req, res, next) { return Auth_1["default"].verifAuth(req, res, next); }, function (req, res, next) { return PostController_1["default"]["delete"](req, res, next); });
+    Router.route("/:category_name/all")
+        .get(function (req, res, next) { return Auth_1["default"].verifAuth(req, res, next); }, function (req, res, next) { return PostController_1["default"].getAllPerCategory(req, res, next); });
     return Router;
 })(express.Router);

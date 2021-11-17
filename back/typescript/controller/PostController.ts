@@ -68,21 +68,15 @@ class PostController {
 				destImages = process.env.DEST_POSTS_ATTACHMENTS ?? "posts_attachments";
 				imageUrl = `${req.protocol}://${req.get('host')}/${destImages}/${req.file.filename}`;				
 			}
+			console.log(req.body);
 			const data = {
 				attachment: imageUrl,
 				content: req.body.content,
 				UserId: tokenPayload.userId,
-				category: req.body.category
+				category_name: req.body.category
 			}
 			// create post & find or create the category
 			const newPost = await this.postModel.create<Post>(data);
-			const categoryOfPost = await this.categoryModel.findOrCreate<Category>({
-				where: { name: req.body.category },
-				default: {
-					name: req.body.category || 'divers'
-				}
-			});
-			await newPost.addCategory(categoryOfPost);
 			res.status(201).json(newPost);
 		} catch (err: any) {
 			res.status(500).json({ error: err.message });
@@ -108,8 +102,34 @@ class PostController {
 						model: this.commentModel
 					},
 					{
-						model: this.categoryModel,
-						attributes: ['name']
+						model: this.reactionModel,
+					}
+				]
+			});
+			res.status(200).json(posts);
+		} catch (err: any) {
+			res.status(500).json({ error: err.messge });
+		}
+	}
+
+	/**
+	 * Get all postsper category with associations
+	 * @memberof PostController
+	 */
+	public async getAllPerCategory(req: Request, res: Response, next: NextFunction): Promise<void> {
+		try {
+			const posts = await this.postModel.findAll<Post>({
+				where: { category_name: req.params.category_name },
+				order: [
+					["id", "DESC"]
+				],
+				include: [
+					{
+						model: this.userModel,
+						attributes: ['username']
+					},
+					{
+						model: this.commentModel
 					},
 					{
 						model: this.reactionModel,

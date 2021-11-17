@@ -21,7 +21,7 @@ const Post: React.FC<Props> = ({ postData }) => {
 				</div>
 				<p className="card-text">{postData.content}</p>
 				
-				<p className="card-category">Categorie <span className="category-name">{ postData.Categories[0].name }</span></p>
+				<p className="card-category">Categorie <span className="category-name">{ postData.category_name }</span></p>
 			</div>
 			{ img }
 		</article>

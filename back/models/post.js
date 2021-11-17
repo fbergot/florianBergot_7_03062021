@@ -10,9 +10,14 @@ module.exports = (sequelize, DataTypes) => {
 					allowNull: false,
 				}
 			});
-			this.belongsToMany(Category, {
-				through: CategoryPost
-			});
+			// this.belongsTo(Category, {
+			// 	foreignKey: {
+			// 		allowNull: false,
+			// 	}
+			// });
+			// this.belongsToMany(Category, {
+			// 	through: CategoryPost
+			// });
 			this.hasMany(Comment, {
 				foreignKey: {
 					allowNull: true,         
@@ -26,7 +31,8 @@ module.exports = (sequelize, DataTypes) => {
 	
 	Post.init({
 		content: DataTypes.STRING,
-		attachment: DataTypes.STRING
+		attachment: DataTypes.STRING,
+		category_name: DataTypes.STRING
 	}, {
 		sequelize,
 		modelName: 'Post',

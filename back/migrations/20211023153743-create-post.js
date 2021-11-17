@@ -13,6 +13,10 @@ module.exports = {
 				type: Sequelize.STRING,
 				allowNull: false,
 			},
+			category_name: {
+				type: Sequelize.STRING,
+					allowNull: false,
+				},	
 			userId: {
 				type: Sequelize.INTEGER,
 				allowNull: false,

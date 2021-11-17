@@ -77,11 +77,11 @@ var PostController = /** @class */ (function () {
     PostController.prototype.create = function (req, res, next) {
         var _a;
         return __awaiter(this, void 0, void 0, function () {
-            var tokenPayload, destImages, imageUrl, data, newPost, categoryOfPost, err_1;
+            var tokenPayload, destImages, imageUrl, data, newPost, err_1;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        _b.trys.push([0, 5, , 6]);
+                        _b.trys.push([0, 3, , 4]);
                         return [4 /*yield*/, Auth_1["default"].getTokenInfo(req)];
                     case 1:
                         tokenPayload = _b.sent();
@@ -91,33 +91,23 @@ var PostController = /** @class */ (function () {
                             destImages = (_a = process.env.DEST_POSTS_ATTACHMENTS) !== null && _a !== void 0 ? _a : "posts_attachments";
                             imageUrl = req.protocol + "://" + req.get('host') + "/" + destImages + "/" + req.file.filename;
                         }
+                        console.log(req.body);
                         data = {
                             attachment: imageUrl,
                             content: req.body.content,
                             UserId: tokenPayload.userId,
-                            category: req.body.category
+                            category_name: req.body.category
                         };
                         return [4 /*yield*/, this.postModel.create(data)];
                     case 2:
                         newPost = _b.sent();
-                        return [4 /*yield*/, this.categoryModel.findOrCreate({
-                                where: { name: req.body.category },
-                                "default": {
-                                    name: req.body.category || 'divers'
-                                }
-                            })];
-                    case 3:
-                        categoryOfPost = _b.sent();
-                        return [4 /*yield*/, newPost.addCategory(categoryOfPost)];
-                    case 4:
-                        _b.sent();
                         res.status(201).json(newPost);
-                        return [3 /*break*/, 6];
-                    case 5:
+                        return [3 /*break*/, 4];
+                    case 3:
                         err_1 = _b.sent();
                         res.status(500).json({ error: err_1.message });
-                        return [3 /*break*/, 6];
-                    case 6: return [2 /*return*/];
+                        return [3 /*break*/, 4];
+                    case 4: return [2 /*return*/];
                 }
             });
         });
@@ -146,10 +136,6 @@ var PostController = /** @class */ (function () {
                                         model: this.commentModel
                                     },
                                     {
-                                        model: this.categoryModel,
-                                        attributes: ['name']
-                                    },
-                                    {
                                         model: this.reactionModel
                                     }
                                 ]
@@ -168,13 +154,55 @@ var PostController = /** @class */ (function () {
         });
     };
     /**
+     * Get all postsper category with associations
+     * @memberof PostController
+     */
+    PostController.prototype.getAllPerCategory = function (req, res, next) {
+        return __awaiter(this, void 0, void 0, function () {
+            var posts, err_3;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.postModel.findAll({
+                                where: { category_name: req.params.category_name },
+                                order: [
+                                    ["id", "DESC"]
+                                ],
+                                include: [
+                                    {
+                                        model: this.userModel,
+                                        attributes: ['username']
+                                    },
+                                    {
+                                        model: this.commentModel
+                                    },
+                                    {
+                                        model: this.reactionModel
+                                    }
+                                ]
+                            })];
+                    case 1:
+                        posts = _a.sent();
+                        res.status(200).json(posts);
+                        return [3 /*break*/, 3];
+                    case 2:
+                        err_3 = _a.sent();
+                        res.status(500).json({ error: err_3.messge });
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    /**
      * Update one message
      * @memberof PostController
      */
     PostController.prototype.update = function (req, res, next) {
         var _a;
         return __awaiter(this, void 0, void 0, function () {
-            var tokenPayload, post, destImages, imageUrl, newPost, err_3;
+            var tokenPayload, post, destImages, imageUrl, newPost, err_4;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -212,8 +240,8 @@ var PostController = /** @class */ (function () {
                         res.status(403).json({ message: this.messages.notAutho });
                         return [3 /*break*/, 6];
                     case 5:
-                        err_3 = _b.sent();
-                        res.status(500).json({ error: err_3.message });
+                        err_4 = _b.sent();
+                        res.status(500).json({ error: err_4.message });
                         return [3 /*break*/, 6];
                     case 6: return [2 /*return*/];
                 }
@@ -227,7 +255,7 @@ var PostController = /** @class */ (function () {
     PostController.prototype["delete"] = function (req, res, next) {
         var _a;
         return __awaiter(this, void 0, void 0, function () {
-            var tokenPayload, post, destImages, deletedPost, err_4;
+            var tokenPayload, post, destImages, deletedPost, err_5;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -259,8 +287,8 @@ var PostController = /** @class */ (function () {
                         res.status(403).json({ error: this.messages.postNotDeleted });
                         return [3 /*break*/, 6];
                     case 5:
-                        err_4 = _b.sent();
-                        res.status(500).json({ error: err_4.message });
+                        err_5 = _b.sent();
+                        res.status(500).json({ error: err_5.message });
                         return [3 /*break*/, 6];
                     case 6: return [2 /*return*/];
                 }

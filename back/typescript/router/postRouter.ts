@@ -32,6 +32,12 @@ export const router = (function (express_router: () => express.Router): express.
 			(req, res, next) => postController.delete(req, res, next)
 		);
 
+	Router.route("/:category_name/all")
+		.get(
+			(req, res, next) => authInstance.verifAuth(req, res, next),
+			(req, res, next) => postController.getAllPerCategory(req, res, next)
+		);
+
 	return Router;
 })(express.Router);
 
