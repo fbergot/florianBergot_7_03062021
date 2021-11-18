@@ -35,6 +35,9 @@ export type Post = {
 } & MethodsModel & {
 	addCategory(data: any): Promise<any>;
 	addReaction<T>(data: any): Promise<T>;
+	addCategoryPost(data: any): any;
+	createCategory(data: any): any;
+	setCategory(data: any): any;
 }
 
 // ---------- /Category types/ -------------- 
@@ -47,6 +50,8 @@ export type Category = {
 	Posts: any[];
 } & MethodsModel & {
 	findOrCreate<T>(data: any): Promise<T>;
+	getPosts(): any;
+	findOne(data: any): any;
 }
 
 // ---------- /Comment types/ --------------

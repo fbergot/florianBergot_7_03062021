@@ -77,7 +77,7 @@ var PostController = /** @class */ (function () {
     PostController.prototype.create = function (req, res, next) {
         var _a;
         return __awaiter(this, void 0, void 0, function () {
-            var tokenPayload, destImages, imageUrl, data, newPost, categoryOfPost, err_1;
+            var tokenPayload, destImages, imageUrl, data, categoryOfPost, newPost, err_1;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -97,17 +97,14 @@ var PostController = /** @class */ (function () {
                             UserId: tokenPayload.userId,
                             category: req.body.category
                         };
-                        return [4 /*yield*/, this.postModel.create(data)];
-                    case 2:
-                        newPost = _b.sent();
-                        return [4 /*yield*/, this.categoryModel.findOrCreate({
-                                where: { name: req.body.category },
-                                "default": {
-                                    name: req.body.category || 'divers'
-                                }
+                        return [4 /*yield*/, this.categoryModel.findOne({
+                                where: { name: req.body.category }
                             })];
-                    case 3:
+                    case 2:
                         categoryOfPost = _b.sent();
+                        return [4 /*yield*/, this.postModel.create(data)];
+                    case 3:
+                        newPost = _b.sent();
                         return [4 /*yield*/, newPost.addCategory(categoryOfPost)];
                     case 4:
                         _b.sent();

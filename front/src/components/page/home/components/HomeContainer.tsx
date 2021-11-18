@@ -53,7 +53,6 @@ const HomeContainer: React.FC<Props> = ({ changeHeader, postsApi, postsPerCatego
 	const postsPerCategoryCall = (idCategory: string) => {
 		postsPerCategory(idCategory);
 	}
-	console.log(posts);
 	// traiter la variable d'erreur en affichant une erreur
 	return (
 		<main className="mainContainer">

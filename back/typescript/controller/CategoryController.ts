@@ -14,7 +14,7 @@ class CategoryController {
 
 	constructor(categoryModel: Category, postModel: Post, userModel: User) {
 		this.categoryModel = categoryModel;
-		this.postModel = postModel;
+		this.postModel = postModel;		
 		this.userModel = userModel;
 		this.message = {
 			notPost: "Zero post in this category"
@@ -54,12 +54,19 @@ class CategoryController {
 	 */
 	public async getPostsInCategory(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
+			// const categoryWithPost = await this.categoryModel.findOne<Category>({
+			// 	where: { id: req.params.categoryId }
+			// });
+			// if (categoryWithPost) {
+			// 	const posts = await categoryWithPost.getPosts();
+			// 	res.status(200).json(posts);
+			// }
 			const categoryWithPost = await this.categoryModel.findOne<Category>({
-				where: { id: req.params.categoryId },
+				where: { name: req.params.categoryName },
 				include: [
 					{
 						model: this.postModel,
-						order: 
+						order:
 							["id", "ASC"]
 						,
 						include: [
@@ -71,17 +78,16 @@ class CategoryController {
 								model: this.categoryModel,
 								attributes: ['name']
 							},
-
 						]
 					}
 				]
 			});
-			if (categoryWithPost) {				
+			if (categoryWithPost) {
 				res.status(200).json([...categoryWithPost.Posts]);
 			} else {
 				res.status(200).json({ message: this.message.notPost, posts: [] });
 			}
-		} catch (err: any) {
+    } catch (err: any) {
 			res.status(500).json({ error: err.message });
 		}
 	}

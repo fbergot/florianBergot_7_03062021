@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
 				}
 			});
 			this.belongsToMany(Category, {
-				through: CategoryPost
+				through: "CategoryPost"
 			});
 			this.hasMany(Comment, {
 				foreignKey: {

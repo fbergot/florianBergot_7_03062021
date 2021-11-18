@@ -74,16 +74,13 @@ class PostController {
 				UserId: tokenPayload.userId,
 				category: req.body.category
 			}
+			const categoryOfPost = await this.categoryModel.findOne<Category>({
+				where: { name: req.body.category }
+			});
 			// create post & find or create the category
 			const newPost = await this.postModel.create<Post>(data);
-			const categoryOfPost = await this.categoryModel.findOrCreate<Category>({
-				where: { name: req.body.category },
-				default: {
-					name: req.body.category || 'divers'
-				}
-			});
 			await newPost.addCategory(categoryOfPost);
-			res.status(201).json(newPost);
+			res.status(201).json(newPost);				
 		} catch (err: any) {
 			res.status(500).json({ error: err.message });
 		}

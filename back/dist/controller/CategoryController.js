@@ -120,7 +120,7 @@ var CategoryController = /** @class */ (function () {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
                         return [4 /*yield*/, this.categoryModel.findOne({
-                                where: { id: req.params.categoryId },
+                                where: { name: req.params.categoryName },
                                 include: [
                                     {
                                         model: this.postModel,

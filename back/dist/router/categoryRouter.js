@@ -10,7 +10,7 @@ exports.router = (function (express_router) {
         .post(function (req, res, next) { return Auth_1["default"].verifAuth(req, res, next); }, function (req, res, next) { return CategoryController_1["default"].create(req, res, next); });
     Router.route("/all")
         .get(function (req, res, next) { return Auth_1["default"].verifAuth(req, res, next); }, function (req, res, next) { return CategoryController_1["default"].getAll(req, res, next); });
-    Router.route("/:categoryId/posts")
+    Router.route("/:categoryName/posts")
         .get(function (req, res, next) { return Auth_1["default"].verifAuth(req, res, next); }, function (req, res, next) { return CategoryController_1["default"].getPostsInCategory(req, res, next); });
     return Router;
 })(express.Router);
