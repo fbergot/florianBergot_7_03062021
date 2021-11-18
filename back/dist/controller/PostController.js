@@ -77,11 +77,11 @@ var PostController = /** @class */ (function () {
     PostController.prototype.create = function (req, res, next) {
         var _a;
         return __awaiter(this, void 0, void 0, function () {
-            var tokenPayload, destImages, imageUrl, data, newPost, err_1;
+            var tokenPayload, destImages, imageUrl, data, newPost, categoryOfPost, err_1;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        _b.trys.push([0, 3, , 4]);
+                        _b.trys.push([0, 5, , 6]);
                         return [4 /*yield*/, Auth_1["default"].getTokenInfo(req)];
                     case 1:
                         tokenPayload = _b.sent();
@@ -91,23 +91,33 @@ var PostController = /** @class */ (function () {
                             destImages = (_a = process.env.DEST_POSTS_ATTACHMENTS) !== null && _a !== void 0 ? _a : "posts_attachments";
                             imageUrl = req.protocol + "://" + req.get('host') + "/" + destImages + "/" + req.file.filename;
                         }
-                        console.log(req.body);
                         data = {
                             attachment: imageUrl,
                             content: req.body.content,
                             UserId: tokenPayload.userId,
-                            category_name: req.body.category
+                            category: req.body.category
                         };
                         return [4 /*yield*/, this.postModel.create(data)];
                     case 2:
                         newPost = _b.sent();
-                        res.status(201).json(newPost);
-                        return [3 /*break*/, 4];
+                        return [4 /*yield*/, this.categoryModel.findOrCreate({
+                                where: { name: req.body.category },
+                                "default": {
+                                    name: req.body.category || 'divers'
+                                }
+                            })];
                     case 3:
+                        categoryOfPost = _b.sent();
+                        return [4 /*yield*/, newPost.addCategory(categoryOfPost)];
+                    case 4:
+                        _b.sent();
+                        res.status(201).json(newPost);
+                        return [3 /*break*/, 6];
+                    case 5:
                         err_1 = _b.sent();
                         res.status(500).json({ error: err_1.message });
-                        return [3 /*break*/, 4];
-                    case 4: return [2 /*return*/];
+                        return [3 /*break*/, 6];
+                    case 6: return [2 /*return*/];
                 }
             });
         });
@@ -134,6 +144,10 @@ var PostController = /** @class */ (function () {
                                     },
                                     {
                                         model: this.commentModel
+                                    },
+                                    {
+                                        model: this.categoryModel,
+                                        attributes: ['name']
                                     },
                                     {
                                         model: this.reactionModel

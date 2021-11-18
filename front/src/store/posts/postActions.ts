@@ -93,9 +93,9 @@ const getAllPostPerCategoryError: CallAction<R> = (errorMessage: string) => {
 }
 
 // per category
-export const apiCallPostsPerCategory = (category: string) => {
+export const apiCallPostsPerCategory = (id_category: string) => {
 	const userInfos = toLocalStorageInst.getItemAndTransform('user');
-	const uriToApi = `posts/${category}/all`;
+	const uriToApi = `categories/${id_category}/posts`;
 
 	let token: undefined | string;
 

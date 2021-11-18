@@ -68,15 +68,21 @@ class PostController {
 				destImages = process.env.DEST_POSTS_ATTACHMENTS ?? "posts_attachments";
 				imageUrl = `${req.protocol}://${req.get('host')}/${destImages}/${req.file.filename}`;				
 			}
-			console.log(req.body);
 			const data = {
 				attachment: imageUrl,
 				content: req.body.content,
 				UserId: tokenPayload.userId,
-				category_name: req.body.category
+				category: req.body.category
 			}
 			// create post & find or create the category
 			const newPost = await this.postModel.create<Post>(data);
+			const categoryOfPost = await this.categoryModel.findOrCreate<Category>({
+				where: { name: req.body.category },
+				default: {
+					name: req.body.category || 'divers'
+				}
+			});
+			await newPost.addCategory(categoryOfPost);
 			res.status(201).json(newPost);
 		} catch (err: any) {
 			res.status(500).json({ error: err.message });
@@ -100,6 +106,10 @@ class PostController {
 					},
 					{
 						model: this.commentModel
+					},
+					{
+						model: this.categoryModel,
+						attributes: ['name']
 					},
 					{
 						model: this.reactionModel,
