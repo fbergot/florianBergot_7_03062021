@@ -48,10 +48,11 @@ exports.__esModule = true;
 // import commonJS: in JS (sequelize models) (TS in allow JS)
 var models = require("../../models");
 var CategoryController = /** @class */ (function () {
-    function CategoryController(categoryModel, postModel, userModel) {
+    function CategoryController(categoryModel, postModel, userModel, commentModel) {
         this.categoryModel = categoryModel;
         this.postModel = postModel;
         this.userModel = userModel;
+        this.commentModel = commentModel;
         this.message = {
             notPost: "Zero post in this category"
         };
@@ -121,10 +122,13 @@ var CategoryController = /** @class */ (function () {
                         _a.trys.push([0, 2, , 3]);
                         return [4 /*yield*/, this.categoryModel.findOne({
                                 where: { name: req.params.categoryName },
+                                order: [
+                                    ["createdAt", "DESC"]
+                                ],
                                 include: [
                                     {
                                         model: this.postModel,
-                                        order: ["id", "ASC"],
+                                        order: ["createdAt", "DESC"],
                                         include: [
                                             {
                                                 model: this.userModel,
@@ -133,6 +137,17 @@ var CategoryController = /** @class */ (function () {
                                             {
                                                 model: this.categoryModel,
                                                 attributes: ['name']
+                                            },
+                                            {
+                                                model: this.commentModel,
+                                                order: [
+                                                    ["createdAt", "DESC"]
+                                                ],
+                                                include: [
+                                                    {
+                                                        model: this.userModel
+                                                    }
+                                                ]
                                             },
                                         ]
                                     }
@@ -158,5 +173,5 @@ var CategoryController = /** @class */ (function () {
     };
     return CategoryController;
 }());
-var categoryController = new CategoryController(models.Category, models.Post, models.User);
+var categoryController = new CategoryController(models.Category, models.Post, models.User, models.Comment);
 exports["default"] = categoryController;

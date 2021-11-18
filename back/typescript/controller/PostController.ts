@@ -94,7 +94,7 @@ class PostController {
 		try {
 			const posts = await this.postModel.findAll<Post>({
 				order: [
-					["id", "DESC"]
+					["createdAt", "DESC"]
 				],
 				include: [
 					{
@@ -102,7 +102,16 @@ class PostController {
 						attributes: ['username']
 					},
 					{
-						model: this.commentModel
+						model: this.commentModel,
+						order: [
+							['createdAt', "DESC"]
+						],
+						include: [
+							{
+								model: this.userModel,
+								attributes: ['username']
+							}
+						]
 					},
 					{
 						model: this.categoryModel,

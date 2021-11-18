@@ -11,7 +11,7 @@ const Category: React.FC<PropsType> = ({ categoryData, handlerPostPerCategory })
     }
     return (
         <div className='bubbleCategory'>
-            <button onClick={(e) => handleClick(e)} data-name={ categoryData.name } className="button-bubbleCategory">
+            <button onClick={ (e) => handleClick(e) } className="button-bubbleCategory">
                 { categoryData.name }
             </button>
         </div>

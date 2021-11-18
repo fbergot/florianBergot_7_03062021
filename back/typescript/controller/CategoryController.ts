@@ -8,14 +8,16 @@ class CategoryController {
 	private categoryModel: Category;
 	private postModel: Post;
 	private userModel: User;
+	private commentModel: any;
 	private message: {
 		notPost: string
 	};
 
-	constructor(categoryModel: Category, postModel: Post, userModel: User) {
+	constructor(categoryModel: Category, postModel: Post, userModel: User, commentModel: any) {
 		this.categoryModel = categoryModel;
 		this.postModel = postModel;		
 		this.userModel = userModel;
+		this.commentModel = commentModel;
 		this.message = {
 			notPost: "Zero post in this category"
 		}
@@ -54,20 +56,16 @@ class CategoryController {
 	 */
 	public async getPostsInCategory(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
-			// const categoryWithPost = await this.categoryModel.findOne<Category>({
-			// 	where: { id: req.params.categoryId }
-			// });
-			// if (categoryWithPost) {
-			// 	const posts = await categoryWithPost.getPosts();
-			// 	res.status(200).json(posts);
-			// }
 			const categoryWithPost = await this.categoryModel.findOne<Category>({
 				where: { name: req.params.categoryName },
+				order: [
+					["createdAt", "DESC"]
+				],						
 				include: [
 					{
 						model: this.postModel,
 						order:
-							["id", "ASC"]
+							["createdAt", "DESC"]
 						,
 						include: [
 							{
@@ -77,6 +75,17 @@ class CategoryController {
 							{
 								model: this.categoryModel,
 								attributes: ['name']
+							},
+							{
+								model: this.commentModel,
+								order: [
+									["createdAt", "DESC"]
+								],
+								include: [
+									{
+										model: this.userModel
+									}
+								]
 							},
 						]
 					}
@@ -93,6 +102,6 @@ class CategoryController {
 	}
 }
 
-const categoryController = new CategoryController(models.Category, models.Post, models.User);
+const categoryController = new CategoryController(models.Category, models.Post, models.User, models.Comment);
 
 export default categoryController;

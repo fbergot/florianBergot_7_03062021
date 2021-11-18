@@ -132,7 +132,7 @@ var PostController = /** @class */ (function () {
                         _a.trys.push([0, 2, , 3]);
                         return [4 /*yield*/, this.postModel.findAll({
                                 order: [
-                                    ["id", "DESC"]
+                                    ["createdAt", "DESC"]
                                 ],
                                 include: [
                                     {
@@ -140,7 +140,16 @@ var PostController = /** @class */ (function () {
                                         attributes: ['username']
                                     },
                                     {
-                                        model: this.commentModel
+                                        model: this.commentModel,
+                                        order: [
+                                            ['createdAt', "DESC"]
+                                        ],
+                                        include: [
+                                            {
+                                                model: this.userModel,
+                                                attributes: ['username']
+                                            }
+                                        ]
                                     },
                                     {
                                         model: this.categoryModel,
