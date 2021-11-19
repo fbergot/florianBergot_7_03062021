@@ -15,6 +15,12 @@ export const router = (function (express_router: () => express.Router): express.
 		.delete(
 			(req, res, next) => authInstance.verifAuth(req, res, next),
 			(req, res, next) => commentController.delete(req, res, next)
+	);
+	
+	Router.route("/getAll/:postId")
+		.get(
+			(req, res, next) => authInstance.verifAuth(req, res, next),
+			(req, res, next) => commentController.getAllPerPost(req, res, next)
 		);
 
 	return Router;

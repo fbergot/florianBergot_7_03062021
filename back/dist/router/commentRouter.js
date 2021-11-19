@@ -9,5 +9,7 @@ exports.router = (function (express_router) {
     Router.route("/add/:postId")
         .post(function (req, res, next) { return Auth_1["default"].verifAuth(req, res, next); }, function (req, res, next) { return CommentController_1["default"].create(req, res, next); });
     Router.route("/delete/:commentId")["delete"](function (req, res, next) { return Auth_1["default"].verifAuth(req, res, next); }, function (req, res, next) { return CommentController_1["default"]["delete"](req, res, next); });
+    Router.route("/getAll/:postId")
+        .get(function (req, res, next) { return Auth_1["default"].verifAuth(req, res, next); }, function (req, res, next) { return CommentController_1["default"].getAllPerPost(req, res, next); });
     return Router;
 })(express.Router);

@@ -6,6 +6,7 @@ import CommentsList from "./page/home/components/CommentsList";
 
 type Props = {
 	postData: {
+		id: number;
 		attachment?: string;
 		createdAt: string;
 		User: {
@@ -41,16 +42,16 @@ const Post: React.FC<Props> = ({ postData }) => {
 			{ img }
 
 			{/* button display comments */}
-			{postData.Comments.length !== 0 ? 
+			{ postData.Comments.length !== 0 ? 
 				<div className="comment-button-container">
 					<button className="comment-button" onClick={() => onClickDisplay()}>{  buttonTitle }</button>					 					
 				</div>	
 				: <div className="comment-button-container">
 					<p className="No-comment">Aucun commentaires</p>
-				</div>}
+				</div> }
 			{/* container comments */}
 			{ displayComments && postData.Comments.length !== 0 ?
-				<CommentsList allComments={ postData.Comments } />
+				<CommentsList idPost={ postData.id } />
 			: null }
 		</article>
 	)

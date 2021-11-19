@@ -222,8 +222,9 @@
 	width: 100%;
 	background-color: #FFF;
 	margin-top: 1rem;
-	box-shadow: 3px 3px 6px rgb(173, 171, 171);
+	box-shadow: 3px 3px 3px rgb(173, 171, 171);
 	border-radius: 13px;
+	position: relative;
 }
 
 .card-user-identifierCont {
@@ -263,7 +264,7 @@
 .card-img {
 	margin-top: .5rem;
 	width: 100%;
-	height: auto;
+	height: 100%;
 	object-fit: cover;
 	border-radius: 0 0 13px 13px;
 }
@@ -280,6 +281,8 @@
 	margin-bottom: .5rem;
 	margin-left: .5rem;
 	padding: .5rem;
+	position: absolute;
+	bottom: 0;
 }
 
 .No-comment {

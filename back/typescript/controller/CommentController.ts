@@ -6,6 +6,7 @@ const models = require("../../models");
 
 class CommentController {
     private commentModel: Comment;
+    private userModel: any;
     private messages: {
         readonly notFound: string;
         readonly comDeleted: string;
@@ -13,8 +14,9 @@ class CommentController {
         readonly infoNotFound: string
     }
 
-    constructor(commentModel: Comment) {
+    constructor(commentModel: Comment, userModel: any) {
 		this.commentModel = commentModel;
+        this.userModel = userModel;
 		this.messages = {
 			notFound: "Comment not found",
 			comDeleted: "Comment deleted",
@@ -38,6 +40,29 @@ class CommentController {
             }
             const newComment = await this.commentModel.create<Comment>(commentProp);
 			res.status(201).json(newComment);
+		} catch (err: any) {
+			res.status(500).json({ error: err.message });
+		}
+    }
+    
+    /**
+     * Get all comments per post
+     * @memberof CommentController
+     */
+    public async getAllPerPost(req: Request, res: Response, next: NextFunction): Promise<void> {       
+        try {
+            const comments = await this.commentModel.findAll<Comment[]>({
+                where: { postId: req.params.postId },
+                order: [
+                    ['createdAt', "DESC"]
+                ],
+                include: [
+                    {
+                        model: this.userModel
+                    }
+                ]
+            });
+			res.status(200).json(comments);
 		} catch (err: any) {
 			res.status(500).json({ error: err.message });
 		}
@@ -73,6 +98,6 @@ class CommentController {
     }
 }
 
-const commentController = new CommentController(models.Comment);
+const commentController = new CommentController(models.Comment, models.User);
 
 export default commentController;

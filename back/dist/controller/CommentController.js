@@ -40,8 +40,9 @@ var Auth_1 = require("../middleware/Auth");
 // import commonJS: in JS (sequelize models) (TS in allow JS)
 var models = require("../../models");
 var CommentController = /** @class */ (function () {
-    function CommentController(commentModel) {
+    function CommentController(commentModel, userModel) {
         this.commentModel = commentModel;
+        this.userModel = userModel;
         this.messages = {
             notFound: "Comment not found",
             comDeleted: "Comment deleted",
@@ -83,12 +84,47 @@ var CommentController = /** @class */ (function () {
         });
     };
     /**
+     * Get all comments per post
+     * @memberof CommentController
+     */
+    CommentController.prototype.getAllPerPost = function (req, res, next) {
+        return __awaiter(this, void 0, void 0, function () {
+            var comments, err_2;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.commentModel.findAll({
+                                where: { postId: req.params.postId },
+                                order: [
+                                    ['createdAt', "DESC"]
+                                ],
+                                include: [
+                                    {
+                                        model: this.userModel
+                                    }
+                                ]
+                            })];
+                    case 1:
+                        comments = _a.sent();
+                        res.status(200).json(comments);
+                        return [3 /*break*/, 3];
+                    case 2:
+                        err_2 = _a.sent();
+                        res.status(500).json({ error: err_2.message });
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    /**
      * Delete one comment
      * @memberof CommentController
      */
     CommentController.prototype["delete"] = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
-            var tokenPayload, comment, deletedComment, err_2;
+            var tokenPayload, comment, deletedComment, err_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -115,8 +151,8 @@ var CommentController = /** @class */ (function () {
                         res.status(403).json({ error: this.messages.comNotDeleted });
                         return [3 /*break*/, 6];
                     case 5:
-                        err_2 = _a.sent();
-                        res.status(500).json({ error: err_2.message });
+                        err_3 = _a.sent();
+                        res.status(500).json({ error: err_3.message });
                         return [3 /*break*/, 6];
                     case 6: return [2 /*return*/];
                 }
@@ -125,5 +161,5 @@ var CommentController = /** @class */ (function () {
     };
     return CommentController;
 }());
-var commentController = new CommentController(models.Comment);
+var commentController = new CommentController(models.Comment, models.User);
 exports["default"] = commentController;

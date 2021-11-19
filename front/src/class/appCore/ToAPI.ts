@@ -27,6 +27,15 @@ class ToAPI {
 		}
 	}
 
+	public async callApiRefact(method: string, url: string, data: any, options: AxiosRequestConfig,  token?: string) {
+		const headers = {
+			'accept': 'application/json',
+			'Authorization': `Bearer ${token}`
+		}
+		const response = await this.toApi(method, url, data, {...data,  headers: { ...headers } });
+		return response;
+	}
+
 	/**
 	 * For operation to API
 	 * @memberof ToAPI
