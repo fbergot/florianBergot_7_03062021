@@ -17,13 +17,12 @@ const PostsList: React.FC<PropsType> = ({ posts }) => {
 	const loadingOrListPosts = posts.isLoading ? <Loader/> : posts.posts && posts.posts.map((post: any, index: number) => {
 		return <Post key={index} postData={post} />
 	});
-		
-
+	
 	return (
 		<div className="postsListContainer">
 			<div className="header-cate-container">
-				<BiMessageDetail className="icon-header-cate-area"/>
-				<h2 className="title-area">Les derniers posts</h2>
+				<BiMessageDetail className="icon-header-post-area"/>
+				<h2 className="title-area-p">Les derniers posts</h2>
 			</div>
 			<div className="postsContainer">
 				{ loadingOrListPosts }

@@ -4,20 +4,29 @@ import JSONTransformInstance from "./JSONTransform";
 type J = UtilsNamespace.JS_Transform_Interface;
 type I = UtilsNamespace.ItemToStringify;
 
+interface BasicLocalStorageWrapper {
+	getJSONTransform: () => J;
+	tranformAndSetItem: (item: I, key: string) => boolean | null;
+	getItemAndTransform: (key: string) => null | I;
+}
 /**
  * to manage local_storage
  * @class ToLocalStorage
  */
-class ToLocalStorage {
+class ToLocalStorage implements BasicLocalStorageWrapper {
 
     private readonly JSONTransform: J;
+    public readonly getJSONTransform: () => UtilsNamespace.JS_Transform_Interface;
 
     /**
 	 * Creates an instance of ToLocalStorage.
 	 * @memberof ToLocalStorage
 	 */
 	constructor(JSONTransform: J) {
-        this.JSONTransform = JSONTransform;
+		this.JSONTransform = JSONTransform;
+		this.getJSONTransform = () => {
+			return this.JSONTransform;
+		};
     }
 
 	/**
@@ -26,7 +35,7 @@ class ToLocalStorage {
 	 */
 	public tranformAndSetItem(item: I, key: string): boolean | null {
 		try {
-			const parseData = this.JSONTransform.stringyfyOrParse(item, 'toJS');
+			const parseData = this.getJSONTransform().stringyfyOrParse(item, 'toJS');
 			if (typeof parseData === 'string') {
 				window.localStorage.setItem(key, parseData);
 				return true;
@@ -45,7 +54,7 @@ class ToLocalStorage {
 	public getItemAndTransform(key: string): null | I {
 		try {
 			const brutItem = window.localStorage.getItem(key);
-			const result = this.JSONTransform.stringyfyOrParse(brutItem, "toOBJ");
+			const result = this.getJSONTransform().stringyfyOrParse(brutItem, "toOBJ");
 			return result;
 		} catch (err: any) {
 			console.error(err.message);

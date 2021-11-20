@@ -25,8 +25,8 @@ const Post: React.FC<Props> = ({ postData }) => {
 	let token: string = '';
 	const userInfos: { token: string } = toLocaleStorageInst.getItemAndTransform("user");
 	const [displayComments, setDisplayComments] = useState<boolean>(false);
-	let [reactionPositiv, setReactionPositiv] = useState<any>(0);
-	let [reactionNegativ, setReactionNegativ] = useState<any>(0);
+	const [reactionPositiv, setReactionPositiv] = useState<any>(0);
+	const [reactionNegativ, setReactionNegativ] = useState<any>(0);
 	const [error, setError] = useState<string>('');
 
 	if (userInfos) {
@@ -47,17 +47,18 @@ const Post: React.FC<Props> = ({ postData }) => {
 		let dislike = 0;
 		const callApi = async () => {
 			const responseApi = await toApiInstance.callApiRefact('GET', `reactions/getReactions/${postData.id}`, {}, {}, token);
+
 			if (typeof responseApi === 'string') {
 				setError(responseApi);
 				return;
 			}
-			console.log(responseApi);
+
 			responseApi.data.Reactions.forEach((reaction: any) => {
+				reaction.likeOrDislike ? (++like) : (++dislike);
 				if (reaction.likeOrDislike === "like") {
 					like += 1;					
 				} else if (reaction.likeOrDislike === "dislike") {
-					dislike += 1;
-					
+					dislike += 1;				
 				}
 			});
 			setReactionPositiv(like);
@@ -73,7 +74,8 @@ const Post: React.FC<Props> = ({ postData }) => {
 	// update moment locale
 	Moment.momentLoc();
 	const timeAgo = moment(postData.createdAt).fromNow(true);
-	const img = postData.attachment ? <img className="card-img" src={ postData.attachment } alt="Pièce jointe du post" /> : null;
+	const img = postData.attachment ? <img className="card-img" src={postData.attachment} alt="Pièce jointe du post" /> : null;
+	
 	return (
 		<article className="card">
 			<div className="card-body">
