@@ -15,8 +15,7 @@ type PropsType = {
 }
 
 const UsersList: React.FC<PropsType> = ({ users }) => {
-    console.log(users);
-    const stateOrData = users.isLoading ? <Loader/> : users.users.map((user, index) => {
+    const stateOrData = users.isLoading ? <Loader className={ "lds-ring" }/> : users.users.map((user, index) => {
         return <User key={ index } userData={ user }/>
     })
     return (

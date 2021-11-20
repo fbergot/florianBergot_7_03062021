@@ -3,15 +3,17 @@ import Comment from './Comment';
 import toApiInstance from '../../../../class/appCore/ToAPI';
 import toLocalStorageInst from "../../../../class/utils/ToLocalStorage";
 import GrmImg from '../../../../assets/imagesAndIcones/icon/logo_alone_groupomania.png';
+import Loader from '../../../generic/Loader';
+
 type PropsType = {
 	idPost: number;
 }
-
 
 const CommentsList: React.FC<PropsType> = ({ idPost }) => {
 	let token: string = '';
 	const userInfos: { token: string } = toLocalStorageInst.getItemAndTransform("user");
 	const [addComment, setAddComment] = useState<string>('');
+	const [loadComment, setLoadComment] = useState<boolean>(true);
 	const [error, setError] = useState<string>('');
 	const [comments, setComments] = useState<any>(null);
 	const handleChange = (e:  React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -26,12 +28,14 @@ const CommentsList: React.FC<PropsType> = ({ idPost }) => {
     
 	// loading all comments
 	useEffect(() => {
+		setLoadComment(true);
 		const callApi = async () => {
 			const responseApi = await toApiInstance.callApiRefact('GET', `comments/getAll/${idPost}`, {}, {}, token);
 			if (typeof responseApi === 'string') {
 				setError(responseApi);
 				return;
 			}
+			setLoadComment(false);
 			setComments(responseApi);
 		}       
 		callApi();
@@ -39,6 +43,7 @@ const CommentsList: React.FC<PropsType> = ({ idPost }) => {
 
 	// add comments & reload
 	const onSubmit = async () => {
+		setLoadComment(true);
 		const data = {
 			content: addComment
 		}
@@ -55,12 +60,13 @@ const CommentsList: React.FC<PropsType> = ({ idPost }) => {
 		}
 		setComments(responseApiGetAllComments);
 		setAddComment("");
+		setLoadComment(false);
 	}
 						
     return (
         <div className="global-comments-container">
 			<img className="img-comment-area" src={ GrmImg } alt="world representation of groupomania"/>
-            <div className='comments-container'>
+			<div className='comments-container'>
 				<div className="title-form-area">
 					<h5>Créer votre commentaire</h5>
 					<form className="area-container">
@@ -70,14 +76,16 @@ const CommentsList: React.FC<PropsType> = ({ idPost }) => {
 				</div>
 				<div className="area-list">
 					<h5>Les derniers commentaires publiés</h5>
-					<div className="comment-container-list">
-						{ error && <p>Une erreur est survenue: { error }</p> }
-						{
-							comments && comments.data.length !== 0 && comments.data.map((comment: any, index: number) => {
-								return <Comment key={ index } commentData={ comment }/>
-							})
-						}
-					</div>
+					{loadComment ? <Loader className={"lds-ring-color"} /> : 
+						<div className="comment-container-list">
+							{ error && <p>Une erreur est survenue: { error }</p> }
+							{
+								comments && comments.data.length !== 0 && comments.data.map((comment: any, index: number) => {
+									return <Comment key={ index } commentData={ comment }/>
+								})
+							}
+						</div>
+					}
 				</div>
             </div>
         </div>

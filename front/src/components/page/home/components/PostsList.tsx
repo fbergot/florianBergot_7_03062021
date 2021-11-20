@@ -14,7 +14,7 @@ type PropsType = {
 }
 
 const PostsList: React.FC<PropsType> = ({ posts }) => {
-	const loadingOrListPosts = posts.isLoading ? <Loader/> : posts.posts && posts.posts.map((post: any, index: number) => {
+	const loadingOrListPosts = posts.isLoading ? <Loader className={ "lds-ring" }/> : posts.posts && posts.posts.map((post: any, index: number) => {
 		return <Post key={index} postData={post} />
 	});
 	

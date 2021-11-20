@@ -1,8 +1,12 @@
 import React from "react";
 
-const Loader: React.FC = () => {	
+type Props = {
+    className: string;
+}
+
+const Loader: React.FC<Props> = ({ className }) => {	
     return  <div className="loader-container">
-                <div className="lds-ring">
+                <div className={ className }>
                     <div></div>
                     <div></div>
                     <div></div>
