@@ -1,4 +1,4 @@
-import axios, { Axios, AxiosRequestConfig } from 'axios';
+import axios, { Axios, AxiosRequestConfig, AxiosResponse } from 'axios';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
@@ -8,7 +8,7 @@ dotenv.config();
  * @class ToAPI
  */
 class ToAPI {
-
+	private buildBasicHeaders: (token: string) => { accept: string; Authorization: string };
 	private readonly axiosModule: Axios;
 	private readonly baseUrlAPI: string;
 	private readonly messages: {
@@ -25,14 +25,20 @@ class ToAPI {
 		this.messages = {
 			badHTTPMethod: "Method is invalid"
 		}
-	}
-
-	public async callApiRefact(method: string, url: string, data: any, options: AxiosRequestConfig,  token?: string) {
-		const headers = {
-			'accept': 'application/json',
-			'Authorization': `Bearer ${token}`
+		this.buildBasicHeaders = (token: string) => {
+			return {
+				'accept': 'application/json',
+				'Authorization': `Bearer ${token}`
+			}
 		}
-		const response = await this.toApi(method, url, data, {...data,  headers: { ...headers } });
+	}
+	/**
+	 * For operation to API, wrapper of toApi method
+	 * @memberof ToAPI
+	 */
+	public async callApiRefact(method: string, url: string, data: any, options: AxiosRequestConfig,  token?: string): Promise<string | Promise<AxiosResponse<any, any>>> {
+		const headers = this.buildBasicHeaders(token ?? "");
+		const response = await this.toApi(method, url, data, {...options,  headers: { ...headers } });
 		return response;
 	}
 
@@ -40,7 +46,7 @@ class ToAPI {
 	 * For operation to API
 	 * @memberof ToAPI
 	 */
-	public async toApi(method: string, url: string, data: any, configOptions: AxiosRequestConfig): Promise<any>  {
+	public async toApi(method: string, url: string, data: any, configOptions: AxiosRequestConfig): Promise<string | Promise<AxiosResponse<any, any>>> {
 		try {
 			let returnAPI;
 			switch (method) {
@@ -74,6 +80,6 @@ class ToAPI {
 const urlToApi: string | undefined = process.env.REACT_APP_BASE_URL_TO_API;
 if (!urlToApi) throw Error("Url to API missing in env var");
 
-const toApiInstance = new ToAPI(axios, urlToApi);
+const toApiInstance = new ToAPI(axios, urlToApi ?? "");
 
 export default toApiInstance;

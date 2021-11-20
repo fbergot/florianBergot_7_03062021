@@ -1,5 +1,7 @@
 import React from "react";
 import Post from "../../../Post";
+import Loader from '../../../generic/Loader';
+import { BiMessageDetail } from 'react-icons/bi';
 
 type PostState = {
 	isLoading: boolean,
@@ -12,16 +14,19 @@ type PropsType = {
 }
 
 const PostsList: React.FC<PropsType> = ({ posts }) => {
-	const stateOrData = posts.isLoading ? "Chargement..." : posts.posts && posts.posts.map((post: any, index: number) => {
+	const loadingOrListPosts = posts.isLoading ? <Loader/> : posts.posts && posts.posts.map((post: any, index: number) => {
 		return <Post key={index} postData={post} />
 	});
 		
 
 	return (
 		<div className="postsListContainer">
-			<h2 className="title-area">Les derniers posts</h2>
+			<div className="header-cate-container">
+				<BiMessageDetail className="icon-header-cate-area"/>
+				<h2 className="title-area">Les derniers posts</h2>
+			</div>
 			<div className="postsContainer">
-				{ stateOrData }
+				{ loadingOrListPosts }
 			</div>
 		</div>
     )

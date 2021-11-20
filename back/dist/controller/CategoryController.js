@@ -128,7 +128,9 @@ var CategoryController = /** @class */ (function () {
                                 include: [
                                     {
                                         model: this.postModel,
-                                        order: ["createdAt", "DESC"],
+                                        order: [
+                                            ["createdAt", "DESC"]
+                                        ],
                                         include: [
                                             {
                                                 model: this.userModel,
@@ -139,15 +141,7 @@ var CategoryController = /** @class */ (function () {
                                                 attributes: ['name']
                                             },
                                             {
-                                                model: this.commentModel,
-                                                order: [
-                                                    ["createdAt", "DESC"]
-                                                ],
-                                                include: [
-                                                    {
-                                                        model: this.userModel
-                                                    }
-                                                ]
+                                                model: this.commentModel
                                             },
                                         ]
                                     }

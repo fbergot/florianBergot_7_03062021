@@ -64,9 +64,9 @@ class CategoryController {
 				include: [
 					{
 						model: this.postModel,
-						order:
+						order: [
 							["createdAt", "DESC"]
-						,
+						],
 						include: [
 							{
 								model: this.userModel,
@@ -78,14 +78,7 @@ class CategoryController {
 							},
 							{
 								model: this.commentModel,
-								order: [
-									["createdAt", "DESC"]
-								],
-								include: [
-									{
-										model: this.userModel
-									}
-								]
+								
 							},
 						]
 					}

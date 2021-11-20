@@ -14,9 +14,13 @@ const Header: React.FC<Props> = ({ headerProfile }) => {
 			<header className="header">
 				<img className="headerLogo" src={logo} alt="logo" />
 				<div className='titleContainer'>
-					<h1 className="title">Le nouveau mini réseau social de l'entreprise Groupomania !</h1>
+					<h1 className="title">
+						Le nouveau mini réseau social de l'entreprise Groupomania !
+						<p>Parceque la communication est essentielle, découvrez le petit réseau social destiné aux membres de notre société</p>
+					
+					</h1>
 				</div>
-				<div>
+				<div className="container-nav">
 					{ headerProfile && <ProfileInfos /> }
 					<nav className="headerNav">
 						<Link className="linkNavbar" to="/">

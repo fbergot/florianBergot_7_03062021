@@ -4,7 +4,25 @@
     font-family: "AlmaroseBold";
     src: url("./assets/fonts/Almarose/Almarose-Bold.otf");
 }
+@font-face {
+    font-family: "AlmaroseRegular";
+    src: url("./assets/fonts/Almarose/Almarose-Regular.otf");
+}
+@font-face {
+    font-family: "AlmaroseBoldItalic";
+    src: url("./assets/fonts/Almarose/Almarose-BoldItalic.otf");
+}
 
+
+:root {
+    --loaderColor: #FFF;
+    --backgrdColorDivisions: rgb(44, 66, 138);
+    --bubblesColor: rgb(79, 104, 158);
+    --globalFont: "AlmaroseBold";
+    --contentFontRegular: "AlmaroseRegular";
+    --contentFontItalic: "AlmaroseBoldItalic";
+    --contentFontItalic: "AlmaroseBoldItalic";
+}
 * {
     box-sizing: border-box;
     padding: 0;
@@ -12,11 +30,11 @@
 }
 
 html, body {
-    font-family: "AlmaroseBold";
+    font-family: "AlmaroseBold", Courier, monospace;
     font-size: 16px;
 }
 
 code {
-  font-family: Consolas, 'Courier New',
+    font-family: Consolas, 'Courier New',
     monospace;
 }

@@ -77,11 +77,11 @@ var PostController = /** @class */ (function () {
     PostController.prototype.create = function (req, res, next) {
         var _a;
         return __awaiter(this, void 0, void 0, function () {
-            var tokenPayload, destImages, imageUrl, data, categoryOfPost, newPost, err_1;
+            var tokenPayload, destImages, imageUrl, data, categoryOfPost, newCategory, newPost, err_1;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        _b.trys.push([0, 5, , 6]);
+                        _b.trys.push([0, 7, , 8]);
                         return [4 /*yield*/, Auth_1["default"].getTokenInfo(req)];
                     case 1:
                         tokenPayload = _b.sent();
@@ -102,19 +102,27 @@ var PostController = /** @class */ (function () {
                             })];
                     case 2:
                         categoryOfPost = _b.sent();
-                        return [4 /*yield*/, this.postModel.create(data)];
+                        newCategory = void 0;
+                        if (!!categoryOfPost) return [3 /*break*/, 4];
+                        return [4 /*yield*/, this.categoryModel.create({
+                                name: req.body.category
+                            })];
                     case 3:
+                        newCategory = _b.sent();
+                        _b.label = 4;
+                    case 4: return [4 /*yield*/, this.postModel.create(data)];
+                    case 5:
                         newPost = _b.sent();
-                        return [4 /*yield*/, newPost.addCategory(categoryOfPost)];
-                    case 4:
+                        return [4 /*yield*/, newPost.addCategory(categoryOfPost !== null && categoryOfPost !== void 0 ? categoryOfPost : newCategory)];
+                    case 6:
                         _b.sent();
                         res.status(201).json(newPost);
-                        return [3 /*break*/, 6];
-                    case 5:
+                        return [3 /*break*/, 8];
+                    case 7:
                         err_1 = _b.sent();
                         res.status(500).json({ error: err_1.message });
-                        return [3 /*break*/, 6];
-                    case 6: return [2 /*return*/];
+                        return [3 /*break*/, 8];
+                    case 8: return [2 /*return*/];
                 }
             });
         });
@@ -155,9 +163,6 @@ var PostController = /** @class */ (function () {
                                         model: this.categoryModel,
                                         attributes: ['name']
                                     },
-                                    {
-                                        model: this.reactionModel
-                                    }
                                 ]
                             })];
                     case 1:

@@ -10,6 +10,12 @@ export const router = (function (express_router: () => express.Router): express.
 			(req, res, next) => authInstance.verifAuth(req, res, next),
 			(req, res, next) => reactionController.create(req, res, next)
 		);
+	
+	Router.route("/getReactions/:postId")
+		.get(
+			(req, res, next) => authInstance.verifAuth(req, res, next),
+			(req, res, next) => reactionController.getReactionsOfPost(req, res, next)
+		);
 
 	return Router;
 })(express.Router);

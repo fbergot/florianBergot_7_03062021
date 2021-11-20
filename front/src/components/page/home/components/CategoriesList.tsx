@@ -1,5 +1,6 @@
 import React from "react";
 import Category from './Category';
+import { BiCategory } from 'react-icons/bi';
 
 type CategoryAction = {
     isLoading: boolean,
@@ -14,9 +15,12 @@ type PropsType = {
 
 const CategoriesList: React.FC<PropsType> = ({ categories, callPostPerCategory }) => {
     return (
-        <div className="categoriesContainer">
-            <h2 className="title-area">Catégories</h2>
-                <div className="list-categories">
+		<div className="categoriesContainer">
+			<div className="header-cate-container">
+				<BiCategory className="icon-header-cate-area"/>
+				<h2 className="title-area">Catégories</h2>
+			</div>
+				<div className="list-categories">
 					{ categories.categories.map((category, index) => {
 						return (							
 								<Category
@@ -26,8 +30,8 @@ const CategoriesList: React.FC<PropsType> = ({ categories, callPostPerCategory }
 								/>
 						);
 					}) }
-                </div>
-        </div>
+				</div>
+		</div>
     )
 }
 

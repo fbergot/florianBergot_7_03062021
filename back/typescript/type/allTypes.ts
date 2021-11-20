@@ -32,12 +32,14 @@ export type Post = {
 	attachment: string;
 	createdAt: string;
 	updatedAt: string;
+	Reactions: any;
 } & MethodsModel & {
 	addCategory(data: any): Promise<any>;
 	addReaction<T>(data: any): Promise<T>;
 	addCategoryPost(data: any): any;
 	createCategory(data: any): any;
 	setCategory(data: any): any;
+	getReaction(): any;
 }
 
 // ---------- /Category types/ -------------- 

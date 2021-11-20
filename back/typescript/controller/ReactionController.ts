@@ -4,10 +4,16 @@ import authInstance from "../middleware/Auth";
 // import commonJS: in JS (sequelize models) (TS in allow JS)
 const models = require("../../models");
 
+type ReactionType = {
+	userId: number;
+	likeOrDislike: string;
+}
+
 class ReactionController {
 
 	private reactionModel: Reaction;
 	private postModel: Post;
+	private reactionPostModel: any;
 	private messages: {
 		readonly alreadyLiked: string;
 		readonly alreadyDisliked: string;
@@ -17,9 +23,10 @@ class ReactionController {
 		readonly postNotFound: string;
 	}
 
-	constructor(reactionModel: Reaction, postModel: Post) { 
+	constructor(reactionModel: Reaction, postModel: Post, reactionPostModel: any) { 
 		this.reactionModel = reactionModel;
 		this.postModel = postModel;
+		this.reactionPostModel = reactionPostModel;
 		this.messages = {
 			alreadyLiked : "User already liked",
 			alreadyDisliked: "User already disliked",
@@ -75,8 +82,14 @@ class ReactionController {
 			const tokenPayload = await authInstance.getTokenInfo(req);
 			// find the post for add reaction			 
 			const post = await this.postModel.findOne<Post>({
-				where: { id: req.params.postId }
+				where: { id: req.params.postId },
+				include: [
+					{
+						model: this.reactionModel
+					}
+				]
 			})
+			console.log(post);
 			if (!post) {
 				res.status(404).json({ message: this.messages.postNotFound });
 				return;
@@ -99,8 +112,30 @@ class ReactionController {
 			res.status(500).json({ error: err.message });
 		}
 	}
+
+	public async getReactionsOfPost(req: Request, res: Response, next: NextFunction) {
+		try {
+			const postWithReaction = await this.postModel.findOne<Post>({
+				where: {id: req.params.postId},
+				include: [
+					{
+						model: this.reactionModel
+					}
+				]
+			})
+	
+			if (postWithReaction) {
+				res.status(200).json(postWithReaction);
+			} else {
+				res.status(404).json({ message: 'No post with this id', postWithReaction: postWithReaction });
+			}
+
+		} catch (err: any) {
+			res.status(500).json({ error: err.message });
+		}
+	}
 }
 
-const reactionController = new ReactionController(models.Reaction, models.Post);
+const reactionController = new ReactionController(models.Reaction, models.Post, models.reactionPost);
 
 export default reactionController;

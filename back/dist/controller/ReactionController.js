@@ -40,9 +40,10 @@ var Auth_1 = require("../middleware/Auth");
 // import commonJS: in JS (sequelize models) (TS in allow JS)
 var models = require("../../models");
 var ReactionController = /** @class */ (function () {
-    function ReactionController(reactionModel, postModel) {
+    function ReactionController(reactionModel, postModel, reactionPostModel) {
         this.reactionModel = reactionModel;
         this.postModel = postModel;
+        this.reactionPostModel = reactionPostModel;
         this.messages = {
             alreadyLiked: "User already liked",
             alreadyDisliked: "User already disliked",
@@ -116,10 +117,16 @@ var ReactionController = /** @class */ (function () {
                     case 1:
                         tokenPayload = _a.sent();
                         return [4 /*yield*/, this.postModel.findOne({
-                                where: { id: req.params.postId }
+                                where: { id: req.params.postId },
+                                include: [
+                                    {
+                                        model: this.reactionModel
+                                    }
+                                ]
                             })];
                     case 2:
                         post = _a.sent();
+                        console.log(post);
                         if (!post) {
                             res.status(404).json({ message: this.messages.postNotFound });
                             return [2 /*return*/];
@@ -156,7 +163,40 @@ var ReactionController = /** @class */ (function () {
             });
         });
     };
+    ReactionController.prototype.getReactionsOfPost = function (req, res, next) {
+        return __awaiter(this, void 0, void 0, function () {
+            var postWithReaction, err_2;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.postModel.findOne({
+                                where: { id: req.params.postId },
+                                include: [
+                                    {
+                                        model: this.reactionModel
+                                    }
+                                ]
+                            })];
+                    case 1:
+                        postWithReaction = _a.sent();
+                        if (postWithReaction) {
+                            res.status(200).json(postWithReaction);
+                        }
+                        else {
+                            res.status(404).json({ message: 'No post with this id', postWithReaction: postWithReaction });
+                        }
+                        return [3 /*break*/, 3];
+                    case 2:
+                        err_2 = _a.sent();
+                        res.status(500).json({ error: err_2.message });
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
     return ReactionController;
 }());
-var reactionController = new ReactionController(models.Reaction, models.Post);
+var reactionController = new ReactionController(models.Reaction, models.Post, models.reactionPost);
 exports["default"] = reactionController;
