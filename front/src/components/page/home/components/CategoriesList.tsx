@@ -1,6 +1,7 @@
 import React from "react";
 import Category from './Category';
 import { BiCategory } from 'react-icons/bi';
+import Loader from "../../../generic/Loader";
 
 type CategoryAction = {
     isLoading: boolean,
@@ -20,17 +21,23 @@ const CategoriesList: React.FC<PropsType> = ({ categories, callPostPerCategory }
 				<BiCategory className="icon-header-cate-area"/>
 				<h2 className="title-area">Catégories</h2>
 			</div>
+			{ categories.isLoading ?
+				<div className="container-load">
+					<Loader className={"lds-ring"}/> 
+				</div>
+					:
 				<div className="list-categories">
 					{ categories.categories.map((category, index) => {
 						return (							
-								<Category
-									key={index}
-									handlerPostPerCategory={callPostPerCategory}
-									categoryData={category}
-								/>
+							<Category
+								key={index}
+								handlerPostPerCategory={callPostPerCategory}
+								categoryData={category}
+							/>
 						);
 					}) }
 				</div>
+				}
 		</div>
     )
 }

@@ -16,7 +16,7 @@
 .container-nav {
 	position: fixed;
 	right: 0;
-	width: calc(12% - 1.1%);
+	width: calc(12% - 1.005%);
 	background-color: #FFF;
 	z-index: 10;
 
@@ -275,6 +275,10 @@
 
 }
 
+.container-load {
+	display: flex;
+	justify-content: center;
+}
 .lds-ring {
 	display: inline-block;
 	position: relative;
@@ -375,6 +379,33 @@
 	font-weight: 300;
 }
 
+.container-like-icon {
+	display: flex;
+	padding-top: .5rem;
+	margin-left: .1rem;
+
+
+}
+.container-like-icon > p {
+	display: flex;
+	padding-top: .5rem;
+	margin-right: .5rem;
+}
+
+.button-reaction {
+	background-color: #FFF;
+	border: none;
+	text-align: center;
+	font-size: 1rem;
+	cursor: pointer;
+	outline: inherit;
+}
+
+.reaction-icon {
+	width: 1.8rem;
+	height: 1.3rem;
+}
+
 .card-category {
 	text-align: right;
 	padding: .8rem;
@@ -388,7 +419,7 @@
 .card-img {
 	margin-top: .5rem;
 	width: 100%;
-	height: 100%;
+	height: auto;
 	object-fit: cover;
 	border-radius: 0 0 13px 13px;
 }

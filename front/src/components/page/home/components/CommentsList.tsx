@@ -23,7 +23,7 @@ const CommentsList: React.FC<PropsType> = ({ idPost }) => {
 	if (userInfos) {
 		token = userInfos.token
 	} else {
-		console.error('Aucune infos utilisateur (token..)')
+		console.error('Not data user (token..)')
     }
     
 	// loading all comments
@@ -76,13 +76,13 @@ const CommentsList: React.FC<PropsType> = ({ idPost }) => {
 				</div>
 				<div className="area-list">
 					<h5>Les derniers commentaires publiés</h5>
-					{loadComment ? <Loader className={"lds-ring-color"} /> : 
+					{ loadComment ? <Loader className={"lds-ring-color"} /> : 
 						<div className="comment-container-list">
 							{ error && <p>Une erreur est survenue: { error }</p> }
 							{
-								comments && comments.data.length !== 0 && comments.data.map((comment: any, index: number) => {
+								comments && comments.data.length !== 0 ? comments.data.map((comment: any, index: number) => {
 									return <Comment key={ index } commentData={ comment }/>
-								})
+								}) : <p>Aucun commentaire</p>
 							}
 						</div>
 					}
@@ -91,5 +91,6 @@ const CommentsList: React.FC<PropsType> = ({ idPost }) => {
         </div>
     )
 }
+
 
 export default CommentsList;

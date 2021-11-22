@@ -35,7 +35,7 @@ const Post: React.FC<Props> = ({ postData }) => {
 		console.error('Aucune infos utilisateur (token..)')
 	}
 	
-	const buttonTitle = displayComments ? 'Réduire' : "Afficher les commentaires";
+	const buttonTitle = displayComments ? 'Réduire' : "Commentaires";
 	const onClickDisplay = () => {
 		const newState = displayComments ? false : true;
 		setDisplayComments(newState);
@@ -55,11 +55,6 @@ const Post: React.FC<Props> = ({ postData }) => {
 
 			responseApi.data.Reactions.forEach((reaction: any) => {
 				reaction.likeOrDislike ? (++like) : (++dislike);
-				if (reaction.likeOrDislike === "like") {
-					like += 1;					
-				} else if (reaction.likeOrDislike === "dislike") {
-					dislike += 1;				
-				}
 			});
 			setReactionPositiv(like);
 			setReactionNegativ(dislike);
@@ -89,31 +84,30 @@ const Post: React.FC<Props> = ({ postData }) => {
 				<p className="card-text">{ postData.content }</p>
 				{/* if error */}
 				{ error && <p>Une erreur c'est produite : { error }</p>}
-				<div>
+				<div className="container-like-icon">
 					<p>
-						<button onClick={ () => onClickLike() } type="button"><BsHandThumbsUp/></button>
+						<button className="button-reaction" onClick={() => onClickLike()} type="button">
+							<BsHandThumbsUp className="reaction-icon"/>
+						</button>
 						<span>{ reactionPositiv }</span>
 					</p>
 					<p>
-						<BsHandThumbsDown />
+						<button className="button-reaction">
+							<BsHandThumbsDown className="reaction-icon"/>
+						</button>
 						<span>{ reactionNegativ }</span>
 					</p>
 				</div>
 			</div>			
 			{ img }
 
-			{/* button display comments */}
-			{ postData.Comments.length !== 0 ? 
-				<div className="comment-button-container">
-					<button className="comment-button" onClick={() => onClickDisplay()}>{  buttonTitle }</button>					 					
-				</div>	
-				: <div className="comment-button-container">
-					<p className="No-comment">Aucun commentaires</p>
-				</div> }
+			{/* button display comments */}			
+			<div className="comment-button-container">
+				<button className="comment-button" onClick={() => onClickDisplay()}>{  buttonTitle }</button>					 					
+			</div>	
+				
 			{/* container comments */}
-			{ displayComments && postData.Comments.length !== 0 ?
-				<CommentsList idPost={ postData.id } />
-			: null }
+			{ displayComments && <CommentsList idPost={ postData.id }/> }
 		</article>
 	)
 }

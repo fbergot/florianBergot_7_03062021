@@ -41,13 +41,14 @@ const HomeContainer: React.FC<Props> = ({ changeHeader, postsApi, postsPerCatego
 		
 	const error = useRef(undefined);
 	useEffect(() => {
-		Promise.all([usersApi(), postsApi(), categoriesApi()])
-			.then($ => {
-				changeHeader();
-			})
-			.catch((err) => {
-				error.current = err.message
-			})
+			Promise.all([usersApi(), postsApi(), categoriesApi()])
+				.then($ => {
+					changeHeader();
+				})
+				.catch((err) => {
+					error.current = err.message
+				})
+			
 	}, [postsApi, usersApi, categoriesApi, changeHeader]);
 
 	const postsPerCategoryCall = (idCategory: string) => {
