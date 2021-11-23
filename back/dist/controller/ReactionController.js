@@ -104,18 +104,18 @@ var ReactionController = /** @class */ (function () {
      */
     ReactionController.prototype.create = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
-            var tokenPayload, post, oldReaction, state, newReaction, $React, err_1;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var tokenPayload_1, post, userOldReaction, idReaction, oldReaction, _a, oldReactionPost, oldReactionPost, newReaction, $React, newReaction, $React, err_1;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
-                        _a.trys.push([0, 7, , 8]);
+                        _b.trys.push([0, 26, , 27]);
                         if (req.body.likeOrDislike !== "like" && req.body.likeOrDislike !== "dislike") {
                             res.status(400).json({ message: this.messages.badKey });
                             return [2 /*return*/];
                         }
                         return [4 /*yield*/, Auth_1["default"].getTokenInfo(req)];
                     case 1:
-                        tokenPayload = _a.sent();
+                        tokenPayload_1 = _b.sent();
                         return [4 /*yield*/, this.postModel.findOne({
                                 where: { id: req.params.postId },
                                 include: [
@@ -125,44 +125,110 @@ var ReactionController = /** @class */ (function () {
                                 ]
                             })];
                     case 2:
-                        post = _a.sent();
-                        console.log(post);
+                        post = _b.sent();
                         if (!post) {
                             res.status(404).json({ message: this.messages.postNotFound });
                             return [2 /*return*/];
                         }
+                        if (!(post.Reactions.length !== 0)) return [3 /*break*/, 22];
+                        userOldReaction = post.Reactions.find(function (reaction) {
+                            return reaction.userId === tokenPayload_1.userId;
+                        });
+                        if (!userOldReaction) return [3 /*break*/, 18];
+                        idReaction = userOldReaction.id;
                         return [4 /*yield*/, this.reactionModel.findOne({
-                                where: { userId: tokenPayload.userId }
-                            })
-                            // if old reaction, analyse 
-                        ];
-                    case 3:
-                        oldReaction = _a.sent();
-                        return [4 /*yield*/, this.analyseReaction(oldReaction, req.body.likeOrDislike, res)];
-                    case 4:
-                        state = _a.sent();
-                        if (state)
-                            return [2 /*return*/];
-                        return [4 /*yield*/, this.reactionModel.create({
-                                UserId: tokenPayload.userId,
-                                likeOrDislike: req.body.likeOrDislike
+                                where: { id: idReaction }
                             })];
+                    case 3:
+                        oldReaction = _b.sent();
+                        if (!oldReaction) return [3 /*break*/, 16];
+                        _a = oldReaction.likeOrDislike;
+                        switch (_a) {
+                            case "like": return [3 /*break*/, 4];
+                            case 'dislike': return [3 /*break*/, 10];
+                        }
+                        return [3 /*break*/, 15];
+                    case 4:
+                        if (!(req.body.likeOrDislike === 'like')) return [3 /*break*/, 5];
+                        res.status(409).json({ message: this.messages.alreadyLiked });
+                        return [2 /*return*/];
                     case 5:
-                        newReaction = _a.sent();
-                        return [4 /*yield*/, post.addReaction(newReaction)];
+                        if (!(req.body.likeOrDislike === 'dislike')) return [3 /*break*/, 9];
+                        return [4 /*yield*/, this.reactionPostModel.findOne({
+                                where: { postId: post.id }
+                            })];
                     case 6:
-                        $React = _a.sent();
-                        res.status(201).json($React);
-                        return [3 /*break*/, 8];
+                        oldReactionPost = _b.sent();
+                        return [4 /*yield*/, oldReactionPost.destroy()];
                     case 7:
-                        err_1 = _a.sent();
+                        _b.sent();
+                        return [4 /*yield*/, oldReaction.destroy()];
+                    case 8:
+                        _b.sent();
+                        res.status(200).json({ message: this.messages.delLiked });
+                        return [2 /*return*/];
+                    case 9: return [3 /*break*/, 15];
+                    case 10:
+                        if (!(req.body.likeOrDislike === 'dislike')) return [3 /*break*/, 11];
+                        res.status(409).json({ message: this.messages.alreadyDisliked });
+                        return [2 /*return*/];
+                    case 11:
+                        if (!(req.body.likeOrDislike === 'like')) return [3 /*break*/, 15];
+                        return [4 /*yield*/, this.reactionPostModel.findOne({
+                                where: { postId: post.id }
+                            })];
+                    case 12:
+                        oldReactionPost = _b.sent();
+                        return [4 /*yield*/, oldReactionPost.destroy()];
+                    case 13:
+                        _b.sent();
+                        return [4 /*yield*/, oldReaction.destroy()];
+                    case 14:
+                        _b.sent();
+                        res.status(200).json({ message: this.messages.delDislike });
+                        return [2 /*return*/];
+                    case 15: return [3 /*break*/, 17];
+                    case 16:
+                        res.status(404).json({ error: "Old reaction missing" });
+                        _b.label = 17;
+                    case 17: return [3 /*break*/, 21];
+                    case 18: return [4 /*yield*/, this.reactionModel.create({
+                            UserId: tokenPayload_1.userId,
+                            likeOrDislike: req.body.likeOrDislike
+                        })];
+                    case 19:
+                        newReaction = _b.sent();
+                        return [4 /*yield*/, post.addReaction(newReaction)];
+                    case 20:
+                        $React = _b.sent();
+                        res.status(201).json($React);
+                        _b.label = 21;
+                    case 21: return [3 /*break*/, 25];
+                    case 22: return [4 /*yield*/, this.reactionModel.create({
+                            UserId: tokenPayload_1.userId,
+                            likeOrDislike: req.body.likeOrDislike
+                        })];
+                    case 23:
+                        newReaction = _b.sent();
+                        return [4 /*yield*/, post.addReaction(newReaction)];
+                    case 24:
+                        $React = _b.sent();
+                        res.status(201).json($React);
+                        _b.label = 25;
+                    case 25: return [3 /*break*/, 27];
+                    case 26:
+                        err_1 = _b.sent();
                         res.status(500).json({ error: err_1.message });
-                        return [3 /*break*/, 8];
-                    case 8: return [2 /*return*/];
+                        return [3 /*break*/, 27];
+                    case 27: return [2 /*return*/];
                 }
             });
         });
     };
+    /**
+     * Get reactions for a post
+     * @memberof ReactionController
+     */
     ReactionController.prototype.getReactionsOfPost = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
             var postWithReaction, err_2;
@@ -198,5 +264,5 @@ var ReactionController = /** @class */ (function () {
     };
     return ReactionController;
 }());
-var reactionController = new ReactionController(models.Reaction, models.Post, models.reactionPost);
+var reactionController = new ReactionController(models.Reaction, models.Post, models.ReactionPost);
 exports["default"] = reactionController;

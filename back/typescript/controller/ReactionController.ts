@@ -89,34 +89,94 @@ class ReactionController {
 					}
 				]
 			})
-			console.log(post);
 			if (!post) {
 				res.status(404).json({ message: this.messages.postNotFound });
 				return;
 			}
-			// check if already liked/disliked
-			const oldReaction = await this.reactionModel.findOne<Reaction>({
-				where: {userId: tokenPayload.userId}
-			})
-			// if old reaction, analyse 
-			const state = await this.analyseReaction(oldReaction, req.body.likeOrDislike, res);
-			if (state) return;
-			// if not old reaction, create & add new reaction
-			const newReaction = await this.reactionModel.create<Reaction>({
-				UserId: tokenPayload.userId,
-				likeOrDislike: req.body.likeOrDislike
-			})
-			const $React = await post.addReaction<Reaction>(newReaction);
-			res.status(201).json($React);
+
+			if (post.Reactions.length !== 0) {
+				const userOldReaction = post.Reactions.find((reaction: {userId: number}) => {
+					return reaction.userId === tokenPayload.userId;
+				})
+
+				if (userOldReaction) {
+					// if old reaction, update
+					let idReaction = userOldReaction.id;
+					const oldReaction = await this.reactionModel.findOne<Reaction>({
+						where: {id: idReaction}
+					})
+
+					if (oldReaction) {
+						switch (oldReaction.likeOrDislike) {
+							case "like":
+								if (req.body.likeOrDislike === 'like') {
+									res.status(409).json({ message: this.messages.alreadyLiked });
+									return;
+								} else if (req.body.likeOrDislike === 'dislike') {
+									const oldReactionPost = await this.reactionPostModel.findOne({
+										where: {postId: post.id}
+									})
+									await oldReactionPost.destroy();
+									await oldReaction.destroy<Reaction>();
+									res.status(200).json({ message: this.messages.delLiked });
+									return;
+								}
+								break;					
+							case 'dislike':
+								if (req.body.likeOrDislike === 'dislike') {
+									res.status(409).json({ message: this.messages.alreadyDisliked });
+									return;
+								} else if (req.body.likeOrDislike === 'like') {
+									const oldReactionPost = await this.reactionPostModel.findOne({
+										where: {postId: post.id}
+									})
+									await oldReactionPost.destroy();
+									await oldReaction.destroy<Reaction>();
+									res.status(200).json({ message: this.messages.delDislike });
+									return;
+								}										
+						}
+					} else {
+						res.status(404).json({ error: "Old reaction missing" });
+					}
+				} else {
+					// if not old reaction, add new reaction
+					const newReaction = await this.reactionModel.create<Reaction>({
+						UserId: tokenPayload.userId,
+						likeOrDislike: req.body.likeOrDislike
+					})
+					const $React = await post.addReaction<Reaction>(newReaction);
+					res.status(201).json($React);
+				}
+			} else {
+				// if not old reaction, add new reaction
+				const newReaction = await this.reactionModel.create<Reaction>({
+					UserId: tokenPayload.userId,
+					likeOrDislike: req.body.likeOrDislike
+				})
+				const $React = await post.addReaction<Reaction>(newReaction);
+				res.status(201).json($React);				
+			}
+			// // check if already liked/disliked
+			// const oldReaction = await this.reactionModel.findOne<Reaction>({
+			// 	where: {userId: tokenPayload.userId}
+			// })
+			// // if old reaction, analyse 
+			// const state = await this.analyseReaction(oldReaction, req.body.likeOrDislike, res);
+			// if (state) return;
 		} catch (err: any) {
 			res.status(500).json({ error: err.message });
 		}
 	}
 
+	/**
+	 * Get reactions for a post
+	 * @memberof ReactionController
+	 */
 	public async getReactionsOfPost(req: Request, res: Response, next: NextFunction) {
 		try {
 			const postWithReaction = await this.postModel.findOne<Post>({
-				where: {id: req.params.postId},
+				where: { id: req.params.postId },
 				include: [
 					{
 						model: this.reactionModel
@@ -136,6 +196,6 @@ class ReactionController {
 	}
 }
 
-const reactionController = new ReactionController(models.Reaction, models.Post, models.reactionPost);
+const reactionController = new ReactionController(models.Reaction, models.Post, models.ReactionPost);
 
 export default reactionController;

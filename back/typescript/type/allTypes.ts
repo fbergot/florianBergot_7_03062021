@@ -4,7 +4,7 @@ type MethodsModel = {
 	create<T>(data: any): Promise<T>;
 	findOne<T>(filter: {}): Promise<T | null>;
 	findAll<T>(filter: {}): Promise<T[] | null >;
-	destroy<T>(): Promise<T>;
+	destroy<T>(data?: any): Promise<T>;
 	save<T>(): Promise<T>;
 };
 // ---------- /User types/ --------------

@@ -25,8 +25,8 @@ const Post: React.FC<Props> = ({ postData }) => {
 	let token: string = '';
 	const userInfos: { token: string } = toLocaleStorageInst.getItemAndTransform("user");
 	const [displayComments, setDisplayComments] = useState<boolean>(false);
-	const [reactionPositiv, setReactionPositiv] = useState<any>(0);
-	const [reactionNegativ, setReactionNegativ] = useState<any>(0);
+	const [reactionPositiv, setReactionPositiv] = useState<number>(0);
+	const [reactionNegativ, setReactionNegativ] = useState<number>(0);
 	const [error, setError] = useState<string>('');
 
 	if (userInfos) {
@@ -53,8 +53,8 @@ const Post: React.FC<Props> = ({ postData }) => {
 				return;
 			}
 
-			responseApi.data.Reactions.forEach((reaction: any) => {
-				reaction.likeOrDislike ? (++like) : (++dislike);
+			responseApi.data.Reactions.forEach((reaction: { likeOrDislike: string }) => {
+				reaction.likeOrDislike === 'like' ? (like++) : (dislike++);
 			});
 			setReactionPositiv(like);
 			setReactionNegativ(dislike);
