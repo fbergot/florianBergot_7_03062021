@@ -43,33 +43,68 @@ const Post: React.FC<Props> = ({ postData }) => {
 
 	// call API for get like & dislike of post
 	useEffect(() => {
-		let like = 0;
-		let dislike = 0;
-		const callApi = async () => {
-			const responseApi = await toApiInstance.callApiRefact('GET', `reactions/getReactions/${postData.id}`, {}, {}, token);
-
+		const callApi = async (postId: number, token: string) => {
+			let like = 0;
+			let dislike = 0;
+	
+			const responseApi = await toApiInstance.callApiRefact('GET', `reactions/getReactions/${ postId }`, {}, {}, token);
+	
 			if (typeof responseApi === 'string') {
 				setError(responseApi);
 				return;
 			}
-
+	
 			responseApi.data.Reactions.forEach((reaction: { likeOrDislike: string }) => {
 				reaction.likeOrDislike === 'like' ? (like++) : (dislike++);
 			});
 			setReactionPositiv(like);
 			setReactionNegativ(dislike);
 		}
-		callApi();
+		
+		callApi(postData.id, token);
 	}, [postData.id, token]);
 
-	// add like
-	const onClickLike = () => {
-
+	// add like or delete dislike
+	const onClickLike = async () => {
+		let like = 0;
+		let dislike = 0;
+		await toApiInstance.callApiRefact('POST', `reactions/add/${postData.id}`, { likeOrDislike: "like" }, {}, token);
+		const responseApi = await toApiInstance.callApiRefact('GET', `reactions/getReactions/${ postData.id }`, {}, {}, token);
+		if (typeof responseApi === 'string') {
+			setError(responseApi);
+			return;
+		}
+	
+		responseApi.data.Reactions.forEach((reaction: { likeOrDislike: string }) => {
+			reaction.likeOrDislike === 'like' ? (like++) : (dislike++);
+		});
+		setReactionPositiv(like);
+		setReactionNegativ(dislike);
 	}
+	
+	// add dislike or delete like
+	const onClickDislike = async () => {
+		let like = 0;
+		let dislike = 0;
+		await toApiInstance.callApiRefact('POST', `reactions/add/${postData.id}`, { likeOrDislike: "dislike" }, {}, token);
+		const responseApi = await toApiInstance.callApiRefact('GET', `reactions/getReactions/${ postData.id }`, {}, {}, token);
+		if (typeof responseApi === 'string') {
+			setError(responseApi);
+			return;
+		}
+	
+		responseApi.data.Reactions.forEach((reaction: { likeOrDislike: string }) => {
+			reaction.likeOrDislike === 'like' ? (like++) : (dislike++);
+		});
+		setReactionPositiv(like);
+		setReactionNegativ(dislike);
+	}
+	
+
 	// update moment locale
 	Moment.momentLoc();
 	const timeAgo = moment(postData.createdAt).fromNow(true);
-	const img = postData.attachment ? <img className="card-img" src={postData.attachment} alt="Pièce jointe du post" /> : null;
+	const img = postData.attachment ? <img className="card-img" src={ postData.attachment } alt="Pièce jointe du post" /> : null;
 	
 	return (
 		<article className="card">
@@ -92,7 +127,7 @@ const Post: React.FC<Props> = ({ postData }) => {
 						<span>{ reactionPositiv }</span>
 					</p>
 					<p>
-						<button className="button-reaction">
+						<button onClick={() => onClickDislike()} className="button-reaction">
 							<BsHandThumbsDown className="reaction-icon"/>
 						</button>
 						<span>{ reactionNegativ }</span>
