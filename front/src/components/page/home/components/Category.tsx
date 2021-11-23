@@ -1,7 +1,9 @@
 import React from "react";
 
 type PropsType = {
-    categoryData: any,
+    categoryData: {
+        name: string;
+    },
     handlerPostPerCategory: (idCategory: string) => void;
 }
 

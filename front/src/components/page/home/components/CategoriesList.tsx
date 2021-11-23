@@ -28,16 +28,10 @@ const CategoriesList: React.FC<PropsType> = ({ categories, callPostPerCategory }
 					:
 				<div className="list-categories">
 					{ categories.categories.map((category, index) => {
-						return (							
-							<Category
-								key={index}
-								handlerPostPerCategory={callPostPerCategory}
-								categoryData={category}
-							/>
-						);
+						return <Category key={ index } handlerPostPerCategory={ callPostPerCategory } categoryData={ category } />;
 					}) }
 				</div>
-				}
+			}
 		</div>
     )
 }

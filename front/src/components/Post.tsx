@@ -6,6 +6,8 @@ import CommentsList from "./page/home/components/CommentsList";
 import { BsHandThumbsUp, BsHandThumbsDown } from "react-icons/bs";
 import toLocaleStorageInst from "../class/utils/ToLocalStorage";
 import toApiInstance from '../class/appCore/ToAPI';
+import { useDispatch } from "react-redux";
+import { apiCallPosts } from '../store/posts/postActions';
 
 type Props = {
 	postData: {
@@ -14,6 +16,7 @@ type Props = {
 		createdAt: string;
 		User: {
 			username: string;
+			id: number;
 		};
 		content: string;
 		Categories: { name: string }[];
@@ -23,7 +26,8 @@ type Props = {
 
 const Post: React.FC<Props> = ({ postData }) => {
 	let token: string = '';
-	const userInfos: { token: string } = toLocaleStorageInst.getItemAndTransform("user");
+	const dispatch = useDispatch();
+	const userInfos: { token: string, id: number } = toLocaleStorageInst.getItemAndTransform("user");
 	const [displayComments, setDisplayComments] = useState<boolean>(false);
 	const [reactionPositiv, setReactionPositiv] = useState<number>(0);
 	const [reactionNegativ, setReactionNegativ] = useState<number>(0);
@@ -68,8 +72,10 @@ const Post: React.FC<Props> = ({ postData }) => {
 	const onClickLike = async () => {
 		let like = 0;
 		let dislike = 0;
+
 		await toApiInstance.callApiRefact('POST', `reactions/add/${postData.id}`, { likeOrDislike: "like" }, {}, token);
-		const responseApi = await toApiInstance.callApiRefact('GET', `reactions/getReactions/${ postData.id }`, {}, {}, token);
+		const responseApi = await toApiInstance.callApiRefact('GET', `reactions/getReactions/${postData.id}`, {}, {}, token);
+		
 		if (typeof responseApi === 'string') {
 			setError(responseApi);
 			return;
@@ -86,8 +92,10 @@ const Post: React.FC<Props> = ({ postData }) => {
 	const onClickDislike = async () => {
 		let like = 0;
 		let dislike = 0;
+
 		await toApiInstance.callApiRefact('POST', `reactions/add/${postData.id}`, { likeOrDislike: "dislike" }, {}, token);
-		const responseApi = await toApiInstance.callApiRefact('GET', `reactions/getReactions/${ postData.id }`, {}, {}, token);
+		const responseApi = await toApiInstance.callApiRefact('GET', `reactions/getReactions/${postData.id}`, {}, {}, token);
+		
 		if (typeof responseApi === 'string') {
 			setError(responseApi);
 			return;
@@ -99,13 +107,19 @@ const Post: React.FC<Props> = ({ postData }) => {
 		setReactionPositiv(like);
 		setReactionNegativ(dislike);
 	}
-	
 
-	// update moment locale
+	// display delete button & delete post
+	const postDelete = postData.User.id === userInfos.id ? <button onClick={(e) => handleDelete()} type="button">X</button> : null;
+	const handleDelete = async () => {
+		await toApiInstance.callApiRefact('DELETE', `posts/delete/${postData.id}`, {}, {}, token);
+		dispatch(apiCallPosts());
+	}
+
+	// time ago & update moment locale
 	Moment.momentLoc();
 	const timeAgo = moment(postData.createdAt).fromNow(true);
+	// check if img -> disply or null
 	const img = postData.attachment ? <img className="card-img" src={ postData.attachment } alt="Pièce jointe du post" /> : null;
-	
 	return (
 		<article className="card">
 			<div className="card-body">
@@ -114,7 +128,10 @@ const Post: React.FC<Props> = ({ postData }) => {
 						<img className="card-identifier" src={ cardImg } alt="post identifier" />
 						<h3 className="card-title">{ postData.User.username }, <span className='card-timeAgo'>il y a { timeAgo }</span></h3>
 					</div>
-					<p className="card-category">Categorie <span className="category-name">{ postData.Categories[0].name }</span></p>
+					<div>
+						<p className="card-category">Categorie <span className="category-name">{ postData.Categories[0].name }</span></p>
+						{ postDelete }
+					</div>
 				</div>
 				<p className="card-text">{ postData.content }</p>
 				{/* if error */}

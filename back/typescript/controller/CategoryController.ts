@@ -8,16 +8,14 @@ class CategoryController {
 	private categoryModel: Category;
 	private postModel: Post;
 	private userModel: User;
-	private commentModel: any;
 	private message: {
 		notPost: string
 	};
 
-	constructor(categoryModel: Category, postModel: Post, userModel: User, commentModel: any) {
+	constructor(categoryModel: Category, postModel: Post, userModel: User) {
 		this.categoryModel = categoryModel;
 		this.postModel = postModel;		
 		this.userModel = userModel;
-		this.commentModel = commentModel;
 		this.message = {
 			notPost: "Zero post in this category"
 		}
@@ -70,16 +68,13 @@ class CategoryController {
 						include: [
 							{
 								model: this.userModel,
-								attributes: ['username']
+								attributes: ['username', 'id']
 							},
 							{
 								model: this.categoryModel,
 								attributes: ['name']
 							},
-							{
-								model: this.commentModel,
-								
-							},
+							
 						]
 					}
 				]
@@ -95,6 +90,6 @@ class CategoryController {
 	}
 }
 
-const categoryController = new CategoryController(models.Category, models.Post, models.User, models.Comment);
+const categoryController = new CategoryController(models.Category, models.Post, models.User);
 
 export default categoryController;

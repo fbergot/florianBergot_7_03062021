@@ -9,7 +9,7 @@ type T = {
 }
 
 const Signup: React.FC<T> = (props) => {
-	const fileInput = createRef<any>();
+	const fileInput: React.RefObject<any> = createRef<any>();
 	const [username, setUsername] = useState<string>('');
 	const [businessRole, setBusinessRole] = useState<string>('');
 	const [email, setEmail] = useState<string>('');
@@ -32,10 +32,12 @@ const Signup: React.FC<T> = (props) => {
 	}
 
     const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+		// get path to API
 		const uriToApi_usersSignup = process.env.REACT_APP_URI_USERS_SIGNUP;
 		if (!uriToApi_usersSignup) throw Error('URI to API (users signup route) is missing');
 		e.preventDefault();
 
+		// build data
 		const formData = new FormData();
 		formData.append('username', username);
 		formData.append('businessRole', businessRole);
@@ -44,6 +46,7 @@ const Signup: React.FC<T> = (props) => {
 		formData.append('password', password);
 		formData.append("image", fileInput.current.files[0]);
 
+		// call API
 		const result = await toApiInstance.toApi('POST', uriToApi_usersSignup, formData, { headers: {
 			'accept': 'application/json',
 			'Content-Type': `multipart/form-data`,

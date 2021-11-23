@@ -13,7 +13,7 @@ type PropsType = {
 }
 
 const Comment: React.FC<PropsType> = ({ commentData }) => {
-    // update moment locale
+    // time ago & update moment locale
 	Moment.momentLoc();
 	const timeAgo = moment(commentData.createdAt).fromNow(true);
     return (

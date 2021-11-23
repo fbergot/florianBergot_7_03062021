@@ -1,5 +1,7 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import PostsListProfile from "./PostsListProfile";
+import UserData from "./UserData";
 import { apiCallCurrentUserInfos } from "../../../../store/profile/profileActions";
 
 type RootState = {
@@ -19,10 +21,10 @@ const ProfileContainer: React.FC = () => {
 	}, [dispatch]);
 	
 	return (
-		<div>
-			<h1>Mon profile</h1>
-			<p>{JSON.stringify(stateCurrentUserInfos)}</p>
-		</div>
+		<main className="main-profile">
+			<UserData data={ stateCurrentUserInfos }/>
+			<PostsListProfile data= { stateCurrentUserInfos }/>
+		</main>
 	)
 }
 

@@ -46,7 +46,7 @@ const HomeContainer: React.FC<Props> = ({ changeHeader, postsApi, postsPerCatego
 					changeHeader();
 				})
 				.catch((err) => {
-					error.current = err.message
+					error.current = err.message;
 				})
 			
 	}, [postsApi, usersApi, categoriesApi, changeHeader]);
@@ -70,6 +70,7 @@ type States = {
 	category: CategoryState
 }
 
+// connection React/Redux (map state in component props)
 const mapStateToProps = (state: States) => {
 	return {
 		posts: state.post,
@@ -78,6 +79,7 @@ const mapStateToProps = (state: States) => {
 	}
 }
 
+// connection React/Redux (map dispatch in component props)
 const mapDispatchToProps = (dispatch: (dispatch: any) => Promise<void> ) => {
 	return {
 		postsPerCategory: (idCategory: string) => dispatch(apiCallPostsPerCategory(idCategory)),

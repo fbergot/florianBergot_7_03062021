@@ -6,7 +6,11 @@ import { FiUsers } from 'react-icons/fi';
 
 type UserState = {
     isLoading: boolean,
-    users: any[],
+    users: {
+        username: string;
+        businessRole: string;
+        urlAvatar: string;
+    }[],
     error: string
 }
 
@@ -24,7 +28,7 @@ const UsersList: React.FC<PropsType> = ({ users }) => {
                 <FiUsers className="icon-header-cate-area" />
                 <h2 className="title-area">Nos utilisateurs</h2>
             </div>
-            <div className="list-users">{stateOrData}</div>
+            <div className="list-users">{ stateOrData }</div>
         </div>
     );
 }

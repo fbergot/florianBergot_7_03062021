@@ -134,14 +134,11 @@ var CategoryController = /** @class */ (function () {
                                         include: [
                                             {
                                                 model: this.userModel,
-                                                attributes: ['username']
+                                                attributes: ['username', 'id']
                                             },
                                             {
                                                 model: this.categoryModel,
                                                 attributes: ['name']
-                                            },
-                                            {
-                                                model: this.commentModel
                                             },
                                         ]
                                     }

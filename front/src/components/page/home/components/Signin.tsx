@@ -14,10 +14,12 @@ const Signin: React.FC = () => {
             case "email":
                 setEmail(e.target.value);
                 break;
+            default:
+                throw Error('Bad name of form field');
         }
     }
 
-    const onSubmit = async () => {
+    const onSubmit = async (): Promise<void> => {
         const data = {
             email: email,
             password: password

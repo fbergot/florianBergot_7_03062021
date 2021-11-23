@@ -2,7 +2,11 @@ import React from "react";
 import { BsPerson } from "react-icons/bs";
 
 type PropsType = {
-    userData: any
+	userData: {
+		username: string;
+		businessRole: string;
+		urlAvatar: string;
+	}
 }
 
 const User: React.FC<PropsType> = ({ userData }) => {

@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 import { bcryptInstance, Bcrypt } from '../class/Bcrypt';
 import { jwtInstance, JSONWebToken } from '../class/Jwt';
+import type { User, Post, Messages, Category } from "../type/allTypes";
 import authInstance from "../middleware/Auth";
 import * as dotenv from 'dotenv';
 import * as fs from "fs";
-import type { User, Post, Messages } from "../type/allTypes";
 // import commonJS: sequelize models is in JS => (TS in allow JS)
 const models = require('../../models');
 
@@ -14,15 +14,23 @@ class UserController {
 
 	private userModel: User;
 	private postModel: Post;
+	private categoryModel: Category;
 	private bcryptInst: Bcrypt;
 	private jwtInst: JSONWebToken;
 	private messages: {
 		+readonly [key in keyof Messages]: Messages[key];
 	}
 
-    constructor(userModel: User, postModel: Post, bcryptInst: Bcrypt, jwt: JSONWebToken) { 
+    /**
+	 * Creates an instance of UserController.
+	 * @param {Bcrypt} bcryptInst -> injection dependency
+	 * @param {JSONWebToken} jwt -> injection dependency
+	 * @memberof UserController
+	 */
+	constructor(userModel: User, postModel: Post, categoryModel: Category, bcryptInst: Bcrypt, jwt: JSONWebToken) { 
 		this.userModel = userModel;
 		this.postModel = postModel;
+		this.categoryModel = categoryModel;
 		this.bcryptInst = bcryptInst;
 		this.jwtInst = jwt;
 		this.messages = {
@@ -86,10 +94,11 @@ class UserController {
      */
 	public async signin(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
-			// --- find if user exist with this email --- 
+			// find if user exist with this email
 			const user = await this.userModel.findOne<User>({
 				where: { email: req.body.email }
 			});
+			// user not found ...
 			if (!user) {
 				res.status(404).json({ error: this.messages.userNotExist });
 				return;
@@ -99,11 +108,16 @@ class UserController {
 				res.status(401).json({ error: this.messages.badPass });
 				return;
 			}
-			const secret = process.env.SECRET ?? "secret";
+			// build & sign a payload for token
+			if (!process.env.SECRET) {
+				throw Error('Secret string for sign token is missing');
+			}
+			const secret = process.env.SECRET;
 			const options = { expiresIn: '6h' };
 			const payload = { userUuid: user.uuid, userId: user.id, isAdmin: user.isAdmin };
 			const signedPayload = await this.jwtInst.signJWT(payload, secret, options);
-			res.status(200).json({ uuid: user.uuid, username: user.username, token: signedPayload });
+
+			res.status(200).json({ uuid: user.uuid, id:user.id, username: user.username, token: signedPayload });
 		} catch (err: any) {
 			res.status(500).json({ err: err.message });
 		}  
@@ -140,7 +154,6 @@ class UserController {
 				res.status(404).json({ message: this.messages.userNotFound });
 				return;
 			}
-
 			// ckeck if it is the user || ckeck if is admin user
 			if ((user.id === tokenPayload.userId )|| tokenPayload.isAdmin) {
 				// if img, delete image
@@ -225,10 +238,14 @@ class UserController {
 				include: [
 					{
 						model: this.postModel
+					},
+					{
+						model: this.categoryModel,
+						attributes: ['name']
 					}
 				]
 			});
-
+			// if not user with this userId
 			if (!user) {
 				res.status(404).json({ message: this.messages.userNotFound });
 				return;
@@ -240,6 +257,6 @@ class UserController {
 	}
 }
 
-const userController = new UserController(models.User, models.Post, bcryptInstance, jwtInstance);
+const userController = new UserController(models.User, models.Post, models.Category, bcryptInstance, jwtInstance);
 
 export default userController;

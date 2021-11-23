@@ -145,19 +145,7 @@ var PostController = /** @class */ (function () {
                                 include: [
                                     {
                                         model: this.userModel,
-                                        attributes: ['username']
-                                    },
-                                    {
-                                        model: this.commentModel,
-                                        order: [
-                                            ['createdAt', "DESC"]
-                                        ],
-                                        include: [
-                                            {
-                                                model: this.userModel,
-                                                attributes: ['username']
-                                            }
-                                        ]
+                                        attributes: ['username', 'id']
                                     },
                                     {
                                         model: this.categoryModel,

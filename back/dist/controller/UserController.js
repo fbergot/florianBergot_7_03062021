@@ -56,9 +56,16 @@ var fs = require("fs");
 var models = require('../../models');
 dotenv.config();
 var UserController = /** @class */ (function () {
-    function UserController(userModel, postModel, bcryptInst, jwt) {
+    /**
+     * Creates an instance of UserController.
+     * @param {Bcrypt} bcryptInst -> injection dependency
+     * @param {JSONWebToken} jwt -> injection dependency
+     * @memberof UserController
+     */
+    function UserController(userModel, postModel, categoryModel, bcryptInst, jwt) {
         this.userModel = userModel;
         this.postModel = postModel;
+        this.categoryModel = categoryModel;
         this.bcryptInst = bcryptInst;
         this.jwtInst = jwt;
         this.messages = {
@@ -134,18 +141,18 @@ var UserController = /** @class */ (function () {
      * @memberof UserController
      */
     UserController.prototype.signin = function (req, res, next) {
-        var _a;
         return __awaiter(this, void 0, void 0, function () {
             var user, secret, options, payload, signedPayload, err_2;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
                     case 0:
-                        _b.trys.push([0, 4, , 5]);
+                        _a.trys.push([0, 4, , 5]);
                         return [4 /*yield*/, this.userModel.findOne({
                                 where: { email: req.body.email }
                             })];
                     case 1:
-                        user = _b.sent();
+                        user = _a.sent();
+                        // user not found ...
                         if (!user) {
                             res.status(404).json({ error: this.messages.userNotExist });
                             return [2 /*return*/];
@@ -153,20 +160,24 @@ var UserController = /** @class */ (function () {
                         return [4 /*yield*/, this.bcryptInst.bcryptCompare(req.body.password, user.password)];
                     case 2:
                         // check password & sign token
-                        if (!(_b.sent())) {
+                        if (!(_a.sent())) {
                             res.status(401).json({ error: this.messages.badPass });
                             return [2 /*return*/];
                         }
-                        secret = (_a = process.env.SECRET) !== null && _a !== void 0 ? _a : "secret";
+                        // build & sign a payload for token
+                        if (!process.env.SECRET) {
+                            throw Error('Secret string for sign token is missing');
+                        }
+                        secret = process.env.SECRET;
                         options = { expiresIn: '6h' };
                         payload = { userUuid: user.uuid, userId: user.id, isAdmin: user.isAdmin };
                         return [4 /*yield*/, this.jwtInst.signJWT(payload, secret, options)];
                     case 3:
-                        signedPayload = _b.sent();
-                        res.status(200).json({ uuid: user.uuid, username: user.username, token: signedPayload });
+                        signedPayload = _a.sent();
+                        res.status(200).json({ uuid: user.uuid, id: user.id, username: user.username, token: signedPayload });
                         return [3 /*break*/, 5];
                     case 4:
-                        err_2 = _b.sent();
+                        err_2 = _a.sent();
                         res.status(500).json({ err: err_2.message });
                         return [3 /*break*/, 5];
                     case 5: return [2 /*return*/];
@@ -331,11 +342,16 @@ var UserController = /** @class */ (function () {
                                 include: [
                                     {
                                         model: this.postModel
+                                    },
+                                    {
+                                        model: this.categoryModel,
+                                        attributes: ['name']
                                     }
                                 ]
                             })];
                     case 2:
                         user = _a.sent();
+                        // if not user with this userId
                         if (!user) {
                             res.status(404).json({ message: this.messages.userNotFound });
                             return [2 /*return*/];
@@ -353,5 +369,5 @@ var UserController = /** @class */ (function () {
     };
     return UserController;
 }());
-var userController = new UserController(models.User, models.Post, Bcrypt_1.bcryptInstance, Jwt_1.jwtInstance);
+var userController = new UserController(models.User, models.Post, models.Category, Bcrypt_1.bcryptInstance, Jwt_1.jwtInstance);
 exports["default"] = userController;

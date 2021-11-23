@@ -562,3 +562,62 @@
 .comment-content {
 	margin-top: .5rem;
 }
+
+
+/* *********** Page profile */
+
+.main-profile {
+	display: grid;
+	grid-template-columns: 25% 80%;
+	grid-template-areas: "userdata posts_profile_container ";
+}
+
+/* userData area*/
+.userData-container {
+	grid-area: userdata;
+	border: 1px solid black;
+}
+
+.container-header-userData-profile {
+	background-color: var(--backgrdColorDivisions);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.header-userData-profile {
+	background-color: var(--backgrdColorDivisions);
+	display: flex;
+	justify-content: center;
+}
+
+/* posts user area */
+.profilePosts-list-container {
+	grid-area: posts_profile_container;
+	border: 1px solid black;
+}
+
+.container-posts-profile {
+	background-color: var(--backgrdColorDivisions);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.header-posts-profile {
+	background-color: var(--backgrdColorDivisions);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.title-post-profile-area {
+	margin-bottom: .2rem;
+	width: 100%;
+	margin-top: .2rem;
+	background-color: var(--backgrdColorDivisions);
+	color: #FFF;
+	font-weight: 400;
+	padding: .5rem 0 .5rem 0;
+	font-size: 1rem;
+	font-family: var(--contentFontRegular);
+}

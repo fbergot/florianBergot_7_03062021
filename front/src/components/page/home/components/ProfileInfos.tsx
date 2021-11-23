@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
 import toLocalStorageInst from "../../../../class/utils/ToLocalStorage";
 
 type StorageObject = {
@@ -34,8 +33,8 @@ const ProfileInfos: React.FC = () => {
 	return (
 		<div>
 			<div className="headerProfileContainer">
-				<p className='nameCurrentUser'>{infosCurrentUser && infosCurrentUser.username}</p>
-				{ infosCurrentUser && <img className="avatarImg" src={infosCurrentUser.urlAvatar} alt="avatar" /> }
+				<p className='nameCurrentUser'>{ infosCurrentUser && infosCurrentUser.username }</p>
+				{ infosCurrentUser && <img className="avatarImg" src={ infosCurrentUser.urlAvatar } alt="avatar" /> }
 			</div>
 		</div>
 	)
