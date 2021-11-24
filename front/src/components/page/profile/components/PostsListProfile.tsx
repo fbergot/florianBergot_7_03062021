@@ -10,6 +10,7 @@ type Props = {
 }
 
 const PostsListProfile: React.FC<Props> = ({ data }) => {
+	console.log(data);
     return (
 		<div className="profilePosts-list-container">
 			<div className="container-posts-profile">

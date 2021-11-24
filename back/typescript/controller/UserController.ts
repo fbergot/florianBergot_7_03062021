@@ -237,12 +237,13 @@ class UserController {
 				where: { id: tokenPayload.userId },
 				include: [
 					{
-						model: this.postModel
+						model: this.postModel,
+						include: {
+							model: this.categoryModel,
+							attributes: ["name"]
+						}
 					},
-					{
-						model: this.categoryModel,
-						attributes: ['name']
-					}
+					
 				]
 			});
 			// if not user with this userId

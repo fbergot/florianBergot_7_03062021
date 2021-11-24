@@ -341,12 +341,12 @@ var UserController = /** @class */ (function () {
                                 where: { id: tokenPayload.userId },
                                 include: [
                                     {
-                                        model: this.postModel
+                                        model: this.postModel,
+                                        include: {
+                                            model: this.categoryModel,
+                                            attributes: ["name"]
+                                        }
                                     },
-                                    {
-                                        model: this.categoryModel,
-                                        attributes: ['name']
-                                    }
                                 ]
                             })];
                     case 2:

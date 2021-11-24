@@ -48,11 +48,10 @@ exports.__esModule = true;
 // import commonJS: in JS (sequelize models) (TS in allow JS)
 var models = require("../../models");
 var CategoryController = /** @class */ (function () {
-    function CategoryController(categoryModel, postModel, userModel, commentModel) {
+    function CategoryController(categoryModel, postModel, userModel) {
         this.categoryModel = categoryModel;
         this.postModel = postModel;
         this.userModel = userModel;
-        this.commentModel = commentModel;
         this.message = {
             notPost: "Zero post in this category"
         };
@@ -164,5 +163,5 @@ var CategoryController = /** @class */ (function () {
     };
     return CategoryController;
 }());
-var categoryController = new CategoryController(models.Category, models.Post, models.User, models.Comment);
+var categoryController = new CategoryController(models.Category, models.Post, models.User);
 exports["default"] = categoryController;
