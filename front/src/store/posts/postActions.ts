@@ -17,12 +17,19 @@ type R = { type: string; payload?: any };
 
 type CallAction<Action> = (data?: any) => Action;
 
+
+/**
+ * Build a action
+ */
 const getAll: CallAction<R> = () => {
 	return {
 		type: POST_GET_ALL
 	}
 }
-	
+
+/**
+ * Build a action
+ */
 const getAllSuccess: CallAction<R> = (posts: []) => {
 	return {
 		type: POST_GET_ALL_SUCCESS,
@@ -30,6 +37,9 @@ const getAllSuccess: CallAction<R> = (posts: []) => {
 	}
 }
 
+/**
+ * Build a action
+ */
 const getAllError: CallAction<R> = (errorMessage: string) => {
 	return {
 		type: POST_GET_ALL_ERROR,
@@ -37,7 +47,9 @@ const getAllError: CallAction<R> = (errorMessage: string) => {
 	}
 }
 
-
+/**
+ * Call API for posts
+ */
 export const apiCallPosts = () => {
 	const userInfos = toLocalStorageInst.getItemAndTransform('user');
 	const uriToApi = process.env.REACT_APP_URI_TO_All_POSTS;
@@ -71,13 +83,20 @@ export const apiCallPosts = () => {
 	}
 }
 
-// --------- per category
+// --------- posts per category
+
+/**
+ * Build a action
+ */
 const getAllPostPerCategory: CallAction<R> = () => {
 	return {
 		type: POST_GET_ALL_PER_CATEGORY
 	}
 }
 
+/**
+ * Build a action
+ */
 const getAllPostPerCategorySuccess: CallAction<R> = (posts: []) => {
 	return {
 		type: POST_GET_ALL_PER_CATEGORY_SUCCESS,
@@ -85,6 +104,9 @@ const getAllPostPerCategorySuccess: CallAction<R> = (posts: []) => {
 	}
 }
 
+/**
+ * Build a action
+ */
 const getAllPostPerCategoryError: CallAction<R> = (errorMessage: string) => {
 	return {
 		type: POST_GET_ALL_PER_CATEGORY_ERROR,
@@ -92,7 +114,9 @@ const getAllPostPerCategoryError: CallAction<R> = (errorMessage: string) => {
 	}
 }
 
-// per category
+/**
+ * Call API for posts per category
+ */
 export const apiCallPostsPerCategory = (id_category: string) => {
 	const userInfos = toLocalStorageInst.getItemAndTransform('user');
 	const uriToApi = `categories/${id_category}/posts`;

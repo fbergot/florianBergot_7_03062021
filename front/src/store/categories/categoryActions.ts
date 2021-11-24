@@ -9,20 +9,26 @@ dotenv.config();
 type R = { type: string; payload?: any };
 
 type CallAction<Action> = (data?: any) => Action;
-
+/**
+ * Build an action
+ */
 const getAll: CallAction<R> = () => {
 	return {
 		type: CATEGORY_GET_ALL
 	}
 }
-    
+/**
+ * Build an action
+ */    
 const getAllSuccess: CallAction<R> = (categories: []) => {
 	return {
 		type: CATEGORY_GET_ALL_SUCCESS,
 		payload: categories
 	}
 }
-
+/**
+ * Build an action
+ */
 const getAllError: CallAction<R> = (errorMessage: string) => {
 	return {
 		type: CATEGORY_GET_ALL_ERROR,
@@ -31,10 +37,11 @@ const getAllError: CallAction<R> = (errorMessage: string) => {
 }
 
 export const apiCallCategories = () => {
-	const userInfos = toLocalStorageInst.getItemAndTransform('user');
+	// get API path
 	const uriToApi = process.env.REACT_APP_URI_TO_ALL_CATEGORIES;
 	if (!uriToApi) throw Error('URI to API missing in env var');
-
+	// get infos (token..) in localStor
+	const userInfos = toLocalStorageInst.getItemAndTransform('user');
 	let token: undefined | string;
 
 	if (userInfos) {

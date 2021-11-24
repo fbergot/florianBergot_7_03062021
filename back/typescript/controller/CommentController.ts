@@ -86,10 +86,11 @@ class CommentController {
                 res.status(404).json({ message: this.messages.notFound });
                 return;
 			}
-			
+			// delete if user have create the comment or if user is admin
             if (comment.UserId === tokenPayload.userId || tokenPayload.isAdmin) {
 				const deletedComment = await comment.destroy<Comment>();
-				res.status(200).json({ message: this.messages.comDeleted, info: { idComDeleted: deletedComment.id } });
+                res.status(200).json({ message: this.messages.comDeleted, info: { idComDeleted: deletedComment.id } });
+                return;
 			}
             res.status(403).json({ error: this.messages.comNotDeleted });			
         } catch (err: any) {

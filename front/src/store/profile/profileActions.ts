@@ -10,12 +10,18 @@ type R = { type: string; payload?: any };
 
 type CallAction<Action> = (data?: any) => Action;
 
+/**
+ * Build a action
+ */
 const getMeInfos: CallAction<R> = () => {
 	return {
 			type: ME_GET_INFOS
 		}
 }
 
+/**
+ * Build a action
+ */
 const getMeInfosSuccess: CallAction<R> = (infos: any) => {
 	return {
 		type: ME_GET_INFOS_SUCCESS,
@@ -23,6 +29,9 @@ const getMeInfosSuccess: CallAction<R> = (infos: any) => {
 	}
 }
 
+/**
+ * Build a action
+ */
 const getMeError: CallAction<R> = (errorMessage: string) => {
 	return {
 		type: ME_GET_INFOS_ERROR,
@@ -30,18 +39,23 @@ const getMeError: CallAction<R> = (errorMessage: string) => {
 	}
 }
 
+/**
+ * Call API 
+ */
 export const apiCallCurrentUserInfos = async (dispatch: Dispatch) => {
+	// get path to API (/me)
 	const uriToApi = process.env.REACT_APP_URI_TO_ME;
 	if (!uriToApi) throw Error('URI to API missing in env var');
+	// get token in localStor
 	const userInfos = toLocalStorageInst.getItemAndTransform('user');
-	let token: any;
+	let token: undefined | string;
 
 	if (userInfos) {
 		token = userInfos.token
 	} else {
 		console.error('Aucune infos utilisateur (token..)')
 	}
-
+	
 	dispatch(getMeInfos());
 	const res = await toApiInstance.toApi("GET", uriToApi, {},
 		{
@@ -52,6 +66,7 @@ export const apiCallCurrentUserInfos = async (dispatch: Dispatch) => {
 		}
 	)
 
+	// if error, typeof res === "string"
 	if (typeof res === 'string') {
 		dispatch(getMeError(res));
 	} else {

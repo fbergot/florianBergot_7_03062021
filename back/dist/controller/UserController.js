@@ -324,7 +324,7 @@ var UserController = /** @class */ (function () {
         });
     };
     /**
-     * Get user infos with post(s)
+     * Get user infos with post(s) for page profile in front
      * @memberof UserController
      */
     UserController.prototype.me = function (req, res, next) {

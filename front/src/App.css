@@ -590,6 +590,25 @@
 	justify-content: center;
 }
 
+.container-profile-userDataHeader {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.container-profile-userDataHeader > h3 {
+	margin-right: 1rem;
+}
+
+.img-user-profile {
+	width: 100px;
+	height: auto;
+	border-radius: 50%;
+	border: 2px solid black;
+	object-fit: cover;
+	margin-left: .5rem;
+}
+
 /* posts user area */
 .profilePosts-list-container {
 	grid-area: posts_profile_container;

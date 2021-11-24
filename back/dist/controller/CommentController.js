@@ -146,7 +146,7 @@ var CommentController = /** @class */ (function () {
                     case 3:
                         deletedComment = _a.sent();
                         res.status(200).json({ message: this.messages.comDeleted, info: { idComDeleted: deletedComment.id } });
-                        _a.label = 4;
+                        return [2 /*return*/];
                     case 4:
                         res.status(403).json({ error: this.messages.comNotDeleted });
                         return [3 /*break*/, 6];

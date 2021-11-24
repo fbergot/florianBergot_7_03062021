@@ -148,7 +148,7 @@ class UserController {
 			const tokenPayload = await authInstance.getTokenInfo(req);
 			// find the user to delete
 			const user = await this.userModel.findOne<User>({
-				where: {email: req.params.email}
+				where: { email: req.params.email }
 			})
 			if (!user) {
 				res.status(404).json({ message: this.messages.userNotFound });
@@ -225,7 +225,7 @@ class UserController {
 	}
 
 	/**
-	 * Get user infos with post(s)
+	 * Get user infos with post(s) for page profile in front
 	 * @memberof UserController
 	 */
 	public async me(req: Request, res: Response, next: NextFunction): Promise<void> {

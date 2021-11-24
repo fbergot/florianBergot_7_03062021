@@ -16,7 +16,7 @@ const PostsListProfile: React.FC<Props> = ({ data }) => {
 			<div className="container-posts-profile">
 				<div className="header-posts-profile">
 					<BiMessageDetail className="icon-header-cate-area"/>
-					<h2 className="title-post-profile-area">Les derniers posts</h2>
+					<h2 className="title-post-profile-area">Vos derniers postes</h2>
 				</div>
 				{}
 			</div>
