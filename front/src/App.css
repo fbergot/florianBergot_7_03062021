@@ -440,6 +440,7 @@
 	max-height: 400px;
 	object-fit: cover;
 	border-radius: 0 0 13px 13px;
+	margin-bottom: -.3rem;
 }
 
 .card-timeAgo {

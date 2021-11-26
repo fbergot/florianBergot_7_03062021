@@ -71,6 +71,7 @@ const PostCreation: React.FC<PropsType> = ({ update }) => {
                         <div>
                             <label>Choisir une catégorie existante</label>
                             <select value={ category } onChange={(e) => setCategory(e.target.value)}>
+                                <option value='divers'>Choisir une catégorie</option>
                                 {categoryState.categories.map((category: { name: string }, index: number) => {
                                     return <option key={ index } value={ category.name }>{ category.name }</option>
                                 })}
