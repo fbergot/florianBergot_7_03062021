@@ -107,9 +107,7 @@ const Post: React.FC<Props> = ({ postData }) => {
 		setReactionPositiv(like);
 		setReactionNegativ(dislike);
 	}
-
-	// display delete button & delete post
-	const postDelete = postData.User.id === userInfos.id ? <button onClick={(e) => handleDelete()} type="button">X</button> : null;
+	
 	const handleDelete = async () => {
 		await toApiInstance.callApiRefact('DELETE', `posts/delete/${postData.id}`, {}, {}, token);
 		dispatch(apiCallPosts());
@@ -130,7 +128,7 @@ const Post: React.FC<Props> = ({ postData }) => {
 					</div>
 					<div>
 						<p className="card-category">Categorie <span className="category-name">{ postData.Categories[0].name }</span></p>
-						{ postDelete }
+						{ postData.User.id === userInfos.id ? <button onClick={(e) => handleDelete()} type="button">X</button> : null }
 					</div>
 				</div>
 				<p className="card-text">{ postData.content }</p>

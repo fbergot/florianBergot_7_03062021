@@ -12,7 +12,7 @@ module.exports = {
                     businessRole: "PDG"
 				},
 				{
-					email: "florian.bergot564@gmail",
+					email: "florian.bergot5640@gmail",
 					password: "testflo",
 					username: "Florence",
 					isAdmin: "false",

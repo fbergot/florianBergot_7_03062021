@@ -156,6 +156,9 @@ class UserController {
 			}
 			// ckeck if it is the user || ckeck if is admin user
 			if ((user.id === tokenPayload.userId )|| tokenPayload.isAdmin) {
+                await this.postModel.destroy({
+                    where: { userId: user.id }
+                })
 				// if img, delete image
 				const destImages = process.env.DEST_USERS_IMAGES ?? "avatars_images";
 				if (user.urlAvatar) {
@@ -225,7 +228,7 @@ class UserController {
 	}
 
 	/**
-	 * Get user infos with post(s) for page profile in front
+	 * Get user infos with post(s)
 	 * @memberof UserController
 	 */
 	public async me(req: Request, res: Response, next: NextFunction): Promise<void> {

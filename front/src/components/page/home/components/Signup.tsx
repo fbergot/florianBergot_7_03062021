@@ -32,10 +32,10 @@ const Signup: React.FC<T> = (props) => {
 	}
 
     const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
 		// get path to API
 		const uriToApi_usersSignup = process.env.REACT_APP_URI_USERS_SIGNUP;
 		if (!uriToApi_usersSignup) throw Error('URI to API (users signup route) is missing');
-		e.preventDefault();
 
 		// build data
 		const formData = new FormData();

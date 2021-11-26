@@ -2,6 +2,7 @@ import React from "react";
 import Post from "../../../Post";
 import Loader from '../../../generic/Loader';
 import { BiMessageDetail } from 'react-icons/bi';
+import PostCreation from './PostCreation';
 
 type PostState = {
 	isLoading: boolean,
@@ -25,6 +26,7 @@ const PostsList: React.FC<PropsType> = ({ posts }) => {
 				<h2 className="title-area-p">Les derniers posts</h2>
 			</div>
 			<div className="postsContainer">
+				<PostCreation/>
 				{ loadingOrListPosts }
 			</div>
 		</div>

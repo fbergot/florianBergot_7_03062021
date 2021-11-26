@@ -223,7 +223,7 @@ var UserController = /** @class */ (function () {
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        _b.trys.push([0, 5, , 6]);
+                        _b.trys.push([0, 6, , 7]);
                         return [4 /*yield*/, Auth_1["default"].getTokenInfo(req)];
                     case 1:
                         tokenPayload = _b.sent();
@@ -236,24 +236,31 @@ var UserController = /** @class */ (function () {
                             res.status(404).json({ message: this.messages.userNotFound });
                             return [2 /*return*/];
                         }
-                        if (!((user.id === tokenPayload.userId) || tokenPayload.isAdmin)) return [3 /*break*/, 4];
+                        if (!((user.id === tokenPayload.userId) || tokenPayload.isAdmin)) return [3 /*break*/, 5];
+                        return [4 /*yield*/, this.postModel.destroy({
+                                where: { userId: user.id }
+                            })
+                            // if img, delete image
+                        ];
+                    case 3:
+                        _b.sent();
                         destImages = (_a = process.env.DEST_USERS_IMAGES) !== null && _a !== void 0 ? _a : "avatars_images";
                         if (user.urlAvatar) {
                             this.eraseImage(user, destImages);
                         }
                         return [4 /*yield*/, user.destroy()];
-                    case 3:
+                    case 4:
                         userDeleted = _b.sent();
                         res.status(200).json({ message: this.messages.userDeleted, info: { username: userDeleted.username } });
                         return [2 /*return*/];
-                    case 4:
-                        res.status(403).json({ message: this.messages.userNotDeleted });
-                        return [3 /*break*/, 6];
                     case 5:
+                        res.status(403).json({ message: this.messages.userNotDeleted });
+                        return [3 /*break*/, 7];
+                    case 6:
                         err_4 = _b.sent();
                         res.status(500).json({ error: err_4.message });
-                        return [3 /*break*/, 6];
-                    case 6: return [2 /*return*/];
+                        return [3 /*break*/, 7];
+                    case 7: return [2 /*return*/];
                 }
             });
         });
@@ -324,7 +331,7 @@ var UserController = /** @class */ (function () {
         });
     };
     /**
-     * Get user infos with post(s) for page profile in front
+     * Get user infos with post(s)
      * @memberof UserController
      */
     UserController.prototype.me = function (req, res, next) {

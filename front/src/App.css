@@ -640,3 +640,9 @@
 	font-size: 1rem;
 	font-family: var(--contentFontRegular);
 }
+
+/* post creation  */
+
+.postCreation-container {
+	background-color: #FFF;
+}
