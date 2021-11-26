@@ -23,9 +23,9 @@
 }
 .headerNav {
 	display: flex;
-	justify-content: right;
+	justify-content: center;
 	margin-top: .5rem;
-	margin-right: 1.2rem;
+	/* margin-right: 1.2rem; */
 	
 }
 
@@ -127,7 +127,6 @@
 }
 
 .list-categories {
-	margin-top: .5rem;
 	width: 90%;
 }
 
@@ -179,7 +178,6 @@
 }
 
 .list-users {
-	margin-top: .5rem;
 	width: 90%;
 }
 
@@ -258,7 +256,7 @@
 	color: #FFF;
 	font-weight: 400;
 	padding: .5rem 0 .5rem 0;
-	font-size: 1rem;
+	font-size: 1.2rem;
 	font-family: var(--contentFontRegular);
 }
 .postsContainer {
@@ -357,13 +355,13 @@
 }
 
 .card-identifier {
-	width: 34px;
-	height: auto;
+	width: 40px;
+	height: 40px;
 	object-fit: cover;
-	margin-left: .5rem;
-	padding: .3rem;
+	margin-left: .3rem;
 	margin: .2rem;
 	margin-top: 0;
+	border-radius: 13px;
 }
 
 .card-title {
@@ -373,16 +371,34 @@
 	text-align: center;
 }
 
+.container-category-delete {
+	display: flex;
+}
+
+.delete-button {
+	color: rgb(247, 37, 37);
+	font-weight: bold;
+	font-size: 1.3rem;
+	background-color: transparent;
+	cursor: pointer;
+	outline: inherit;
+	border: none;
+	margin-right: .5rem;
+	margin-top: .1rem;
+}
 .card-text {
 	padding-top: .5rem;
-	margin-left: .5rem;
+	margin-left: .8rem;
+	margin-right: .8rem;
 	font-weight: 300;
 }
 
 .container-like-icon {
 	display: flex;
+	margin-top: .4rem;
 	padding-top: .5rem;
-	margin-left: .1rem;
+	margin-left: .4rem;
+	padding-bottom: .3rem;
 
 
 }
@@ -410,6 +426,7 @@
 	text-align: right;
 	padding: .8rem;
 	padding-top: 1rem;
+	margin-right: 1rem;
 }
 
 .category-name {	
@@ -420,6 +437,7 @@
 	margin-top: .5rem;
 	width: 100%;
 	height: auto;
+	max-height: 400px;
 	object-fit: cover;
 	border-radius: 0 0 13px 13px;
 }
@@ -645,4 +663,56 @@
 
 .postCreation-container {
 	background-color: #FFF;
+	margin-bottom: 1rem;
+}
+
+.postCreation-container > p {
+	text-align: center;
+	padding-top: 1rem;
+	padding-bottom: 1rem;
+	font-family: 'Roboto';
+	font-weight: bold;
+}
+
+.container-areaMessge {
+	display: flex;
+	justify-content: center;
+}
+
+.areaMessage {
+	width: 90%;
+	font-family: "Roboto";
+	font-size: .9rem;
+	padding: .5rem;
+}
+
+.cont-img-cat {
+	display: flex;
+	justify-content: space-around;
+	padding: .5rem;
+}
+
+.cont-image > label {
+	font-family: 'Roboto';
+	margin-right: .5rem;	
+}
+
+.cont-select > label {
+	font-family: 'Roboto';
+	margin-right: .5rem;
+}
+
+.cont-createCat > label {
+	font-family: 'Roboto';
+	margin-right: .5rem;
+}
+
+.cont-button {
+	display: flex;
+	justify-content: center;
+}
+
+.cont-button > button {
+	padding: .5rem;
+	cursor: pointer;
 }

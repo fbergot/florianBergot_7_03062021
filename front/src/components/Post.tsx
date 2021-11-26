@@ -121,19 +121,23 @@ const Post: React.FC<Props> = ({ postData }) => {
 	return (
 		<article className="card">
 			<div className="card-body">
+
 				<div className="card-user-identifierCont">
 					<div className="container-img-title">
 						<img className="card-identifier" src={ cardImg } alt="post identifier" />
 						<h3 className="card-title">{ postData.User.username }, <span className='card-timeAgo'>il y a { timeAgo }</span></h3>
 					</div>
-					<div>
+
+					<div className='container-category-delete'>
 						<p className="card-category">Categorie <span className="category-name">{ postData.Categories[0].name }</span></p>
-						{ postData.User.id === userInfos.id ? <button onClick={(e) => handleDelete()} type="button">X</button> : null }
+						{ postData.User.id === userInfos.id ? <span><button className="delete-button" onClick={(e) => handleDelete()} type="button">X</button></span> : null }
 					</div>
 				</div>
+
 				<p className="card-text">{ postData.content }</p>
 				{/* if error */}
-				{ error && <p>Une erreur c'est produite : { error }</p>}
+				{error && <p>Une erreur c'est produite : {error}</p>}
+				
 				<div className="container-like-icon">
 					<p>
 						<button className="button-reaction" onClick={() => onClickLike()} type="button">
@@ -148,15 +152,12 @@ const Post: React.FC<Props> = ({ postData }) => {
 						<span>{ reactionNegativ }</span>
 					</p>
 				</div>
+				
 			</div>			
-			{ img }
-
-			{/* button display comments */}			
+			{ img }		
 			<div className="comment-button-container">
 				<button className="comment-button" onClick={() => onClickDisplay()}>{  buttonTitle }</button>					 					
-			</div>	
-				
-			{/* container comments */}
+			</div>					
 			{ displayComments && <CommentsList idPost={ postData.id }/> }
 		</article>
 	)

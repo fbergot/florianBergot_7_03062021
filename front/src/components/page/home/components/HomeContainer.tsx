@@ -54,11 +54,17 @@ const HomeContainer: React.FC<Props> = ({ changeHeader, postsApi, postsPerCatego
 	const postsPerCategoryCall = (idCategory: string) => {
 		postsPerCategory(idCategory);
 	}
+
+	// update after add post
+	const update = () => {
+		postsApi();
+		categoriesApi();
+	}
 	// traiter la variable d'erreur en affichant une erreur
 	return (
 		<main className="mainContainer">
 			<UsersList users={ users }/>
-			<PostsList posts={ posts }/>
+			<PostsList posts={posts} update={ update }/>
 			<CategoriesList categories={categories} callPostPerCategory={ postsPerCategoryCall }/>            
 		</main>
 	)

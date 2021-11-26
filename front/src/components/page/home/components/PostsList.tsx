@@ -12,9 +12,10 @@ type PostState = {
 
 type PropsType = {
 	posts: PostState,
+	update: () => void;
 }
 
-const PostsList: React.FC<PropsType> = ({ posts }) => {
+const PostsList: React.FC<PropsType> = ({ posts, update }) => {
 	const loadingOrListPosts = posts.isLoading ? <Loader className={"lds-ring"} /> :
 		posts.posts && posts.posts.map((post: any, index: number) => {
 			return <Post key={ index } postData={ post } />
@@ -23,10 +24,10 @@ const PostsList: React.FC<PropsType> = ({ posts }) => {
 		<div className="postsListContainer">
 			<div className="header-cate-container">
 				<BiMessageDetail className="icon-header-post-area"/>
-				<h2 className="title-area-p">Les derniers posts</h2>
+				<h2 className="title-area-p">Les derniers postes / Ajouter votre poste</h2>
 			</div>
 			<div className="postsContainer">
-				<PostCreation/>
+				<PostCreation update={ update }/>
 				{ loadingOrListPosts }
 			</div>
 		</div>
