@@ -43,7 +43,6 @@ const getAllError: CallAction<R> = (errorMessage: string) => {
 export const apiCallUsers = () => {
 	const userInfos = toLocalStorageInst.getItemAndTransform('user');
 	const uriToApi = process.env.REACT_APP_URI_TO_All_USERS;
-	console.log(process.env);
 	if (!uriToApi) throw Error('URI to API missing in env var');
 
 	let token: undefined | string;
@@ -70,5 +69,34 @@ export const apiCallUsers = () => {
 			dispatch<R>(getAllSuccess(res.data))
 		}
 
+	}
+}
+
+export const apiCallUsers2 = async (dispatch: any) => {
+	const userInfos = toLocalStorageInst.getItemAndTransform('user');
+	const uriToApi = process.env.REACT_APP_URI_TO_All_USERS;
+	if (!uriToApi) throw Error('URI to API missing in env var');
+
+	let token: undefined | string;
+
+	if (userInfos) {
+		token = userInfos.token;
+	} else {
+		console.error('Aucune infos utilisateur (token..)')
+	}
+		
+	dispatch(getAll());
+	const res = await toApiInstance.toApi("GET", uriToApi, {},
+		{
+			headers: {
+				'accept': 'application/json',
+				'Authorization' : `Bearer ${ token }`
+			}
+		})
+	
+	if (typeof res === 'string') {
+		dispatch(getAllError(res));
+	} else {
+		dispatch(getAllSuccess(res.data))
 	}
 }

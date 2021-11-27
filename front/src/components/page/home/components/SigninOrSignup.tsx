@@ -13,8 +13,8 @@ const SigninOrSignup: React.FC = () => {
 	}
 	
 	const mess = state === 'signin' ? "Pas encore inscrit ?" : "Déja un compte ?";
-	const display = state === 'signin' ? <Signin switchHandle={handle} buttonMessage={mess} /> :
-		<Signup switchHandle={handle} buttonMessage={mess} onRedirect={redirect} />;
+	const display = state === 'signin' ? <Signin switchHandle={ handle } buttonMessage={ mess } /> :
+		<Signup switchHandle={ handle } buttonMessage={ mess } onRedirect={ redirect } />;
 
 	return (
 		<div className="container">

@@ -41,11 +41,11 @@ const UserDataInfos: React.FC<Props> = ({ data }) => {
     const deleteHandleClick = async () => {
         // call API for delete account
         const responseApi = await toApiInstance.callApiRefact('DELETE', `users/delete/${ data.email }`, {}, {}, token);
+        window.localStorage.removeItem('user');
         if (typeof responseApi === 'string') {
             console.error("Une erreur s'est produite lors de la suppression du compte");
         }
 
-        window.localStorage.removeItem('user');
         window.location.assign('/');
     }
 

@@ -12,7 +12,7 @@ type User = {
 
 type RootState = {
 	user: {
-		users: any[]
+		users: { username : string, urlAvatar: string}[]
 	};
 }
 

@@ -109,7 +109,7 @@ const Post: React.FC<Props> = ({ postData }) => {
 	}
 	
 	const handleDelete = async () => {
-		await toApiInstance.callApiRefact('DELETE', `posts/delete/${postData.id}`, {}, {}, token);
+		const responseApi = await toApiInstance.callApiRefact('DELETE', `posts/delete/${postData.id}`, {}, {}, token);
 		dispatch(apiCallPosts());
 	}
 

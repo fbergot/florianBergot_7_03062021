@@ -1,16 +1,23 @@
 import React from "react";
 import Loader from "../../../generic/Loader";
 import { BiMessageDetail } from "react-icons/bi";
+import SimplePostProfile from "./SimplePostProfile";
 
 type Props = {
 	data: {
 		isLoading: boolean;
-		infos: any;
+		infos: {
+			Posts: any;
+			username: string;
+		};
 	};
 }
 
 const PostsListProfile: React.FC<Props> = ({ data }) => {
-	console.log(data);
+	const loadingOrListOfPost = data.isLoading ? <Loader className={"lds-ring-color"} /> : 
+		data.infos.Posts && data.infos.Posts.length !== 0 && data.infos.Posts.map((post: any, index: number) => {
+			return <SimplePostProfile creator={ data.infos.username } key={ index } data={ post }/>
+		})
     return (
 		<div className="profilePosts-list-container">
 			<div className="container-posts-profile">
@@ -20,9 +27,7 @@ const PostsListProfile: React.FC<Props> = ({ data }) => {
 				</div>
 				{}
 			</div>
-			{ data.isLoading ? <Loader className={"lds-ring-color"} /> : 
-				<p>{JSON.stringify(data.infos)}</p>
-			}		
+			{ loadingOrListOfPost }		
 		</div>
     );
 }

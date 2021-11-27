@@ -256,7 +256,7 @@
 	color: #FFF;
 	font-weight: 400;
 	padding: .5rem 0 .5rem 0;
-	font-size: 1.2rem;
+	font-size: 1rem;
 	font-family: var(--contentFontRegular);
 }
 .postsContainer {
@@ -402,6 +402,7 @@
 
 
 }
+
 .container-like-icon > p {
 	display: flex;
 	padding-top: .5rem;
@@ -665,11 +666,7 @@
 .postCreation-container {
 	background-color: #FFF;
 	margin-bottom: 1rem;
-	padding: 1rem;
-}
-
-.postCreation-container > form {
-
+	padding: 1rem 1rem 0.2rem 1rem;
 }
 
 .postCreation-container > p {
@@ -683,6 +680,7 @@
 .container-areaMessge {
 	display: flex;
 	justify-content: center;
+	align-items: center;
 }
 
 .areaMessage {
@@ -695,6 +693,7 @@
 .cont-img-cat {
 	display: flex;
 	justify-content: space-around;
+	align-items: center;
 	padding: .5rem;
 }
 
@@ -705,13 +704,22 @@
 
 .cont-image > label {
 	font-family: 'Roboto';
-	margin-right: .5rem;	
+	margin-right: .5rem;
+	margin-top: .2rem;
+	
+}
+.cont-image > input {
+	padding: .4rem;
+	
 }
 
+.cont-select {
+	display: flex;
+}
 .cont-createCat {
 	display: flex;
 	flex-direction: column;
-	margin-bottom: .5rem;
+	/* margin-bottom: .5rem; */
 	
 }
 
@@ -719,6 +727,7 @@
 	font-family: 'Roboto';
 	margin-right: .5rem;
 	margin-top: .2rem;
+	text-align: center;	
 	
 }
 

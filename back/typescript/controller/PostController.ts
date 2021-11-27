@@ -47,11 +47,14 @@ class PostController {
 	 * Erase img according to destImages path
 	 * @memberof PostController
 	 */
-	private eraseImage(post: Post, destImages: string) {
+	private eraseImage(post: Post, destImages: string): Promise<any> {
 		const fileName = post.attachment.split(`/${destImages}/`)[1];
-		fs.unlink(`${destImages}/${fileName}`, (err: any )=> {
-			if (err) throw err;
-		});
+		return new Promise((resolve, reject) => {
+			fs.unlink(`${destImages}/${fileName}`, (err: any )=> {
+				if (err) reject(err);
+				resolve(true);
+			});
+		})
 	}
 
 	/**
@@ -177,7 +180,7 @@ class PostController {
 				if (req.file) {
 					destImages = process.env.DEST_POSTS_ATTACHMENTS ?? "posts_attachments";
 					if (post.attachment) {
-						this.eraseImage(post, destImages);					
+						await this.eraseImage(post, destImages);					
 					}
 					imageUrl = `${req.protocol}://${req.get('host')}/${destImages}/${req.file.filename}`;
 				}
@@ -204,7 +207,7 @@ class PostController {
 			const tokenPayload = await authInstance.getTokenInfo(req);
 			// find the post to delete
 			const post = await this.postModel.findOne<Post>({
-				where: {id: req.params.id}
+				where: { id: req.params.id }
 			})
 			if (!post) {
 				res.status(404).json({ message: this.messages.noPost });
@@ -217,7 +220,7 @@ class PostController {
 				let destImages: undefined | string;
 				if (post.attachment) {
 					destImages = process.env.DEST_POSTS_ATTACHMENTS ?? "post_attachments";
-					this.eraseImage(post, destImages);
+					await this.eraseImage(post, destImages);
 				}
 				// del post
 				const deletedPost = await post.destroy<Post>();

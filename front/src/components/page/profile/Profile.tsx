@@ -1,12 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import Header from '../../Header';
 import ProfileContainer from './components/ProfileContainer';
 
 const Profile: React.FC = () => {
+  const [displayInfosProfile, setDisplayInfosProfile] = useState(true); 
     return (
       <div>
-            <Header headerProfile={ true }/>
-            <ProfileContainer />
+            <Header headerProfile={ displayInfosProfile }/>
+            <ProfileContainer displayInfosHeader={ setDisplayInfosProfile }/>
       </div>
     );
 }

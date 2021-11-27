@@ -50,11 +50,14 @@ class UserController {
 	 * Erase img according to destImages path
 	 * @memberof PostController
 	 */
-	private eraseImage(user: User, destImages: string) {
+	private eraseImage(user: User, destImages: string): Promise<any> {
 		const fileName = user.urlAvatar.split(`/${destImages}/`)[1];
-		fs.unlink(`${destImages}/${fileName}`, (err: any )=> {
-			if (err) throw err;
-		});
+		return new Promise((resolve, reject) => {
+			fs.unlink(`${destImages}/${fileName}`, (err: any )=> {
+				if (err) reject(err);
+				resolve(true);
+			});
+		})
 	}
 	   
     /**
@@ -150,27 +153,55 @@ class UserController {
 			const user = await this.userModel.findOne<User>({
 				where: { email: req.params.email }
 			})
+			console.log(user);
 			if (!user) {
 				res.status(404).json({ message: this.messages.userNotFound });
 				return;
 			}
 			// ckeck if it is the user || ckeck if is admin user
-			if ((user.id === tokenPayload.userId )|| tokenPayload.isAdmin) {
+			if ((user.id === tokenPayload.userId) || tokenPayload.isAdmin) {
+				// delete all images of posts
+				const posts = await this.postModel.findAll<Post>({
+					where: { UserId: user.id }
+				})
+				if (posts) {
+					const destImages = process.env.DEST_POSTS_ATTACHMENTS ?? "posts_attachments";
+					// loop in all posts for erase imgs
+					posts.forEach(async (post: { attachment: string | undefined }) => {
+						function eraseImgPost() {
+							const fileName = post.attachment?.split(`/${destImages}/`)[1];
+							return new Promise((resolve, reject) => {
+								fs.unlink(`${destImages}/${fileName}`, (err: any) => {
+									if (err) reject(err);
+									resolve(true);
+								});
+							});
+						}
+						if (posts.attachment) {
+							await eraseImgPost();
+						}
+					});
+				}
+				// del user
+				const userDeleted = await this.userModel.destroy<User>({
+					where: { id: user.id }
+				});
+
+				// delete all posts for this user
                 await this.postModel.destroy({
                     where: { userId: user.id }
                 })
 				// if img, delete image
 				const destImages = process.env.DEST_USERS_IMAGES ?? "avatars_images";
 				if (user.urlAvatar) {
-					this.eraseImage(user, destImages);
+					await this.eraseImage(user, destImages);
 				}
-				// del user
-				const userDeleted = await user.destroy<User>();
 				res.status(200).json({ message: this.messages.userDeleted, info: { username: userDeleted.username } });
 				return;				
 			}
 			res.status(403).json({ message: this.messages.userNotDeleted });	
 		} catch (err: any) {
+			console.error(err);
 			res.status(500).json({ error: err.message });
 		}
 	}

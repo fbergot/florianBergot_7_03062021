@@ -86,9 +86,12 @@ var UserController = /** @class */ (function () {
      */
     UserController.prototype.eraseImage = function (user, destImages) {
         var fileName = user.urlAvatar.split("/" + destImages + "/")[1];
-        fs.unlink(destImages + "/" + fileName, function (err) {
-            if (err)
-                throw err;
+        return new Promise(function (resolve, reject) {
+            fs.unlink(destImages + "/" + fileName, function (err) {
+                if (err)
+                    reject(err);
+                resolve(true);
+            });
         });
     };
     /**
@@ -217,50 +220,93 @@ var UserController = /** @class */ (function () {
      * @memberof UserController
      */
     UserController.prototype["delete"] = function (req, res, next) {
-        var _a;
+        var _a, _b;
         return __awaiter(this, void 0, void 0, function () {
-            var tokenPayload, user, destImages, userDeleted, err_4;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
+            var tokenPayload, user, posts_1, destImages_1, userDeleted, destImages, err_4;
+            var _this = this;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
                     case 0:
-                        _b.trys.push([0, 6, , 7]);
+                        _c.trys.push([0, 9, , 10]);
                         return [4 /*yield*/, Auth_1["default"].getTokenInfo(req)];
                     case 1:
-                        tokenPayload = _b.sent();
+                        tokenPayload = _c.sent();
                         return [4 /*yield*/, this.userModel.findOne({
                                 where: { email: req.params.email }
                             })];
                     case 2:
-                        user = _b.sent();
+                        user = _c.sent();
+                        console.log(user);
                         if (!user) {
                             res.status(404).json({ message: this.messages.userNotFound });
                             return [2 /*return*/];
                         }
-                        if (!((user.id === tokenPayload.userId) || tokenPayload.isAdmin)) return [3 /*break*/, 5];
+                        if (!((user.id === tokenPayload.userId) || tokenPayload.isAdmin)) return [3 /*break*/, 8];
+                        return [4 /*yield*/, this.postModel.findAll({
+                                where: { UserId: user.id }
+                            })];
+                    case 3:
+                        posts_1 = _c.sent();
+                        if (posts_1) {
+                            destImages_1 = (_a = process.env.DEST_POSTS_ATTACHMENTS) !== null && _a !== void 0 ? _a : "posts_attachments";
+                            // loop in all posts for erase imgs
+                            posts_1.forEach(function (post) { return __awaiter(_this, void 0, void 0, function () {
+                                function eraseImgPost() {
+                                    var _a;
+                                    var fileName = (_a = post.attachment) === null || _a === void 0 ? void 0 : _a.split("/" + destImages_1 + "/")[1];
+                                    return new Promise(function (resolve, reject) {
+                                        fs.unlink(destImages_1 + "/" + fileName, function (err) {
+                                            if (err)
+                                                reject(err);
+                                            resolve(true);
+                                        });
+                                    });
+                                }
+                                return __generator(this, function (_a) {
+                                    switch (_a.label) {
+                                        case 0:
+                                            if (!posts_1.attachment) return [3 /*break*/, 2];
+                                            return [4 /*yield*/, eraseImgPost()];
+                                        case 1:
+                                            _a.sent();
+                                            _a.label = 2;
+                                        case 2: return [2 /*return*/];
+                                    }
+                                });
+                            }); });
+                        }
+                        return [4 /*yield*/, this.userModel.destroy({
+                                where: { id: user.id }
+                            })];
+                    case 4:
+                        userDeleted = _c.sent();
+                        // delete all posts for this user
                         return [4 /*yield*/, this.postModel.destroy({
                                 where: { userId: user.id }
                             })
                             // if img, delete image
                         ];
-                    case 3:
-                        _b.sent();
-                        destImages = (_a = process.env.DEST_USERS_IMAGES) !== null && _a !== void 0 ? _a : "avatars_images";
-                        if (user.urlAvatar) {
-                            this.eraseImage(user, destImages);
-                        }
-                        return [4 /*yield*/, user.destroy()];
-                    case 4:
-                        userDeleted = _b.sent();
+                    case 5:
+                        // delete all posts for this user
+                        _c.sent();
+                        destImages = (_b = process.env.DEST_USERS_IMAGES) !== null && _b !== void 0 ? _b : "avatars_images";
+                        if (!user.urlAvatar) return [3 /*break*/, 7];
+                        return [4 /*yield*/, this.eraseImage(user, destImages)];
+                    case 6:
+                        _c.sent();
+                        _c.label = 7;
+                    case 7:
                         res.status(200).json({ message: this.messages.userDeleted, info: { username: userDeleted.username } });
                         return [2 /*return*/];
-                    case 5:
+                    case 8:
                         res.status(403).json({ message: this.messages.userNotDeleted });
-                        return [3 /*break*/, 7];
-                    case 6:
-                        err_4 = _b.sent();
+                        return [3 /*break*/, 10];
+                    case 9:
+                        err_4 = _c.sent();
+                        console.error(err_4);
                         res.status(500).json({ error: err_4.message });
-                        return [3 /*break*/, 7];
-                    case 7: return [2 /*return*/];
+                        return [3 /*break*/, 10];
+                    case 10: return [2 /*return*/];
                 }
             });
         });
