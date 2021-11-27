@@ -53,7 +53,6 @@ const PostCreation: React.FC<PropsType> = ({ update }) => {
     }
     return (
         <div className='postCreation-container'>
-            <p>Créer votre poste</p>
 
             <form onSubmit={(e) => onSubmit(e)} encType="multipart/form-data">
                 <div className="container-areaMessge">
@@ -68,8 +67,8 @@ const PostCreation: React.FC<PropsType> = ({ update }) => {
 
                     <div className="cont-select">
                         { categoryState.categories.length !== 0 &&
-                        <div>
-                            <label>Choisir une catégorie existante</label>
+                        <div className="cont-createCat">
+                            <label>Catégories existantes</label>
                             <select value={ category } onChange={(e) => setCategory(e.target.value)}>
                                 <option value='divers'>Choisir une catégorie</option>
                                 {categoryState.categories.map((category: { name: string }, index: number) => {
@@ -80,7 +79,7 @@ const PostCreation: React.FC<PropsType> = ({ update }) => {
                         }
                         <div className="cont-createCat">
                             <label htmlFor="createCat">Créer sa catégorie</label>
-                            <input value={ category } onChange={(e) => setCategory(e.target.value)} id='createCat' type='text'/>
+                            <input placeholder="Ex: informatique" value={ category } onChange={(e) => setCategory(e.target.value)} id='createCat' type='text'/>
                         </div>
                     </div>
                 </div>

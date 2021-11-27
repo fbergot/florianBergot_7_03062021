@@ -12,7 +12,7 @@ const Home: React.FC = () => {
     const body = status ? <HomeContainer changeHeader={changeStateHeader} /> : <SigninOrSignup />;
     return (
         <div>
-            <Header headerProfile={ state }/>
+            {status && <Header headerProfile={state} />}
             { body }
         </div>
     )

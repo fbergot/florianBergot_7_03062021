@@ -2,7 +2,12 @@ import React, { useState } from "react";
 import toApiInstance from "../../../../class/appCore/ToAPI";
 import toLocalStorageInst from "../../../../class/utils/ToLocalStorage";
 
-const Signin: React.FC = () => {
+type Props = {
+    switchHandle: () => void;
+    buttonMessage: string;
+};
+
+const Signin: React.FC<Props> = ({ switchHandle, buttonMessage }) => {
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
 
@@ -26,16 +31,18 @@ const Signin: React.FC = () => {
         }
 
         const result = await toApiInstance.toApi('POST', 'users/signin', data, {})
-        if (result) {
+        if (result && typeof result !== 'string') {
             // add infos user in localStor
             const status = toLocalStorageInst.tranformAndSetItem(result.data, 'user');
             if (status) {
                 window.location.assign('/');
             }
+        } else {
+            console.error("Une erreur est survenue");
         }       
     }
     return (
-        <div>
+        <div className='container-signin'>
             <form>
                 <div className="form-group">
                     <label htmlFor="email">Email</label>
@@ -48,7 +55,11 @@ const Signin: React.FC = () => {
                     <input onChange={(e) => handle(e)} value={password} name="password"
                         type="password" className="form-control" id="password" />
                 </div>
-                <button type='button' onClick={() => onSubmit()} className='btn btn-primary'>M'identifier</button>              
+
+                <div className="signin-cont-button">
+                    <button type='button' onClick={() => onSubmit()} className="send-button">Envoyer</button>
+                    <button className="switch-button" onClick={ () => switchHandle() }>{ buttonMessage }</button>
+                </div>
             </form>
         </div>
     )

@@ -4,11 +4,13 @@ import * as dotenv from 'dotenv';
 
 dotenv.config();
 
-type T = {
+type Props = {
 	onRedirect: () => void
-}
+    switchHandle: () => void;
+	buttonMessage: string;
+};
 
-const Signup: React.FC<T> = (props) => {
+const Signup: React.FC<Props> = (props) => {
 	const fileInput: React.RefObject<any> = createRef<any>();
 	const [username, setUsername] = useState<string>('');
 	const [businessRole, setBusinessRole] = useState<string>('');
@@ -56,7 +58,7 @@ const Signup: React.FC<T> = (props) => {
 	} 
     
     return (
-		<div>
+		<div className='container-signup'>
 			<form onSubmit={(e) => onSubmit(e)} encType="multipart/form-data">
 				<div className="form-group">
 					<label htmlFor="username">Nom d'utilisateur</label>
@@ -87,7 +89,10 @@ const Signup: React.FC<T> = (props) => {
 					<input type="file" className="form-control-file" id="avatar" ref={fileInput} name='image'/>
 				</div>
 
-				<button type="submit" className='btn btn-primary'>Envoyer</button>               
+				<div className="signup-cont-button">
+					<button type="submit" className="send-button">Envoyer</button>
+					<button className="switch-button" onClick={ () => props.switchHandle() }>{ props.buttonMessage }</button>
+				</div>
 			</form>
 		</div>
     )
