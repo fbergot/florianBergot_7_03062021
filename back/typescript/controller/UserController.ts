@@ -166,7 +166,7 @@ class UserController {
 				})
 				if (posts) {
 					const destImages = process.env.DEST_POSTS_ATTACHMENTS ?? "posts_attachments";
-					// loop in all posts for erase imgs
+					// loop in all posts for erase imgs before delete posts
 					posts.forEach(async (post: { attachment: string | undefined }) => {
 						function eraseImgPost() {
 							const fileName = post.attachment?.split(`/${destImages}/`)[1];
@@ -177,7 +177,7 @@ class UserController {
 								});
 							});
 						}
-						if (posts.attachment) {
+						if (post.attachment) {
 							await eraseImgPost();
 						}
 					});

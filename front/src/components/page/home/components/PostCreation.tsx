@@ -3,13 +3,11 @@ import { useSelector } from "react-redux";
 import toApiInstance from '../../../../class/appCore/ToAPI';
 import toLocalStorageInst from '../../../../class/utils/ToLocalStorage';
 
-
 type GlobalState = {
     category: {
        categories: { name: string }[];
     }
 }
-
 
 type PropsType = {
     update: () => void;
@@ -20,7 +18,7 @@ const PostCreation: React.FC<PropsType> = ({ update }) => {
     const [message, setMessage] = useState<string>('');
     const [category, setCategory] = useState<string>('');
     const categoryState = useSelector((state: GlobalState) => state.category);
-    const [error, setError] = useState<string>('');
+    const [error, setError] = useState<string | null>(null);
 
 	const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -46,14 +44,16 @@ const PostCreation: React.FC<PropsType> = ({ update }) => {
         // call API
 		const responseApi = await toApiInstance.callApiRefact("POST", uriToApi_addPost, formData, {}, token);
         if (typeof responseApi === "string") {
-            
+            setError(responseApi);
+            return;
         }      
         setMessage('');
         update();
     }
+
     return (
         <div className='postCreation-container'>
-
+            { error }
             <form onSubmit={(e) => onSubmit(e)} encType="multipart/form-data">
                 <div className="container-areaMessge">
                     <textarea className="areaMessage" placeholder='Votre message...' value={ message } onChange={(e) => setMessage(e.target.value)}></textarea>
@@ -65,23 +65,23 @@ const PostCreation: React.FC<PropsType> = ({ update }) => {
                         <input id="image" type='file' ref={ fileInput } name="image"></input>
                     </div>
 
-                    <div className="cont-select">
-                        { categoryState.categories.length !== 0 &&
-                        <div className="cont-createCat">
-                            <label>Catégories existantes</label>
-                            <select value={ category } onChange={(e) => setCategory(e.target.value)}>
-                                <option value='divers'>Choisir une catégorie</option>
-                                {categoryState.categories.map((category: { name: string }, index: number) => {
-                                    return <option key={ index } value={ category.name }>{ category.name }</option>
-                                })}
-                            </select>
-                        </div> 
-                        }
-                        <div className="cont-createCat">
-                            <label htmlFor="createCat">Créer sa catégorie</label>
-                            <input placeholder="Ex: informatique" value={ category } onChange={(e) => setCategory(e.target.value)} id='createCat' type='text'/>
-                        </div>
+                    
+                    { categoryState.categories.length !== 0 &&
+                    <div className="cont-createCat">
+                        <label>Catégories existantes</label>
+                        <select value={ category } onChange={(e) => setCategory(e.target.value)}>
+                            <option value='divers'>Choisir une catégorie</option>
+                            {categoryState.categories.map((category: { name: string }, index: number) => {
+                                return <option key={ index } value={ category.name }>{ category.name }</option>
+                            })}
+                        </select>
+                    </div> 
+                    }
+                    <div className="cont-createCat">
+                        <label htmlFor="createCat">Créer sa catégorie</label>
+                        <input placeholder="Ex: informatique" value={ category } onChange={(e) => setCategory(e.target.value)} id='createCat' type='text'/>
                     </div>
+                    
                 </div>
                 <div className='cont-button'>
                     <button type="submit">Créer mon poste</button>
