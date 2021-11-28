@@ -1,5 +1,5 @@
 import * as http from 'http';
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 
 class Utils {
 
@@ -39,7 +39,7 @@ class Utils {
      * Middleware for add headers CORS
      * @memberof Utils
      */
-    public setHeadersCORS(req: Request, res: Response, next: CallableFunction): void {
+    public setHeadersCORS(req: Request, res: Response, next: NextFunction): void {
         res.setHeader('Access-Control-Allow-Origin', "*");
         res.setHeader('Access-Control-Allow-Headers', "Origin, X-Requested-With, Content, Accept, Content-Type, Authorization");
         res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');

@@ -5,7 +5,7 @@ import Loader from "../../../generic/Loader";
 
 type CategoryAction = {
     isLoading: boolean,
-    categories: any[],
+	categories: { name: string }[],
     error: string
 }
 
@@ -15,13 +15,7 @@ type PropsType = {
 }
 
 const CategoriesList: React.FC<PropsType> = ({ categories, callPostPerCategory }) => {
-    return (
-		<div className="categoriesContainer">
-			<div className="header-cate-container">
-				<BiCategory className="icon-header-cate-area"/>
-				<h2 className="title-area">Catégories</h2>
-			</div>
-			{ categories.isLoading ?
+	const loaderOrCategoryList = categories.isLoading ?
 				<div className="container-load">
 					<Loader className={"lds-ring"}/> 
 				</div>
@@ -31,7 +25,13 @@ const CategoriesList: React.FC<PropsType> = ({ categories, callPostPerCategory }
 						return <Category key={ index } handlerPostPerCategory={ callPostPerCategory } categoryData={ category } />;
 					}) }
 				</div>
-			}
+    return (
+		<div className="categoriesContainer">
+			<div className="header-cate-container">
+				<BiCategory className="icon-header-cate-area"/>
+				<h2 className="title-area">Catégories</h2>
+			</div>
+			{ categories.error ? <p>{ categories.error }</p> : loaderOrCategoryList }
 		</div>
     )
 }

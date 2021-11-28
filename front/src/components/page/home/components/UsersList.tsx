@@ -27,7 +27,7 @@ const UsersList: React.FC<PropsType> = ({ users }) => {
                 <FiUsers className="icon-header-cate-area" />
                 <h2 className="title-area">Utilisateurs</h2>
             </div>
-            <div className="list-users">{ stateOrData }</div>
+            <div className="list-users">{ users.error ? <p>{ users.error }</p> : stateOrData }</div>
         </div>
     );
 }

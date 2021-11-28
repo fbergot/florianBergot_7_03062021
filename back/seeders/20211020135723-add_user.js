@@ -16,7 +16,7 @@ module.exports = {
 					password: "testflo",
 					username: "Florence",
 					isAdmin: "false",
-                    businessRole: "PDG"
+                    businessRole: "Dev WEB"
 				},
 			], {});  
   	},

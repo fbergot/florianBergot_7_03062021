@@ -28,7 +28,7 @@ const PostsList: React.FC<PropsType> = ({ posts, update }) => {
 			</div>
 			<div className="postsContainer">
 				<PostCreation update={ update }/>
-				{ loadingOrListPosts }
+				{ posts.error ? <p>{ posts.error }</p> : loadingOrListPosts }
 			</div>
 		</div>
     )

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from 'react-redux';
 import { apiCallPosts, apiCallPostsPerCategory } from "../../../../store/posts/postActions";
 import { apiCallCategories } from "../../../../store/categories/categoryActions";
@@ -55,7 +55,7 @@ const HomeContainer: React.FC<Props> = ({ changeHeader, postsApi, postsPerCatego
 		postsPerCategory(idCategory);
 	}
 
-	// update after add post
+	// update after add post (dispatch actions)
 	const update = () => {
 		postsApi();
 		categoriesApi();

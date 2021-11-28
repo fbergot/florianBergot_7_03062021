@@ -80,6 +80,6 @@ class ToAPI {
 const urlToApi: string | undefined = process.env.REACT_APP_BASE_URL_TO_API;
 if (!urlToApi) throw Error("Url to API missing in env var");
 
-const toApiInstance = new ToAPI(axios, urlToApi ?? "");
+const toApiInstance = new ToAPI(axios, urlToApi);
 
 export default toApiInstance;

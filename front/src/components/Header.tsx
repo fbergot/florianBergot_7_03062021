@@ -16,7 +16,7 @@ const Header: React.FC<Props> = ({ headerProfile }) => {
 				<div className='titleContainer'>
 					<h1 className="title">
 						Le nouveau réseau social de l'entreprise Groupomania !
-						<p>Venez découvrir le tout nouveau petit réseau social destiné aux membres de la société</p>			
+						<p>Venez découvrir notre tout nouveau réseau social destiné aux membres de la société</p>			
 					</h1>
 				</div>
 
