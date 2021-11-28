@@ -53,6 +53,7 @@ const CommentsList: React.FC<PropsType> = ({ idPost }) => {
 			setError(responseApiAddComments);
 			return;
 		}
+		
 		const responseApiGetAllComments = await toApiInstance.callApiRefact("GET", `comments/getAll/${idPost}`, {}, {}, token);
 		if (typeof responseApiGetAllComments === 'string') {
 			setError(responseApiGetAllComments);

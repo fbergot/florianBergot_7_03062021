@@ -42,7 +42,8 @@ const PostCreation: React.FC<PropsType> = ({ update }) => {
 		formData.append('category', category);
 		formData.append("image", fileInput.current.files[0]);
         // call API
-		const responseApi = await toApiInstance.callApiRefact("POST", uriToApi_addPost, formData, {}, token);
+        const responseApi = await toApiInstance.callApiRefact("POST", uriToApi_addPost, formData, {}, token);
+        
         if (typeof responseApi === "string") {
             setError(responseApi);
             return;
@@ -67,15 +68,15 @@ const PostCreation: React.FC<PropsType> = ({ update }) => {
 
                     
                     { categoryState.categories.length !== 0 &&
-                    <div className="cont-createCat">
-                        <label>Catégories existantes</label>
-                        <select value={ category } onChange={(e) => setCategory(e.target.value)}>
-                            <option value='divers'>Choisir une catégorie</option>
-                            {categoryState.categories.map((category: { name: string }, index: number) => {
-                                return <option key={ index } value={ category.name }>{ category.name }</option>
-                            })}
-                        </select>
-                    </div> 
+                        <div className="cont-createCat">
+                            <label>Catégories existantes</label>
+                            <select value={ category } onChange={(e) => setCategory(e.target.value)}>
+                                <option value='divers'>Choisir une catégorie</option>
+                                {categoryState.categories.map((category: { name: string }, index: number) => {
+                                    return <option key={ index } value={ category.name }>{ category.name }</option>
+                                })}
+                            </select>
+                        </div> 
                     }
                     <div className="cont-createCat">
                         <label htmlFor="createCat">Créer sa catégorie</label>

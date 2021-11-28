@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { connect } from 'react-redux';
 import { apiCallPosts, apiCallPostsPerCategory } from "../../../../store/posts/postActions";
 import { apiCallCategories } from "../../../../store/categories/categoryActions";
@@ -39,16 +39,16 @@ type Props = {
 const HomeContainer: React.FC<Props> = ({ changeHeader, postsApi, postsPerCategory,
 		usersApi, categoriesApi, posts, users, categories }) => {
 		
-	const error = useRef(undefined);
+	const [error, setError] = useState(null);
+
 	useEffect(() => {
-			Promise.all([usersApi(), postsApi(), categoriesApi()])
-				.then($ => {
-					changeHeader();
-				})
-				.catch((err) => {
-					error.current = err.message;
-				})
-			
+		Promise.all([usersApi(), postsApi(), categoriesApi()])
+			.then($ => {
+				changeHeader();
+			})
+			.catch((err) => {
+				setError(err.message);
+			})			
 	}, [postsApi, usersApi, categoriesApi, changeHeader]);
 
 	const postsPerCategoryCall = (idCategory: string) => {
@@ -60,12 +60,13 @@ const HomeContainer: React.FC<Props> = ({ changeHeader, postsApi, postsPerCatego
 		postsApi();
 		categoriesApi();
 	}
-	// traiter la variable d'erreur en affichant une erreur
+
 	return (
 		<main className="mainContainer">
+			{ error && <p>{ error }</p> }
 			<UsersList users={ users }/>
-			<PostsList posts={posts} update={ update }/>
-			<CategoriesList categories={categories} callPostPerCategory={ postsPerCategoryCall }/>            
+			<PostsList posts={ posts } update={ update }/>
+			<CategoriesList categories={ categories } callPostPerCategory={ postsPerCategoryCall }/>            
 		</main>
 	)
 }

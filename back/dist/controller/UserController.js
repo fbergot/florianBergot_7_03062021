@@ -222,7 +222,7 @@ var UserController = /** @class */ (function () {
     UserController.prototype["delete"] = function (req, res, next) {
         var _a, _b;
         return __awaiter(this, void 0, void 0, function () {
-            var tokenPayload, user, posts_1, destImages_1, userDeleted, destImages, err_4;
+            var tokenPayload, user, posts, destImages_1, userDeleted, destImages, err_4;
             var _this = this;
             return __generator(this, function (_c) {
                 switch (_c.label) {
@@ -246,11 +246,11 @@ var UserController = /** @class */ (function () {
                                 where: { UserId: user.id }
                             })];
                     case 3:
-                        posts_1 = _c.sent();
-                        if (posts_1) {
+                        posts = _c.sent();
+                        if (posts) {
                             destImages_1 = (_a = process.env.DEST_POSTS_ATTACHMENTS) !== null && _a !== void 0 ? _a : "posts_attachments";
-                            // loop in all posts for erase imgs
-                            posts_1.forEach(function (post) { return __awaiter(_this, void 0, void 0, function () {
+                            // loop in all posts for erase imgs before delete posts
+                            posts.forEach(function (post) { return __awaiter(_this, void 0, void 0, function () {
                                 function eraseImgPost() {
                                     var _a;
                                     var fileName = (_a = post.attachment) === null || _a === void 0 ? void 0 : _a.split("/" + destImages_1 + "/")[1];
@@ -265,7 +265,7 @@ var UserController = /** @class */ (function () {
                                 return __generator(this, function (_a) {
                                     switch (_a.label) {
                                         case 0:
-                                            if (!posts_1.attachment) return [3 /*break*/, 2];
+                                            if (!post.attachment) return [3 /*break*/, 2];
                                             return [4 /*yield*/, eraseImgPost()];
                                         case 1:
                                             _a.sent();

@@ -774,6 +774,10 @@
 	padding: .5rem;
 }
 
+.container-signup > form {
+	margin-bottom: .7rem;
+}
+
 .form-group {
 	display: flex;
 	flex-direction: column;
@@ -784,11 +788,12 @@
 
 .form-group > label {
 	margin-bottom: .3rem;
+	font-weight: 400;
 }
 
 .form-group > input {
 	padding: .3rem;
-	width: 250px;
+	width: 400px;
 }
 
 .form-group .form-control-file {
@@ -812,6 +817,10 @@
 	padding: .5rem;
 }
 
+.container-signin > form {
+	margin-bottom: .7rem;
+}
+
 .signin-cont-button {
 	display: flex;
 	justify-content: space-between;
@@ -830,4 +839,5 @@
 	color: #fd2d01;
 	border: none;
 	margin-right: .6rem;
+	margin-top: .2rem;
 }

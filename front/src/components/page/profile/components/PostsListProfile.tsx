@@ -13,9 +13,18 @@ type Props = {
 	};
 }
 
+type Post = {
+	createdAt: string;
+	username: string;
+	Categories: any[];
+	content: string;
+	attachment: string;
+
+}
+
 const PostsListProfile: React.FC<Props> = ({ data }) => {
 	const loadingOrListOfPost = data.isLoading ? <Loader className={"lds-ring-color"} /> : 
-		data.infos.Posts && data.infos.Posts.length !== 0 && data.infos.Posts.map((post: any, index: number) => {
+		data.infos.Posts && data.infos.Posts.length !== 0 && data.infos.Posts.map((post: Post, index: number) => {
 			return <SimplePostProfile creator={ data.infos.username } key={ index } data={ post }/>
 		})
     return (
@@ -25,7 +34,6 @@ const PostsListProfile: React.FC<Props> = ({ data }) => {
 					<BiMessageDetail className="icon-header-cate-area"/>
 					<h2 className="title-post-profile-area">Vos derniers postes</h2>
 				</div>
-				{}
 			</div>
 			{ loadingOrListOfPost }		
 		</div>

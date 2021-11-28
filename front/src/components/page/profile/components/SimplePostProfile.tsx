@@ -7,7 +7,7 @@ type Props = {
 	data: {
         createdAt: string;
         username: string;
-        Categories: any[];
+        Categories: { name: string }[];
         content: string;
         attachment: string;
     };
@@ -34,7 +34,7 @@ const SimplePostProfile: React.FC<Props> = ({ data, creator }) => {
 				</div>
 
 				<p className="card-text">{ data.content }</p>
-                {img}
+                { img }
             </div>
 		</article>
     );

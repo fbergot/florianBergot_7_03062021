@@ -3,7 +3,6 @@ import Loader from "../../../generic/Loader";
 import User from "./User";
 import { FiUsers } from 'react-icons/fi';
 
-
 type UserState = {
     isLoading: boolean,
     users: {
