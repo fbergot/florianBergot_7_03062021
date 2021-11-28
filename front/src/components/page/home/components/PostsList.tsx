@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Post from "../../../Post";
 import Loader from '../../../generic/Loader';
 import { BiMessageDetail } from 'react-icons/bi';
@@ -16,22 +16,27 @@ type PropsType = {
 }
 
 const PostsList: React.FC<PropsType> = ({ posts, update }) => {
+	const [displayCreationPost, setDisplayCreationPost] = useState<boolean>(false);
 	const loadingOrListPosts = posts.isLoading ? <Loader className={"lds-ring"} /> :
 		posts.posts && posts.posts.map((post: any, index: number) => {
-			return <Post key={ index } postData={ post } />
+			return <Post key={ index } postData={ post }/>
 		});	
 	return (
 		<div className="postsListContainer">
 			<div className="header-cate-container">
-				<BiMessageDetail className="icon-header-post-area"/>
-				<h2 className="title-area-p">Les derniers postes / Ajouter votre poste</h2>
+				<h2 className="title-area-p">
+					<button onClick={() => setDisplayCreationPost(!displayCreationPost)}>
+						<BiMessageDetail className="icon-header-post-area" />
+						Créer un poste
+					</button>
+				</h2>
 			</div>
 			<div className="postsContainer">
-				<PostCreation update={ update }/>
+				{ displayCreationPost && <PostCreation update={ update }/> }
 				{ posts.error ? <p>{ posts.error }</p> : loadingOrListPosts }
 			</div>
 		</div>
-    )
+  );
 }
 
 export default PostsList;

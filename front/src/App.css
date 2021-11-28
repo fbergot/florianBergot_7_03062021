@@ -94,9 +94,10 @@
 	grid-template-columns: 11% 78% 11%;
 	grid-template-areas: "userscontainer postscontainer categoriescontainer";
 }
-/* categoriesList */
+
+/* categories division */
+
 .categoriesContainer {
-	/* border: 1px solid black; */
 	grid-area: categoriescontainer;
 	background-color: var(--backgrdColorDivisions);
 	display: flex;
@@ -113,11 +114,10 @@
 }
 
 .icon-header-post-area {
-	margin-top: .2rem;
-	font-size: 1.9rem;
+	margin-top: .05rem;
+	font-size: 1.3rem;
 	color: #FFF;
-	padding: .2rem;
-	margin-right: .2rem;
+	margin-right: .6rem;
 }
 
 .header-cate-container {
@@ -167,7 +167,7 @@
 	text-align: center;
 }
 
-/* usersList */
+/* usersList division */
 
 .usersListContainer {
 	grid-area: userscontainer;
@@ -225,7 +225,7 @@
 	font-size: 1.9rem;
 }
 
-/* postList */
+/* postList division */
 
 .postsListContainer {
 	grid-area: postscontainer;
@@ -259,6 +259,20 @@
 	font-size: 1rem;
 	font-family: var(--contentFontRegular);
 }
+
+.title-area-p > button {
+	color: #FFF;
+	font-weight: 400;
+	font-size: 1rem;
+	font-family: var(--contentFontRegular);
+	border-radius: 7px;
+	background-color: var(--bubblesColor);
+	border: none;
+	display: flex;
+	cursor: pointer;
+	padding: .1rem .5rem .1rem .5rem; 
+}
+
 .postsContainer {
 	min-width: 400px;
 	width: 100%;	
@@ -667,20 +681,28 @@
 	background-color: #FFF;
 	margin-bottom: 1rem;
 	padding: 1rem 1rem 0.2rem 1rem;
+	border-radius: 13px;
+	
 }
-
-.postCreation-container > p {
-	text-align: center;
-	padding-top: 1rem;
-	padding-bottom: 1rem;
-	font-family: 'Roboto';
-	font-weight: bold;
+.postCreation-container > form {
+	display: flex;
+	justify-content: space-around;
+	
 }
 
 .container-areaMessge {
 	display: flex;
+	flex-direction: column;
 	justify-content: center;
 	align-items: center;
+	width: 220%;
+	border: 1px solid blue;
+}
+
+.container-areaMessge > p {
+	font-family: "Roboto";
+	font-size: 1rem;
+	font-weight: 400;
 }
 
 .areaMessage {
@@ -690,11 +712,18 @@
 	padding: .5rem;
 }
 
+input[type="file"] {
+    display: none;
+}
+
 .cont-img-cat {
 	display: flex;
-	justify-content: space-around;
-	align-items: center;
+	flex-direction: column;
+	justify-content: center;
+	align-items: space-around;
 	padding: .5rem;
+	border: 1px solid red;
+	width: 50%;
 }
 
 .cont-image {
@@ -708,14 +737,26 @@
 	margin-top: .2rem;
 	
 }
-.cont-image > input {
+
+#label-file {
 	padding: .4rem;
-	
+	cursor: pointer;
+	color: #fd2d01;
+	text-align: center;
+	border: 1px solid grey;
+	width: 100%;
+	font-size: .9rem;
+}
+
+#label-file:hover{
+	background-color: rgb(215, 215, 216);
+	transition: .3s;
 }
 
 .cont-select {
 	display: flex;
 }
+
 .cont-createCat {
 	display: flex;
 	flex-direction: column;

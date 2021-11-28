@@ -217,10 +217,14 @@ class PostController {
 			// ckeck if it is the author || admin user
 			if ((post.UserId === tokenPayload.userId) || tokenPayload.isAdmin) {
 				// if img, delete img
-				let destImages: undefined | string;
-				if (post.attachment) {
-					destImages = process.env.DEST_POSTS_ATTACHMENTS ?? "post_attachments";
-					await this.eraseImage(post, destImages);
+				try {
+					let destImages: undefined | string;
+					if (post.attachment) {
+						destImages = process.env.DEST_POSTS_ATTACHMENTS ?? "post_attachments";
+						await this.eraseImage(post, destImages);
+					}
+				} catch (err) {
+					console.error(err);
 				}
 				// del post
 				const deletedPost = await post.destroy<Post>();

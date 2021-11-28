@@ -57,16 +57,14 @@ const PostCreation: React.FC<PropsType> = ({ update }) => {
             { error }
             <form onSubmit={(e) => onSubmit(e)} encType="multipart/form-data">
                 <div className="container-areaMessge">
-                    <textarea className="areaMessage" placeholder='Votre message...' value={ message } onChange={(e) => setMessage(e.target.value)}></textarea>
+                    {/* <p>Créer votre message</p> */}
+                    <textarea className="areaMessage" placeholder='Votre message...' value={message} onChange={(e) => setMessage(e.target.value)}></textarea>
+                    <div className='cont-button'>
+                        <button type="submit">Créer mon poste</button>
+                    </div>
                 </div>
 
-                <div className='cont-img-cat'>
-                    <div className='cont-image'>
-                        <label htmlFor="image">Ajouter une image</label>
-                        <input id="image" type='file' ref={ fileInput } name="image"></input>
-                    </div>
-
-                    
+                <div className='cont-img-cat'>                 
                     { categoryState.categories.length !== 0 &&
                         <div className="cont-createCat">
                             <label>Catégories existantes</label>
@@ -83,10 +81,14 @@ const PostCreation: React.FC<PropsType> = ({ update }) => {
                         <input placeholder="Ex: informatique" value={ category } onChange={(e) => setCategory(e.target.value)} id='createCat' type='text'/>
                     </div>
                     
+                    <div className='cont-image'>
+                        <label id="label-file" htmlFor="image">
+                            Ajouter une image
+                            <input id="image" type='file' ref={ fileInput } name="image"/>
+                        </label>
+                    </div>
                 </div>
-                <div className='cont-button'>
-                    <button type="submit">Créer mon poste</button>
-                </div>
+                
             </form>
             
         </div>
