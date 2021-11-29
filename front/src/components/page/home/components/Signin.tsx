@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import toApiInstance from "../../../../class/appCore/ToAPI";
 import toLocalStorageInst from "../../../../class/utils/ToLocalStorage";
+import { useHistory } from 'react-router-dom';
 
 type Props = {
     switchHandle: () => void;
@@ -10,6 +11,7 @@ type Props = {
 const Signin: React.FC<Props> = ({ switchHandle, buttonMessage }) => {
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
+    const history = useHistory();
 
     const handle = (e: React.ChangeEvent<HTMLInputElement>) => {
         switch (e.target.name) {
@@ -30,13 +32,16 @@ const Signin: React.FC<Props> = ({ switchHandle, buttonMessage }) => {
             password: password
         }
 
+        // call API
         const result = await toApiInstance.toApi('POST', 'users/signin', data, {})
         if (result && typeof result !== 'string') {
             // add infos user in localStor
             const returnOfStor = toLocalStorageInst.tranformAndSetItem(result.data, 'user');
             if (returnOfStor) {
-                window.location.assign('/');
+                history.push('/');
+                return;
             }
+            console.error(returnOfStor);
         } else {
             console.error("Une erreur est survenue");
         }       

@@ -16,7 +16,7 @@ const UserData: React.FC<Props> = ({ data }) => {
             <div className="container-header-userData-profile">
                 <div className="header-userData-profile">
                     <FiUsers className="icon-header-cate-area" />
-                    <h2 className="title-area">Informations du profil</h2>
+                    <h2 className="title-area-profile">Informations du profil</h2>
                 </div>
             </div>
             { data.isLoading ? <Loader className={"lds-ring-color"} /> :

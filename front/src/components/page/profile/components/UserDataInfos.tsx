@@ -3,6 +3,7 @@ import Moment from '../../../../class/appCore/Moment';
 import moment from 'moment';
 import toLocaleStorageInst from '../../../../class/utils/ToLocalStorage';
 import toApiInstance from '../../../../class/appCore/ToAPI';
+import { useHistory } from 'react-router-dom';
 
 type Props = {
     data: {
@@ -16,6 +17,7 @@ type Props = {
 
 
 const UserDataInfos: React.FC<Props> = ({ data }) => {
+    const history = useHistory();
     let token: string = '';
 	const userInfos: { token: string, id: number } = toLocaleStorageInst.getItemAndTransform("user");
     if (userInfos) {
@@ -29,13 +31,6 @@ const UserDataInfos: React.FC<Props> = ({ data }) => {
     const imgAvatar = data.urlAvatar ? <img className="img-user-profile" src={data.urlAvatar} alt="avatar" /> : null;
 
     /**
-     * for update profile data
-     */
-    const updateHandleClick = () => {
-        alert("hello")
-    }
-
-    /**
      * for delete user account
      */
     const deleteHandleClick = async () => {
@@ -46,23 +41,25 @@ const UserDataInfos: React.FC<Props> = ({ data }) => {
             console.error("Une erreur s'est produite lors de la suppression du compte");
         }
 
-        window.location.assign('/');
+        // redirect
+        history.push('/');
     }
 
     return (
-        <div className="r">
+        <section className="section-user-infos">
             <div className="container-profile-userDataHeader">
                 { imgAvatar }
                 <h3>{ data.username }</h3>
             </div>
-            <p>Role dans l'entreprise: { data.businessRole }</p>	
-            <p>Email: { data.email }</p>
-            <p>Compte crée il y a { timeAgo }</p>
-            <p>
-                <button onClick={() => updateHandleClick()} type="button">Modifier les informations du profile</button>
-                <button onClick={() => deleteHandleClick()} type="button">Supprimer mon compte</button>
-            </p>
-		</div>
+            <div className="container-profile-userData">
+                <p>Role dans l'entreprise: <span>{ data.businessRole }</span> </p>	
+                <p>Email: <span>{ data.email }</span></p>
+                <p>Compte crée il y a <span>{ timeAgo }</span></p>
+                <p>               
+                    <button onClick={() => deleteHandleClick()} type="button">Supprimer mon compte</button>
+                </p>
+            </div>
+		</section>
     );
 }
 

@@ -602,14 +602,13 @@
 
 .main-profile {
 	display: grid;
-	grid-template-columns: 25% 80%;
+	grid-template-columns: 25% 75%;
 	grid-template-areas: "userdata posts_profile_container ";
 }
 
 /* userData area*/
 .userData-container {
 	grid-area: userdata;
-	border: 1px solid black;
 }
 
 .container-header-userData-profile {
@@ -624,29 +623,64 @@
 	justify-content: center;
 }
 
+.title-area-profile {
+	width: 100%;
+	margin-top: .2rem;
+	margin-bottom: .15rem;
+	text-align: center;
+	background-color: var(--backgrdColorDivisions);
+	color: #FFF;
+	font-weight: 400;
+	padding: .5rem 0 .5rem 0;
+	font-size: 1rem;
+	font-family: var(--contentFontRegular);
+
+}
+
+.section-user-infos {
+	margin-top: 1rem;
+	border: 1px solid gray;
+	font-family: "Roboto";
+	border-radius: 13px;
+}
+
 .container-profile-userDataHeader {
 	display: flex;
-	justify-content: space-between;
+	flex-direction: column;
 	align-items: center;
+	margin-top: .5rem;
 }
 
 .container-profile-userDataHeader > h3 {
-	margin-right: 1rem;
+	text-align: center;
+	margin-top: .5rem;
+}
+
+.container-profile-userData {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.container-profile-userData > p {
+	padding: .4rem;
+}
+
+.container-profile-userData > p > span {
+	font-weight: 500;
 }
 
 .img-user-profile {
-	width: 100px;
-	height: auto;
-	border-radius: 50%;
-	border: 2px solid black;
+	width: 150px;
+	height: 150px;
+	border-radius: 100%;
 	object-fit: cover;
 	margin-left: .5rem;
 }
 
 /* posts user area */
 .profilePosts-list-container {
-	grid-area: posts_profile_container;
-	border: 1px solid black;
+	grid-area: posts_profile_container;	
 }
 
 .container-posts-profile {
@@ -675,15 +709,33 @@
 	font-family: var(--contentFontRegular);
 }
 
+.article-container {
+	border: 1px sild blue;
+	width: 100%;
+	display: flex;
+	margin-top: 1rem;
+	flex-direction: column;
+	align-items: center;
+}
+
+.card-profile {
+	font-family: "Roboto";
+	width: 95%;
+	background-color: #FFF;
+	margin-bottom: 1rem;
+	border-radius: 13px;
+	position: relative;
+	border: 1px solid gray;
+}
 /* post creation  */
 
 .postCreation-container {
 	background-color: #FFF;
 	margin-bottom: 1rem;
 	padding: 1rem 1rem 0.2rem 1rem;
-	border-radius: 13px;
-	
+	border-radius: 13px;	
 }
+
 .postCreation-container > form {
 	display: flex;
 	justify-content: space-around;
@@ -870,6 +922,7 @@ input[type="file"] {
 .send-button {
 	margin-left: 1rem;
 }
+
 .signin-cont-button > button{
 	padding: .3rem;
 	cursor: pointer;

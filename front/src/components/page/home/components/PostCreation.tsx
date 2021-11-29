@@ -14,7 +14,7 @@ type PropsType = {
 }
 
 const PostCreation: React.FC<PropsType> = ({ update }) => {
-    const fileInput: React.RefObject<any> = createRef<any>();
+    const fileInput: React.RefObject<any> = createRef();
     const [message, setMessage] = useState<string>('');
     const [category, setCategory] = useState<string>('');
     const categoryState = useSelector((state: GlobalState) => state.category);
@@ -67,9 +67,9 @@ const PostCreation: React.FC<PropsType> = ({ update }) => {
                 <div className='cont-img-cat'>                 
                     { categoryState.categories.length !== 0 &&
                         <div className="cont-createCat">
-                            <label>Catégories existantes</label>
+                            {/* <label>Catégories existantes</label> */}
                             <select value={ category } onChange={(e) => setCategory(e.target.value)}>
-                                <option value='divers'>Choisir une catégorie</option>
+                                <option value='divers'>Catégories existantes</option>
                                 {categoryState.categories.map((category: { name: string }, index: number) => {
                                     return <option key={ index } value={ category.name }>{ category.name }</option>
                                 })}
@@ -77,8 +77,8 @@ const PostCreation: React.FC<PropsType> = ({ update }) => {
                         </div> 
                     }
                     <div className="cont-createCat">
-                        <label htmlFor="createCat">Créer sa catégorie</label>
-                        <input placeholder="Ex: informatique" value={ category } onChange={(e) => setCategory(e.target.value)} id='createCat' type='text'/>
+                        {/* <label htmlFor="createCat">Créer sa catégorie</label> */}
+                        <input placeholder="Créer une catégorie, ex: noël" value={ category } onChange={(e) => setCategory(e.target.value)} id='createCat' type='text'/>
                     </div>
                     
                     <div className='cont-image'>

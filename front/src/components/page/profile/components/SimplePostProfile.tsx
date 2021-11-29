@@ -20,7 +20,7 @@ const SimplePostProfile: React.FC<Props> = ({ data, creator }) => {
     const timeAgo = moment(data.createdAt).fromNow(true);
 	const img = data.attachment ? <img className="card-img" src={ data.attachment } alt="Pièce jointe du post" /> : null;
     return (
-		<article className="card">
+		<article className="card-profile">
             <div className="card-body">
                 <div className="card-user-identifierCont">
 					<div className="container-img-title">

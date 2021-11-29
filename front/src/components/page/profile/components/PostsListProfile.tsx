@@ -35,7 +35,9 @@ const PostsListProfile: React.FC<Props> = ({ data }) => {
 					<h2 className="title-post-profile-area">Vos derniers postes</h2>
 				</div>
 			</div>
-			{ loadingOrListOfPost }		
+			<div className="article-container">
+				{ loadingOrListOfPost }		
+			</div>
 		</div>
     );
 }
