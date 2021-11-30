@@ -293,12 +293,14 @@ var PostController = /** @class */ (function () {
                             return [2 /*return*/];
                         }
                         if (!((post.UserId === tokenPayload.userId) || tokenPayload.isAdmin)) return [3 /*break*/, 7];
+                        // del comments
                         return [4 /*yield*/, this.commentModel.destroy({
                                 where: { postId: req.params.id }
                             })
                             // if img, delete img				
                         ];
                     case 3:
+                        // del comments
                         _b.sent();
                         destImages = void 0;
                         if (!post.attachment) return [3 /*break*/, 5];

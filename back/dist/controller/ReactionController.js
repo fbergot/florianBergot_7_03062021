@@ -155,7 +155,7 @@ var ReactionController = /** @class */ (function () {
                     case 5:
                         if (!(req.body.likeOrDislike === 'dislike')) return [3 /*break*/, 9];
                         return [4 /*yield*/, this.reactionPostModel.findOne({
-                                where: { postId: post.id }
+                                where: { postId: post.id, reactionId: idReaction }
                             })];
                     case 6:
                         oldReactionPost = _b.sent();
@@ -175,7 +175,7 @@ var ReactionController = /** @class */ (function () {
                     case 11:
                         if (!(req.body.likeOrDislike === 'like')) return [3 /*break*/, 15];
                         return [4 /*yield*/, this.reactionPostModel.findOne({
-                                where: { postId: post.id }
+                                where: { postId: post.id, reactionId: idReaction }
                             })];
                     case 12:
                         oldReactionPost = _b.sent();

@@ -15,7 +15,8 @@ module.exports = (sequelize, DataTypes) => {
 			});
 			this.hasMany(Comment, {
 				foreignKey: {
-					allowNull: true,         
+					allowNull: false,
+					name: "PostId"
 				},
 				onDelete: "cascade"
 			});

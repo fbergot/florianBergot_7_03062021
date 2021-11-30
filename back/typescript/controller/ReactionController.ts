@@ -114,7 +114,7 @@ class ReactionController {
 									return;
 								} else if (req.body.likeOrDislike === 'dislike') {
 									const oldReactionPost = await this.reactionPostModel.findOne({
-										where: {postId: post.id}
+										where: {postId: post.id, reactionId: idReaction}
 									})
 									await oldReactionPost.destroy();
 									await oldReaction.destroy<Reaction>();
@@ -128,7 +128,7 @@ class ReactionController {
 									return;
 								} else if (req.body.likeOrDislike === 'like') {
 									const oldReactionPost = await this.reactionPostModel.findOne({
-										where: {postId: post.id}
+										where: {postId: post.id, reactionId: idReaction}
 									})
 									await oldReactionPost.destroy();
 									await oldReaction.destroy<Reaction>();

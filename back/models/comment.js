@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
 			this.belongsTo(Post, {
 				foreignKey: {
 					allowNull: false,
+					name: "PostId"
 				},
 				onDelete: "cascade"
 			});
