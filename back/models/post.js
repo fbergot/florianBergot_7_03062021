@@ -14,10 +14,6 @@ module.exports = (sequelize, DataTypes) => {
 				through: "CategoryPost"
 			});
 			this.hasMany(Comment, {
-				foreignKey: {
-					allowNull: false,
-					name: "PostId"
-				},
 				onDelete: "cascade"
 			});
 			this.belongsToMany(Reaction, {

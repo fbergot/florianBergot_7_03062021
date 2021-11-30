@@ -215,11 +215,7 @@ class PostController {
 			}
 
 			// ckeck if it is the author || admin user
-			if ((post.UserId === tokenPayload.userId) || tokenPayload.isAdmin) {
-				// del comments
-				await this.commentModel.destroy({
-					where: { postId: req.params.id }
-				})
+			if ((post.UserId === tokenPayload.userId) || tokenPayload.isAdmin) {			
 				// if img, delete img				
 				let destImages: undefined | string;
 				if (post.attachment) {

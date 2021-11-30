@@ -56,41 +56,42 @@ const PostCreation: React.FC<PropsType> = ({ update }) => {
         <div className='postCreation-container'>
             { error }
             <form onSubmit={(e) => onSubmit(e)} encType="multipart/form-data">
-                <div className="container-areaMessge">
-                    {/* <p>Créer votre message</p> */}
-                    <textarea className="areaMessage" placeholder='Votre message...' value={message} onChange={(e) => setMessage(e.target.value)}></textarea>
-                    <div className='cont-button'>
-                        <button type="submit">Créer mon poste</button>
+                <div className="general-display-areaMessage">
+                    <div className="container-areaMessage">
+                        {/* <p>Créer votre message</p> */}
+                        <textarea className="areaMessage" placeholder='Votre message...' value={message} onChange={(e) => setMessage(e.target.value)}></textarea>                       
                     </div>
-                </div>
 
-                <div className='cont-img-cat'>                 
-                    { categoryState.categories.length !== 0 &&
+                    <div className='cont-img-cat'>                 
+                        { categoryState.categories.length !== 0 &&
+                            <div className="cont-createCat">
+                                {/* <label>Catégories existantes</label> */}
+                                <select value={ category } onChange={(e) => setCategory(e.target.value)}>
+                                    <option value='divers'>Catégories existantes</option>
+                                    {categoryState.categories.map((category: { name: string }, index: number) => {
+                                        return <option key={ index } value={ category.name }>{ category.name }</option>
+                                    })}
+                                </select>
+                            </div> 
+                        }
                         <div className="cont-createCat">
-                            {/* <label>Catégories existantes</label> */}
-                            <select value={ category } onChange={(e) => setCategory(e.target.value)}>
-                                <option value='divers'>Catégories existantes</option>
-                                {categoryState.categories.map((category: { name: string }, index: number) => {
-                                    return <option key={ index } value={ category.name }>{ category.name }</option>
-                                })}
-                            </select>
-                        </div> 
-                    }
-                    <div className="cont-createCat">
-                        {/* <label htmlFor="createCat">Créer sa catégorie</label> */}
-                        <input placeholder="Créer une catégorie, ex: noël" value={ category } onChange={(e) => setCategory(e.target.value)} id='createCat' type='text'/>
-                    </div>
-                    
-                    <div className='cont-image'>
-                        <label id="label-file" htmlFor="image">
-                            Ajouter une image
-                            <input id="image" type='file' ref={ fileInput } name="image"/>
-                        </label>
+                            {/* <label htmlFor="createCat">Créer sa catégorie</label> */}
+                            <input placeholder="Créer une catégorie, ex: noël" value={ category } onChange={(e) => setCategory(e.target.value)} id='createCat' type='text'/>
+                        </div>
+                        
+                        <div className='cont-image'>
+                            <label id="label-file" htmlFor="image">
+                                Ajouter une image
+                                <input id="image" type='file' ref={ fileInput } name="image"/>
+                            </label>
+                        </div>
                     </div>
                 </div>
                 
+            <div className='cont-button'>
+                <button type="submit">Créer mon poste</button>
+            </div>
             </form>
-            
         </div>
     )
 }

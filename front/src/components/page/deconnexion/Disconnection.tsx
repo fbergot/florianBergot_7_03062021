@@ -1,10 +1,11 @@
 import React from "react";
+import { useHistory } from "react-router-dom";
 
 const Disconnection: React.FC = () => {
-    return (
-        <div>
-        </div>
-    )
-}
+    const history = useHistory();
+    window.localStorage.removeItem("user");
+    history.push("/");
+    return <></>;
+};
 
 export default Disconnection;

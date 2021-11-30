@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
 		  });
 		  this.belongsToMany(Post, {
 			  through: ReactionPost,
-			  onDelete: 'CASCADE'
+			  onDelete: 'cascade'
 		  });
 		}
 	};

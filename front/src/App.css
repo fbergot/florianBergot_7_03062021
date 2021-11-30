@@ -602,7 +602,7 @@
 
 .main-profile {
 	display: grid;
-	grid-template-columns: 25% 75%;
+	grid-template-columns: 20% 80%;
 	grid-template-areas: "userdata posts_profile_container ";
 }
 
@@ -617,6 +617,7 @@
 	justify-content: center;
 	align-items: center;
 }
+
 .header-userData-profile {
 	background-color: var(--backgrdColorDivisions);
 	display: flex;
@@ -637,8 +638,14 @@
 
 }
 
+.cont-userDataInfos {
+	display: flex;
+	justify-content: center;
+}
+
 .section-user-infos {
 	margin-top: 1rem;
+	width: 90%;
 	border: 1px solid gray;
 	font-family: "Roboto";
 	border-radius: 13px;
@@ -710,7 +717,6 @@
 }
 
 .article-container {
-	border: 1px sild blue;
 	width: 100%;
 	display: flex;
 	margin-top: 1rem;
@@ -727,38 +733,47 @@
 	position: relative;
 	border: 1px solid gray;
 }
-/* post creation  */
+
+/* ------ post creation  */
 
 .postCreation-container {
 	background-color: #FFF;
 	margin-bottom: 1rem;
-	padding: 1rem 1rem 0.2rem 1rem;
+	padding: 1rem 1rem 1rem 1rem;
 	border-radius: 13px;	
 }
 
 .postCreation-container > form {
-	display: flex;
-	justify-content: space-around;
+	
 	
 }
 
-.container-areaMessge {
+.general-display-areaMessage {
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+}
+
+.container-areaMessage {
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
 	width: 220%;
-	border: 1px solid blue;
+	/* border: 1px solid blue; */
+	margin-top: 1.2rem;
 }
 
 .container-areaMessge > p {
 	font-family: "Roboto";
 	font-size: 1rem;
 	font-weight: 400;
+	
 }
 
 .areaMessage {
-	width: 90%;
+	width: 100%;
+	height: 120px;
 	font-family: "Roboto";
 	font-size: .9rem;
 	padding: .5rem;
@@ -773,25 +788,25 @@ input[type="file"] {
 	flex-direction: column;
 	justify-content: center;
 	align-items: space-around;
-	padding: .5rem;
-	border: 1px solid red;
+	padding: .5rem 0 .5rem .5rem;
+	/* border: 1px solid red; */
 	width: 50%;
 }
 
 .cont-image {
 	display: flex;
-	flex-direction: column;	
+	flex-direction: column;
+	margin-top: .9rem;	
 }
 
 .cont-image > label {
 	font-family: 'Roboto';
-	margin-right: .5rem;
-	margin-top: .2rem;
+	margin-right: .7rem;
 	
 }
 
 #label-file {
-	padding: .4rem;
+	padding: .35rem;
 	cursor: pointer;
 	color: #fd2d01;
 	text-align: center;
@@ -812,6 +827,7 @@ input[type="file"] {
 .cont-createCat {
 	display: flex;
 	flex-direction: column;
+	margin-top: .9rem;
 	/* margin-bottom: .5rem; */
 	
 }
@@ -829,18 +845,20 @@ input[type="file"] {
 	
 }
 .cont-createCat > select {
-	padding: .4rem;
+	padding: .35rem;
 	
 }
 
 .cont-button {
 	display: flex;
 	justify-content: center;
+	margin-top: .5rem;
 }
 
 .cont-button > button {
 	padding: .5rem;
 	cursor: pointer;
+	background-color: ;
 }
 
 /* signup */

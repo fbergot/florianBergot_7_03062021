@@ -279,7 +279,7 @@ var PostController = /** @class */ (function () {
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        _b.trys.push([0, 8, , 9]);
+                        _b.trys.push([0, 7, , 8]);
                         return [4 /*yield*/, Auth_1["default"].getTokenInfo(req)];
                     case 1:
                         tokenPayload = _b.sent();
@@ -292,36 +292,27 @@ var PostController = /** @class */ (function () {
                             res.status(404).json({ message: this.messages.noPost });
                             return [2 /*return*/];
                         }
-                        if (!((post.UserId === tokenPayload.userId) || tokenPayload.isAdmin)) return [3 /*break*/, 7];
-                        // del comments
-                        return [4 /*yield*/, this.commentModel.destroy({
-                                where: { postId: req.params.id }
-                            })
-                            // if img, delete img				
-                        ];
-                    case 3:
-                        // del comments
-                        _b.sent();
+                        if (!((post.UserId === tokenPayload.userId) || tokenPayload.isAdmin)) return [3 /*break*/, 6];
                         destImages = void 0;
-                        if (!post.attachment) return [3 /*break*/, 5];
+                        if (!post.attachment) return [3 /*break*/, 4];
                         destImages = (_a = process.env.DEST_POSTS_ATTACHMENTS) !== null && _a !== void 0 ? _a : "post_attachments";
                         return [4 /*yield*/, this.eraseImage(post, destImages)];
-                    case 4:
+                    case 3:
                         _b.sent();
-                        _b.label = 5;
-                    case 5: return [4 /*yield*/, post.destroy()];
-                    case 6:
+                        _b.label = 4;
+                    case 4: return [4 /*yield*/, post.destroy()];
+                    case 5:
                         deletedPost = _b.sent();
                         res.status(200).json({ message: this.messages.postDeleted, info: { idPostDeleted: deletedPost.id } });
                         return [2 /*return*/];
-                    case 7:
+                    case 6:
                         res.status(403).json({ error: this.messages.postNotDeleted });
-                        return [3 /*break*/, 9];
-                    case 8:
+                        return [3 /*break*/, 8];
+                    case 7:
                         err_5 = _b.sent();
                         res.status(500).json({ error: err_5.message });
-                        return [3 /*break*/, 9];
-                    case 9: return [2 /*return*/];
+                        return [3 /*break*/, 8];
+                    case 8: return [2 /*return*/];
                 }
             });
         });

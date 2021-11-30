@@ -19,8 +19,10 @@ const UserData: React.FC<Props> = ({ data }) => {
                     <h2 className="title-area-profile">Informations du profil</h2>
                 </div>
             </div>
-            { data.isLoading ? <Loader className={"lds-ring-color"} /> :
-                <UserDataInfos data={ data.infos }/> }			
+            <div className="cont-userDataInfos">
+                { data.isLoading ? <Loader className={"lds-ring-color"} /> :
+                    <UserDataInfos data={ data.infos }/> }			
+            </div>
 		</div>
     );
 }
