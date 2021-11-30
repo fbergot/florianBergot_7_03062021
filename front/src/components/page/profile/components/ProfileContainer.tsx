@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import PostsListProfile from "./PostsListProfile";
 import UserData from "./UserData";
 import { apiCallCurrentUserInfos } from "../../../../store/profile/profileActions";
-import { apiCallUsers2 } from '../../../../store/users/userActions';
+import { apiCallUsers } from '../../../../store/users/userActions';
 
 type RootState = {
     profileInfos: {
@@ -27,7 +27,7 @@ const ProfileContainer: React.FC<Props> = ({ displayInfosHeader }) => {
 	useEffect(() => {
 		const apiCall = async () => {
 			await apiCallCurrentUserInfos(dispatch);
-			await apiCallUsers2(dispatch);
+			await apiCallUsers(dispatch);
 			displayInfosHeader(true);
 		}
 		apiCall();

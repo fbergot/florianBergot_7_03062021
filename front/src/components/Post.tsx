@@ -110,7 +110,7 @@ const Post: React.FC<Props> = ({ postData }) => {
 	
 	const handleDelete = async () => {
 		const responseApi = await toApiInstance.callApiRefact('DELETE', `posts/delete/${postData.id}`, {}, {}, token);
-		dispatch(apiCallPosts());
+		apiCallPosts(dispatch);
 	}
 
 	// time ago & update moment locale

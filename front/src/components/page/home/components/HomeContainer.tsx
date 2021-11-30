@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from "react-redux";
 import { apiCallPosts, apiCallPostsPerCategory } from "../../../../store/posts/postActions";
 import { apiCallCategories } from "../../../../store/categories/categoryActions";
 import { apiCallUsers } from "../../../../store/users/userActions";
@@ -36,64 +36,41 @@ type Props = {
 	categories: CategoryState
 }
 
-const HomeContainer: React.FC<Props> = ({ changeHeader, postsApi, postsPerCategory,
-		usersApi, categoriesApi, posts, users, categories }) => {
-		
+const HomeContainer: React.FC<Props> = ({ changeHeader }) => {
+	
+	const states = useSelector((states: any )=> states);
+	const dispatch = useDispatch();	
 	const [error, setError] = useState(null);
 
 	useEffect(() => {
-		Promise.all([usersApi(), postsApi(), categoriesApi()])
+		Promise.all([apiCallUsers(dispatch), apiCallPosts(dispatch), apiCallCategories(dispatch)])
 			.then($ => {
 				changeHeader();
 			})
 			.catch((err) => {
 				setError(err.message);
 			})			
-	}, [postsApi, usersApi, categoriesApi, changeHeader]);
+	}, [changeHeader, dispatch]);
 
 	const postsPerCategoryCall = (idCategory: string) => {
-		postsPerCategory(idCategory);
+		apiCallPostsPerCategory(idCategory, dispatch);
 	}
 
-	// update after add post (dispatch actions)
-	const update = () => {
-		postsApi();
-		categoriesApi();
+	// update after add post
+	const update = async () => {
+		await apiCallPosts(dispatch);
+		await apiCallCategories(dispatch);
 	}
 
 	return (
 		<main className="mainContainer">
 			{ error && <p>{ error }</p> }
-			<UsersList users={ users }/>
-			<PostsList posts={ posts } update={ update }/>
-			<CategoriesList categories={ categories } callPostPerCategory={ postsPerCategoryCall }/>            
+			<UsersList users={ states.user }/>
+			<PostsList posts={ states.post } update={ update }/>
+			<CategoriesList categories={ states.category } callPostPerCategory={ postsPerCategoryCall }/>            
 		</main>
 	)
 }
 
-type States = {
-	post: PostState,
-	user: UserState,
-	category: CategoryState
-}
 
-// connection React/Redux (map state in component props)
-const mapStateToProps = (state: States) => {
-	return {
-		posts: state.post,
-		users: state.user,
-		categories: state.category
-	}
-}
-
-// connection React/Redux (map dispatch in component props)
-const mapDispatchToProps = (dispatch: (dispatch: any) => Promise<void> ) => {
-	return {
-		postsPerCategory: (idCategory: string) => dispatch(apiCallPostsPerCategory(idCategory)),
-		postsApi: () => dispatch(apiCallPosts()),
-		usersApi: () => dispatch(apiCallUsers()),
-		categoriesApi: () => dispatch(apiCallCategories()),
-	}
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(HomeContainer);
+export default HomeContainer;

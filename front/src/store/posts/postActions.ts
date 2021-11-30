@@ -6,10 +6,9 @@ import {
 	POST_GET_ALL_PER_CATEGORY_SUCCESS,
 	POST_GET_ALL_PER_CATEGORY_ERROR
 } from "./postTypes";
-import toLocalStorageInst from "../../class/utils/ToLocalStorage";
-import toApiInstance from "../../class/appCore/ToAPI";
 import { Dispatch } from "redux";
 import * as dotenv from 'dotenv';
+import { APICall } from '../callAPI';
 
 dotenv.config();
 
@@ -50,37 +49,12 @@ const getAllError: CallAction<R> = (errorMessage: string) => {
 /**
  * Call API for posts
  */
-export const apiCallPosts = () => {
-	const userInfos = toLocalStorageInst.getItemAndTransform('user');
-	const uriToApi = process.env.REACT_APP_URI_TO_All_POSTS;
-	if (!uriToApi) throw Error('URI to API missing in env var');
-
-	let token: undefined | string;
-
-	if (userInfos) {
-		token = userInfos.token
-	} else {
-		console.error('Aucune infos utilisateur (token..)')
-	}
-	
-	return async (dispatch: Dispatch) => {
-		dispatch<R>(getAll());
-		const res = await toApiInstance.toApi("GET", uriToApi, {},
-		{
-			headers: {
-				'accept': 'application/json',
-				'Authorization' : `Bearer ${ token }`
-			}
-		}
-		)
-		
-		if (typeof res === 'string') {
-			dispatch<R>(getAllError(res));
-		} else {
-			dispatch<R>(getAllSuccess(res.data))
-		}
-		
-	}
+export const apiCallPosts = async (dispatch: Dispatch) => {
+	await APICall(process.env.REACT_APP_URI_TO_All_POSTS || "", dispatch, [
+    getAll,
+    getAllSuccess,
+    getAllError,
+  ]);			
 }
 
 // --------- posts per category
@@ -117,34 +91,10 @@ const getAllPostPerCategoryError: CallAction<R> = (errorMessage: string) => {
 /**
  * Call API for posts per category
  */
-export const apiCallPostsPerCategory = (id_category: string) => {
-	const userInfos = toLocalStorageInst.getItemAndTransform('user');
-	const uriToApi = `categories/${id_category}/posts`;
-
-	let token: undefined | string;
-
-	if (userInfos) {
-		token = userInfos.token
-	} else {
-		console.error('Aucune infos utilisateur (token..)')
-	}
-
-	return async (dispatch: Dispatch) => {
-		dispatch<R>(getAllPostPerCategory());
-		const res = await toApiInstance.toApi("GET", uriToApi, {},
-			{
-				headers: {
-					'accept': 'application/json',
-					'Authorization' : `Bearer ${ token }`
-				}
-			}
-		)
-
-		if (typeof res === 'string') {
-			dispatch<R>(getAllPostPerCategoryError(res));
-		} else {
-			dispatch<R>(getAllPostPerCategorySuccess(res.data));
-		}
-
-	}
+export const apiCallPostsPerCategory = async (id_category: string, dispatch: Dispatch) => {
+	await APICall(`categories/${id_category}/posts` || "", dispatch, [
+		getAllPostPerCategory,
+		getAllPostPerCategorySuccess,
+		getAllPostPerCategoryError,
+	]);
 }

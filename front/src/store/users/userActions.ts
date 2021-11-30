@@ -3,6 +3,7 @@ import toLocalStorageInst from "../../class/utils/ToLocalStorage";
 import toApiInstance from "../../class/appCore/ToAPI";
 import { Dispatch } from "redux";
 import * as dotenv from 'dotenv';
+import { APICall } from '../callAPI';
 
 dotenv.config();
 
@@ -40,63 +41,10 @@ const getAllError: CallAction<R> = (errorMessage: string) => {
 /**
  * Call API for all users memorized in app
  */
-export const apiCallUsers = () => {
-	const userInfos = toLocalStorageInst.getItemAndTransform('user');
-	const uriToApi = process.env.REACT_APP_URI_TO_All_USERS;
-	if (!uriToApi) throw Error('URI to API missing in env var');
-
-	let token: undefined | string;
-
-	if (userInfos) {
-		token = userInfos.token;
-	} else {
-		console.error('Aucune infos utilisateur (token..)')
-	}
-	
-	return async (dispatch: Dispatch) => {
-		dispatch<R>(getAll());
-		const res = await toApiInstance.toApi("GET", uriToApi, {},
-			{
-				headers: {
-					'accept': 'application/json',
-					'Authorization' : `Bearer ${ token }`
-				}
-			})
-		
-		if (typeof res === 'string') {
-			dispatch<R>(getAllError(res));
-		} else {
-			dispatch<R>(getAllSuccess(res.data))
-		}
-
-	}
-}
-
-export const apiCallUsers2 = async (dispatch: any) => {
-	const userInfos = toLocalStorageInst.getItemAndTransform('user');
-	const uriToApi = process.env.REACT_APP_URI_TO_All_USERS;
-	if (!uriToApi) throw Error('URI to API missing in env var');
-
-	let token: undefined | string;
-
-	if (userInfos) {
-		token = userInfos.token;
-	} else {
-		console.error('Aucune infos utilisateur (token..)')
-	}
-		
-	dispatch(getAll());
-	const res = await toApiInstance.toApi("GET", uriToApi, {},
-		{
-			headers: {
-				'accept': 'application/json',
-				'Authorization' : `Bearer ${ token }`
-			}
-		})
-	
-	if (typeof res === 'string') {
-		dispatch(getAllError(res));
-	} else {
-		dispatch(getAllSuccess(res.data))
-	}
+export const apiCallUsers = async (dispatch: Dispatch) => {
+	await APICall(process.env.REACT_APP_URI_TO_All_USERS || "", dispatch, [
+		getAll,
+		getAllSuccess,
+		getAllError,
+	]);	
 }
