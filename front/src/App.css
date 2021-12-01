@@ -29,6 +29,16 @@
 	
 }
 
+.headerNav button {
+	background-color: transparent;
+	border: none;
+	color: #fd2d01;
+	padding: .5rem;
+	font-size: 1.2rem;
+	cursor: pointer
+	
+}
+
 .linkNavbar {
 	text-decoration: none;
 	color: #fd2d01;
@@ -225,6 +235,15 @@
 	font-size: 1.9rem;
 }
 
+.bubble-user button {
+	position: absolute;
+	top: 0;
+	right: 0;
+	color: #fd2d01;
+	border: none;
+	background-color: transparent;
+	cursor: pointer;
+}
 /* postList division */
 
 .postsListContainer {

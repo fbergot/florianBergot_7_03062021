@@ -22,7 +22,6 @@ const User: React.FC<PropsType> = ({ userData, erasable, deleteFunc }) => {
 		const email = userData.email;
 		deleteFunc(email);
 	}
-	console.log(erasable);
     return (
         <div className='bubble-user'>
             { imgOrAvatar }

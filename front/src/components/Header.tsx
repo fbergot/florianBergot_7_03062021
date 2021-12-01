@@ -3,6 +3,7 @@ import ProfileInfos from './page/home/components/ProfileInfos';
 import logo from "../assets/imagesAndIcones/icon/icon-above-font.svg";
 import { Link } from "react-router-dom";
 import { BsFillHouseDoorFill, BsBoxArrowInRight, BsFillPersonFill } from "react-icons/bs";
+import { useHistory } from "react-router-dom";
 
 type Props = {
     headerProfile?: boolean;
@@ -11,6 +12,11 @@ type Props = {
 
 
 const Header: React.FC<Props> = ({ headerProfile }) => {
+	const history = useHistory();
+	const handleDisconnect = () => {
+		window.localStorage.removeItem("user");
+    	history.push("/");
+	}
     return (
 		<div>
 			<header className="header">
@@ -33,9 +39,9 @@ const Header: React.FC<Props> = ({ headerProfile }) => {
 							<BsFillPersonFill />
 						</Link>
 
-						<Link className="linkNavbar" to="/out">
+						<button onClick={() => handleDisconnect()}>
 							<BsBoxArrowInRight />
-						</Link>
+						</button>
 					</nav>
 				</div>
 			</header>
