@@ -41,16 +41,16 @@ const PostsList: React.FC<PropsType> = ({ posts, update }) => {
 				<h2 className="title-area-p">
 					<button onClick={() => setDisplayCreationPost((state) => !state)}>
 						<BiMessageDetail className="icon-header-post-area" />
-						{displayCreationPost === false ? "Créer un poste" : "Réduire"}
+						{ displayCreationPost === false ? "Créer un poste" : "Réduire" }
 					</button>
 				</h2>
 			</div>
 			 
 			<div className="postsContainer">
-				 <Transition in={displayCreationPost} timeout={duration}>
+				 <Transition in={ displayCreationPost } timeout={ duration }>
 					{state => (
 					<div style={{ ...defaultStyle,...transitionStyles[state]} }>
-						{ displayCreationPost && <PostCreation update={update} />}
+						{ displayCreationPost && <PostCreation update={ update } />}
 					</div>
 					)}
 				</Transition>

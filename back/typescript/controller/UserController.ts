@@ -272,6 +272,9 @@ class UserController {
 				include: [
 					{
 						model: this.postModel,
+						order: [
+							["createdAt", "ASC"]
+						],
 						include: {
 							model: this.categoryModel,
 							attributes: ["name"]

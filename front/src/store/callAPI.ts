@@ -1,12 +1,11 @@
 import toApiInstance from "../class/appCore/ToAPI";
 import toLocalStorageInst from "../class/utils/ToLocalStorage";
-import { Dispatch } from "redux";
 
 type R = { type: string; payload?: any };
 
 type CallAction<Action> = (data?: any) => Action;
 
-export const APICall = async (path: string, dispatch: any, arrayBuildAction: CallAction<R>[]) => {
+export const APICall = async (path: string, dispatch: (action: R) => void, arrayBuildAction: CallAction<R>[]) => {
 	const userInfos = toLocalStorageInst.getItemAndTransform('user');
 
 	let token: undefined | string;
@@ -16,21 +15,22 @@ export const APICall = async (path: string, dispatch: any, arrayBuildAction: Cal
 	} else {
 		console.error('Aucune infos utilisateur (token..)')
 	}
-	
-	
+		
 	dispatch(arrayBuildAction[0]());
 	const res = await toApiInstance.toApi("GET", path, {},
-	{
-		headers: {
-			'accept': 'application/json',
-			'Authorization' : `Bearer ${ token }`
-		}
-	}
+        {
+            headers: {
+                'accept': 'application/json',
+                'Authorization' : `Bearer ${ token }`
+            }
+        }
 	)
-	
+	// if typeof res == string, it's an error (look toApiInstance.toApi)
 	if (typeof res === 'string') {
+        // error
 		dispatch(arrayBuildAction[2](res));
 	} else {
+        // success
 		dispatch(arrayBuildAction[1](res.data));
 	}			
 }

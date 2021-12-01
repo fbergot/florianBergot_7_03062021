@@ -1,7 +1,7 @@
 import React from "react";
 import Moment from '../../../../class/appCore/Moment';
 import moment from 'moment';
-import toLocaleStorageInst from '../../../../class/utils/ToLocalStorage';
+import toLocalStorageInst from '../../../../class/utils/ToLocalStorage';
 import toApiInstance from '../../../../class/appCore/ToAPI';
 import { useHistory } from 'react-router-dom';
 
@@ -19,7 +19,7 @@ type Props = {
 const UserDataInfos: React.FC<Props> = ({ data }) => {
     const history = useHistory();
     let token: string = '';
-	const userInfos: { token: string, id: number } = toLocaleStorageInst.getItemAndTransform("user");
+	const userInfos: { token: string, id: number } = toLocalStorageInst.getItemAndTransform("user");
     if (userInfos) {
 		token = userInfos.token
 	} else {

@@ -1,6 +1,4 @@
 import { USER_GET_ALL, USER_GET_ALL_ERROR, USER_GET_ALL_SUCCESS } from "./userTypes";
-import toLocalStorageInst from "../../class/utils/ToLocalStorage";
-import toApiInstance from "../../class/appCore/ToAPI";
 import { Dispatch } from "redux";
 import * as dotenv from 'dotenv';
 import { APICall } from '../callAPI';

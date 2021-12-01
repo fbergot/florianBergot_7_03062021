@@ -62,10 +62,15 @@ const HomeContainer: React.FC<Props> = ({ changeHeader }) => {
 		await apiCallCategories(dispatch);
 	}
 
+	// update after delete user
+	const updateUsers = async () => {
+		await apiCallUsers(dispatch);;
+	}
+
 	return (
 		<main className="mainContainer">
 			{ error && <p>{ error }</p> }
-			<UsersList users={ states.user }/>
+			<UsersList users={states.user} updateUser={ updateUsers }/>
 			<PostsList posts={ states.post } update={ update }/>
 			<CategoriesList categories={ states.category } callPostPerCategory={ postsPerCategoryCall }/>            
 		</main>

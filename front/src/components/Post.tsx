@@ -67,13 +67,13 @@ const Post: React.FC<Props> = ({ postData }) => {
 		
 		callApi(postData.id, token);
 	}, [postData.id, token]);
-
-	// add like or delete dislike
-	const onClickLike = async () => {
+	
+	// add or remove like/dislike
+	const onClickLikeOrDislike = async (likeOrDislike: string) => {
 		let like = 0;
 		let dislike = 0;
 
-		await toApiInstance.callApiRefact('POST', `reactions/add/${postData.id}`, { likeOrDislike: "like" }, {}, token);
+		await toApiInstance.callApiRefact('POST', `reactions/add/${postData.id}`, { likeOrDislike: likeOrDislike }, {}, token);
 		const responseApi = await toApiInstance.callApiRefact('GET', `reactions/getReactions/${postData.id}`, {}, {}, token);
 		
 		if (typeof responseApi === 'string') {
@@ -87,30 +87,14 @@ const Post: React.FC<Props> = ({ postData }) => {
 		setReactionPositiv(like);
 		setReactionNegativ(dislike);
 	}
-	
-	// add dislike or delete like
-	const onClickDislike = async () => {
-		let like = 0;
-		let dislike = 0;
-
-		await toApiInstance.callApiRefact('POST', `reactions/add/${postData.id}`, { likeOrDislike: "dislike" }, {}, token);
-		const responseApi = await toApiInstance.callApiRefact('GET', `reactions/getReactions/${postData.id}`, {}, {}, token);
-		
-		if (typeof responseApi === 'string') {
-			setError(responseApi);
-			return;
-		}
-	
-		responseApi.data.Reactions.forEach((reaction: { likeOrDislike: string }) => {
-			reaction.likeOrDislike === 'like' ? (like++) : (dislike++);
-		});
-		setReactionPositiv(like);
-		setReactionNegativ(dislike);
-	}
-	
+	// delete a post
 	const handleDelete = async () => {
-		const responseApi = await toApiInstance.callApiRefact('DELETE', `posts/delete/${postData.id}`, {}, {}, token);
-		apiCallPosts(dispatch);
+		try {
+			await toApiInstance.callApiRefact('DELETE', `posts/delete/${postData.id}`, {}, {}, token);
+			apiCallPosts(dispatch);
+		} catch (err) {
+			console.error(err);
+		}
 	}
 
 	// time ago & update moment locale
@@ -140,13 +124,13 @@ const Post: React.FC<Props> = ({ postData }) => {
 				
 				<div className="container-like-icon">
 					<p>
-						<button className="button-reaction" onClick={() => onClickLike()} type="button">
+						<button className="button-reaction" onClick={() => onClickLikeOrDislike('like')} type="button">
 							<BsHandThumbsUp className="reaction-icon"/>
 						</button>
 						<span>{ reactionPositiv }</span>
 					</p>
 					<p>
-						<button onClick={() => onClickDislike()} className="button-reaction">
+						<button onClick={() => onClickLikeOrDislike('dislike')} className="button-reaction">
 							<BsHandThumbsDown className="reaction-icon"/>
 						</button>
 						<span>{ reactionNegativ }</span>

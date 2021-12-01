@@ -8,6 +8,8 @@ type Props = {
     headerProfile?: boolean;
 }
 
+
+
 const Header: React.FC<Props> = ({ headerProfile }) => {
     return (
 		<div>

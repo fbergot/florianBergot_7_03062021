@@ -1,8 +1,6 @@
 import { ME_GET_INFOS, ME_GET_INFOS_SUCCESS, ME_GET_INFOS_ERROR } from './profileTypes';
 import { Dispatch } from "redux";
 import { APICall } from '../callAPI';
-import toLocalStorageInst from "../../class/utils/ToLocalStorage";
-import toApiInstance from "../../class/appCore/ToAPI";
 import * as dotenv from 'dotenv';
 
 dotenv.config();
