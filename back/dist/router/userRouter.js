@@ -5,10 +5,11 @@ var express = require("express");
 var UserController_1 = require("../controller/UserController");
 var Auth_1 = require("../middleware/Auth");
 var multer_config_1 = require("../middleware/multer-config");
+var Validate_1 = require("../middleware/Validate");
 exports.router = (function (express_router) {
     var Router = express_router();
     Router.route('/signup')
-        .post(multer_config_1.avatarMulter, function (req, res, next) { return UserController_1["default"].signup(req, res, next); });
+        .post(multer_config_1.avatarMulter, function (req, res, next) { return Validate_1.validation.validationAuth(req, res, next); }, function (req, res, next) { return UserController_1["default"].signup(req, res, next); });
     Router.route('/signin')
         .post(function (req, res, next) { return UserController_1["default"].signin(req, res, next); });
     Router.route("/all")

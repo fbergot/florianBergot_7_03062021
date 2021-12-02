@@ -9,7 +9,7 @@ type PropsType = {
 
 const Category: React.FC<PropsType> = ({ categoryData, handlerPostPerCategory }) => {
     const handleClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-        handlerPostPerCategory(e.target.textContent);
+        handlerPostPerCategory(categoryData.name);
     }
     return (
         <div className='bubbleCategory'>

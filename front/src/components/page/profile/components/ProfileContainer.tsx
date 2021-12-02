@@ -17,7 +17,7 @@ type RootState = {
 }
 
 type Props = {
-	displayInfosHeader: any;
+	displayInfosHeader: (d: boolean) => void;
 }
 
 const ProfileContainer: React.FC<Props> = ({ displayInfosHeader }) => {

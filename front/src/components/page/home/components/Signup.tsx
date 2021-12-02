@@ -16,6 +16,7 @@ const Signup: React.FC<Props> = (props) => {
 	const [businessRole, setBusinessRole] = useState<string>('');
 	const [email, setEmail] = useState<string>('');
 	const [password, setPassword] = useState<string>('');
+	const [error, setError] = useState<string>('');
 
     const handle = (e: React.ChangeEvent<HTMLInputElement>) => {
 		switch (e.target.name) {
@@ -49,12 +50,19 @@ const Signup: React.FC<Props> = (props) => {
 		formData.append("image", fileInput.current.files[0]);
 
 		// call API
-		const result = await toApiInstance.toApi('POST', uriToApi_usersSignup, formData, { headers: {
-			'accept': 'application/json',
-			'Content-Type': `multipart/form-data`,
-		}})
-		// pas de re-rendu pour le moment pour l'affichage erreur (voir gestion d'erreur ensuite) --
-		const status = result ? props.onRedirect() : "Une erreur s'est produite";           
+		const result = await toApiInstance.toApi('POST', uriToApi_usersSignup, formData, {
+			headers:
+				{
+					'accept': 'application/json',
+					'Content-Type': `multipart/form-data`,
+				}
+		})
+
+		if (typeof result === 'string') {
+			setError(result);
+			return;
+		}
+		props.onRedirect();     
 	} 
     
     return (
@@ -62,25 +70,26 @@ const Signup: React.FC<Props> = (props) => {
 			<form onSubmit={(e) => onSubmit(e)} encType="multipart/form-data">
 				<div className="form-group">
 					<label htmlFor="username">Nom d'utilisateur</label>
-					<input onChange={(e) => handle(e)} name='username' value={username} type="text" className="form-control"
+					<input required onChange={(e) => handle(e)} name='username' value={username} type="text" className="form-control"
 						id="username" placeholder="Bob" />
 				</div>
 
 				<div className="form-group">
 					<label htmlFor="businessRole">Rôle dans l'entreprise</label>
-					<input onChange={(e) => handle(e)} name='businessRole' value={businessRole}
+					<input required onChange={(e) => handle(e)} name='businessRole' value={businessRole}
 						type="text" className="form-control" id="businessRole" placeholder="ex: PDG" />
 				</div>
 
 				<div className="form-group">
 					<label htmlFor="email">Email</label>
-					<input onChange={(e) => handle(e)} value={email} name="email" type="email"
+					<input required onChange={(e) => handle(e)} value={email} name="email" type="email"
 						className="form-control" id="email" placeholder="name@example.com" />
+					{ error === "Request failed with status code 409" && <p>Un utilisateur existe déjà avec cet email</p> }
 				</div>
 
 				<div className="form-group">
 					<label htmlFor="password">Mot de passe</label>
-					<input onChange={(e) => handle(e)} value={password} name="password"
+					<input required onChange={(e) => handle(e)} value={password} name="password"
 						type="password" className="form-control" id="password" />
 				</div>
 

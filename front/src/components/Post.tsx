@@ -22,9 +22,10 @@ type Props = {
 		Categories: { name: string }[];
 		Comments: any[];
 	}
+	autorizeErase: undefined | boolean;
 }
 
-const Post: React.FC<Props> = ({ postData }) => {
+const Post: React.FC<Props> = ({ postData, autorizeErase }) => {
 	let token: string = '';
 	const dispatch = useDispatch();
 	const userInfos: { token: string, id: number } = toLocaleStorageInst.getItemAndTransform("user");
@@ -114,7 +115,7 @@ const Post: React.FC<Props> = ({ postData }) => {
 
 					<div className='container-category-delete'>
 						<p className="card-category">Categorie <span className="category-name">{ postData.Categories[0].name }</span></p>
-						{ postData.User.id === userInfos.id ? <span><button className="delete-button" onClick={(e) => handleDelete()} type="button">X</button></span> : null }
+						{ postData.User.id === userInfos.id || autorizeErase ? <span><button className="delete-button" onClick={(e) => handleDelete()} type="button">X</button></span> : null }
 					</div>
 				</div>
 

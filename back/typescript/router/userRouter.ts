@@ -1,7 +1,8 @@
 import * as express from 'express';
 import userController from '../controller/UserController';
 import authInstance from "../middleware/Auth";
-import {avatarMulter} from '../middleware/multer-config';
+import { avatarMulter } from '../middleware/multer-config';
+import { validation } from '../middleware/Validate';
 
 export const router = (function (express_router: () => express.Router): express.Router {
     const Router = express_router();
@@ -9,6 +10,7 @@ export const router = (function (express_router: () => express.Router): express.
     Router.route('/signup')
         .post(
             avatarMulter,
+            (req, res, next) => validation.validationAuth(req, res, next),
             (req, res, next) => userController.signup(req, res, next)
         );
     

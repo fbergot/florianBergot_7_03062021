@@ -1,13 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Post from "../../../Post";
 import Loader from '../../../generic/Loader';
 import { BiMessageDetail } from 'react-icons/bi';
 import PostCreation from './PostCreation';
 import { Transition } from "react-transition-group";
+import Jwt from '../../../../class/appCore/Jwt';
+import toLocalStorageInst from '../../../../class/utils/ToLocalStorage';
 
 type PostState = {
 	isLoading: boolean,
-	posts: any,
+	posts: {
+		id: number;
+		attachment?: string;
+		createdAt: string;
+		User: {
+			username: string;
+			id: number;
+		};
+		content: string;
+		Categories: { name: string }[];
+		Comments: any[];
+	}[],
 	error: string
 }
 
@@ -30,11 +43,31 @@ const transitionStyles: any = {
 };
 
 const PostsList: React.FC<PropsType> = ({ posts, update }) => {
+	const [isAdmin, setIsAdmin] = useState<undefined | boolean>(undefined);
 	const [displayCreationPost, setDisplayCreationPost] = useState<boolean>(false);
+	
+	useEffect(() => {
+        const authorizeErase = async () => {
+			try {
+				const token = toLocalStorageInst.getItemAndTransform('user').token;
+                const payloadToken = await Jwt.verify(token, process.env.REACT_APP_SECRET || '', {});
+                if (payloadToken.isAdmin) {
+                    setIsAdmin(true);
+                    return;
+                } 
+                setIsAdmin(false);
+            } catch (err) {
+				console.error(err);
+                setIsAdmin(false);
+            }
+        }
+        authorizeErase();
+	}, []);
+	
 	const loadingOrListPosts = posts.isLoading ? <Loader className={"lds-ring"} /> :
-		posts.posts && posts.posts.map((post: any, index: number) => {
-			return <Post key={ index } postData={ post }/>
-		});	
+		posts.posts && posts.posts.map((post, index: number) => {
+			return <Post autorizeErase={ isAdmin } key={ index } postData={ post }/>
+		});
 	return (
 		<div className="postsListContainer">
 			<div className="header-cate-container">

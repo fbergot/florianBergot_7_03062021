@@ -31,7 +31,9 @@ const CategoriesList: React.FC<PropsType> = ({ categories, callPostPerCategory }
 				<BiCategory className="icon-header-cate-area"/>
 				<h2 className="title-area">Catégories</h2>
 			</div>
-			{ categories.error ? <p>{ categories.error }</p> : loaderOrCategoryList }
+			<div className="list-categories">
+				{ categories.error ? <p>{ categories.error }</p> : loaderOrCategoryList }
+			</div>
 		</div>
     )
 }
