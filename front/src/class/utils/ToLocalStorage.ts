@@ -23,7 +23,7 @@ class ToLocalStorage implements BasicLocalStorageWrapper {
 	 * @memberof ToLocalStorage
 	 */
 	constructor(JSONTransform: J) {
-		this.JSONTransform = JSONTransform;
+		this.JSONTransform = JSONTransform;// injection dependency
 		this.getJSONTransform = () => {
 			return this.JSONTransform;
 		};
@@ -35,9 +35,9 @@ class ToLocalStorage implements BasicLocalStorageWrapper {
 	 */
 	public tranformAndSetItem(item: I, key: string): boolean | null {
 		try {
-			const parseData = this.getJSONTransform().stringyfyOrParse(item, 'toJS');
-			if (typeof parseData === 'string') {
-				window.localStorage.setItem(key, parseData);
+			const parsedData = this.getJSONTransform().stringyfyOrParse(item, 'toJS');
+			if (typeof parsedData === 'string') {
+				window.localStorage.setItem(key, parsedData);
 				return true;
 			}
 			return null;

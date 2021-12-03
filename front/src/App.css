@@ -23,13 +23,16 @@
 	width: calc(12% - 1.005%);
 	background-color: #FFF;
 	z-index: 10;
+	border: 1px solid black;
+	min-width: 120px;
+	margin-right: 0;
 }
 
 .headerNav {
 	display: flex;
 	justify-content: center;
 	margin-top: .5rem;
-	/* margin-right: 1.2rem; */
+	margin-right: 1rem;
 	
 }
 
@@ -59,7 +62,7 @@
 	justify-content: right;
 	align-items: center;
 	padding: .5rem 0 .5rem .5rem;
-	margin-right: 1.5rem;
+	width: 100%;
 }
 
 .nameCurrentUser {
@@ -74,7 +77,8 @@
 	width: 40px;
 	height: 40px;
 	object-fit: cover;
-	border-radius: 2em;
+	border-radius: 5em;
+	margin-right: 1rem;
 }
 
 .titleContainer {
@@ -143,7 +147,7 @@
 }
 
 .list-categories {
-	width: 95%;
+	width: 90%;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -171,7 +175,6 @@
 	align-items: center;
 	width: 100%;
 	height: 35px;
-	margin-top: .5rem;
 	border-radius: 7px;
 	background-color: var(--bubblesColor);
 	position: relative;
@@ -995,16 +998,21 @@ input[type="file"] {
 		align-items: center;
 		order: 2;
 		width: 100%;
-		height: 85px;
+		height: 110px;
 
 	}
 
 	.list-categories {
 		display: flex;
 		flex-direction: row;
-		align-items: center;
+		/* align-items: center; */
 		width: 90%;
-		height: auto;
+		min-height: 70px;
+		overflow-x: scroll;
+	}
+	.cont-cate {
+		overflow-y:none;
+		width: 100%;
 	}
 
 	.bubbleCategory {
@@ -1013,7 +1021,6 @@ input[type="file"] {
 	}
 
 	.usersListContainer {
-		margin-top: 1rem;
 		display: flex;
 		align-items: center;
 		background-color: var(--backgrdColorDivisions);
@@ -1051,29 +1058,72 @@ input[type="file"] {
 
 @media screen and (max-width: 960px) {
 
-	.headerLogo {
-		width: 150px;
-		height: 100px;
-		object-fit: cover;
+	.header {
+		display: flex;
+		justify-content: space-between;
+		width: 100%;
+		position: relative;
 	}
 
-	.title {
-		font-size: 1.5rem;
+	.headerLogo {
+		width: 170px;
+		height: 120px;
+		object-fit: cover;
+		position: static;
+		transform: none; 
 	}
 
 	.container-nav {
-		position: fixed;
+		position: static;
 		right: 0;
 		width: calc(12% - 1.005%);
 		background-color: #FFF;
-		z-index: 10;
-		margin-right: .8rem;
 	}
+
+	.postsContainer {
+		min-width: 400px;
+		width: 90%;	
+		background-color: var(--backgrdColorDivisions);
+		max-height: 1000px;
+		overflow-y: scroll;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+
+	
 }
 
 @media screen and (max-width: 470px) { 
 	.form-group > input {
 		padding: .3rem;
 		width: 280px;
+	}
+	.card {
+		width: 90%;
+	}
+
+	.card-title {
+		padding-top: .3rem;
+		text-align: left;
+	}
+
+	.card-category {
+		padding: .5rem;
+		font-size: .9rem;
+		margin-right: .2rem;
+	}
+	.list-categories {
+		width: 90%;
+		min-height: 65px;
+	}
+	.categoriesContainer {
+
+		height: 100px;
+
+	}
+
+	.postsContainer {
+		width: 90%;
 	}
 }

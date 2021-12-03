@@ -48,21 +48,29 @@ const Signup: React.FC<Props> = (props) => {
 		formData.append('email', email);
 		formData.append('password', password);
 		formData.append("image", fileInput.current.files[0]);
+		try {
+			// call API
+			const result = await toApiInstance.toApi('POST', uriToApi_usersSignup, formData, {
+				headers:
+					{
+						'accept': 'application/json',
+						'Content-Type': `multipart/form-data`,
+					}
+			})
 
-		// call API
-		const result = await toApiInstance.toApi('POST', uriToApi_usersSignup, formData, {
-			headers:
-				{
-					'accept': 'application/json',
-					'Content-Type': `multipart/form-data`,
-				}
-		})
-
-		if (typeof result === 'string') {
-			setError(result);
-			return;
+			if (typeof result !== 'string' && result.data.error && result.data.error.message) {
+				setError(result.data.error.message);
+				return;
+			} else if (typeof result === 'string') {
+				setError(result);
+        		return;
+			}
+			// redirect to signin
+			props.onRedirect();     
+		} catch (err: any) {
+			console.log(err);
+			setError(err);
 		}
-		props.onRedirect();     
 	} 
     
     return (
@@ -70,32 +78,33 @@ const Signup: React.FC<Props> = (props) => {
 			<form onSubmit={(e) => onSubmit(e)} encType="multipart/form-data">
 				<div className="form-group">
 					<label htmlFor="username">Nom d'utilisateur</label>
-					<input required onChange={(e) => handle(e)} name='username' value={username} type="text" className="form-control"
+					<input required onChange={(e) => handle(e)} name='username' value={ username } type="text" className="form-control"
 						id="username" placeholder="Bob" />
 				</div>
 
 				<div className="form-group">
 					<label htmlFor="businessRole">Rôle dans l'entreprise</label>
-					<input required onChange={(e) => handle(e)} name='businessRole' value={businessRole}
+					<input required onChange={(e) => handle(e)} name='businessRole' value={ businessRole }
 						type="text" className="form-control" id="businessRole" placeholder="ex: PDG" />
 				</div>
 
 				<div className="form-group">
 					<label htmlFor="email">Email</label>
-					<input required onChange={(e) => handle(e)} value={email} name="email" type="email"
+					<input required onChange={(e) => handle(e)} value={ email } name="email" type="email"
 						className="form-control" id="email" placeholder="name@example.com" />
-					{ error === "Request failed with status code 409" && <p>Un utilisateur existe déjà avec cet email</p> }
+					{ error === "Request failed with status code 409" ? <p>Un utilisateur existe déjà avec cet email</p> : error === "email must be a valid email" ? 'L\'email doit être valide' : null}
 				</div>
 
 				<div className="form-group">
 					<label htmlFor="password">Mot de passe</label>
-					<input required onChange={(e) => handle(e)} value={password} name="password"
-						type="password" className="form-control" id="password" />
+					<input required onChange={(e) => handle(e)} value={ password } name="password"
+						type="password" placeholder="Minimum 4 caractères" className="form-control" id="password" />
+					{ error === "password must be at least 4 characters" ? <p>Le mot de passe doit contenir au moins 4 caractères</p> : null}
 				</div>
 
 				<div className="form-group">
-					<label htmlFor="avatar">Image de profil</label>
-					<input type="file" className="form-control-file" id="avatar" ref={fileInput} name='image'/>
+					<label htmlFor="avatar">Ajouter une image de profil</label>
+					<input type="file" className="form-control-file" id="avatar" ref={ fileInput } name='image'/>
 				</div>
 
 				<div className="signup-cont-button">

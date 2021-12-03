@@ -76,7 +76,7 @@ var Validation = /** @class */ (function () {
                         return [3 /*break*/, 3];
                     case 2:
                         err_1 = _a.sent();
-                        res.status(400).json({ error: err_1 });
+                        res.status(200).json({ error: err_1 });
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
                 }

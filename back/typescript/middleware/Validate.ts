@@ -30,14 +30,11 @@ class Validation {
                 username: req.body.username,
                 businessRole: req.body.businessRole
             });
-
             if (statusValid) next();
         } catch (err: any) {
-            res.status(400).json({ error: err });
+            res.status(200).json({ error: err });
         }
- 
     }
-
 }
 
 

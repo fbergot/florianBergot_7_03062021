@@ -11,6 +11,7 @@ type Props = {
 const Signin: React.FC<Props> = ({ switchHandle, buttonMessage }) => {
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
+    const [error, setError] = useState<string>("");
     const history = useHistory();
 
     const handle = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -27,24 +28,25 @@ const Signin: React.FC<Props> = ({ switchHandle, buttonMessage }) => {
     }
 
     const onSubmit = async (): Promise<void> => {
-        const data = {
-            email: email,
-            password: password
-        }
-
-        // call API
-        const result = await toApiInstance.toApi('POST', 'users/signin', data, {})
-        if (result && typeof result !== 'string') {
-            // add infos user in localStor
-            const returnOfStor = toLocalStorageInst.tranformAndSetItem(result.data, 'user');
-            if (returnOfStor) {
-                history.push('/');
+        const payload = { email, password };
+            
+        try {
+            // call API
+            const responseApi = await toApiInstance.toApi('POST', 'users/signin', payload, {})
+            if (typeof responseApi !== 'string') {  
+                // add infos user in localStor
+                const returnSuccessOrError = toLocalStorageInst.tranformAndSetItem(responseApi.data, 'user');
+                if (returnSuccessOrError) {
+                    history.push('/');
+                    return;
+                }
+                setError('Error with storage or with parsing/stringifying');
                 return;
             }
-            console.error(returnOfStor);
-        } else {
-            console.error("Une erreur est survenue");
-        }       
+            setError(responseApi);                 
+        } catch (err: any) {
+            setError(err.message);                 
+        }
     }
     return (
         <div className='container-signin'>
@@ -53,12 +55,14 @@ const Signin: React.FC<Props> = ({ switchHandle, buttonMessage }) => {
                     <label htmlFor="email">Email</label>
                     <input onChange={(e) => handle(e)} value={ email } name="email" type="email"
                         className="form-control" id="email" placeholder="name@example.com" />
+                    {error === 'Request failed with status code 404' ? <p>Aucun utilisateur avec cet email</p> : null}                       
                 </div>
 
                 <div className="form-group">
                     <label htmlFor="password">Mot de passe</label>
                     <input onChange={(e) => handle(e)} value={ password } name="password"
                         type="password" className="form-control" id="password" />
+                    { error === "Request failed with status code 401" ? <p>Mot de passe incorrect</p> : null }
                 </div>
 
                 <div className="signin-cont-button">

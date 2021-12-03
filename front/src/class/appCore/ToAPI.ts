@@ -70,7 +70,7 @@ class ToAPI {
 					throw Error(this.messages.badHTTPMethod);
 			}
 		} catch (err: any) {
-			console.error(err.message);
+			console.error(err);
 			return err.message;
 		}
 	}
