@@ -36,38 +36,6 @@ class ReactionController {
 			postNotFound: "Post not found"
 		}
 	}
-
-	/**
-	 * Analyse reaction and state of old reaction (if exist) 
-	 * @memberof ReactionController
-	 */
-	private async analyseReaction(oldReaction: Reaction | null, likeOrDislike: string, res: Response) {
-		if (oldReaction) {
-			switch (likeOrDislike) {
-				case "like":
-					if (oldReaction.likeOrDislike === 'like') {
-						res.status(409).json({ message: this.messages.alreadyLiked });
-						return true;
-					} else if (oldReaction.likeOrDislike === 'dislike') {
-						await oldReaction.destroy<Reaction>();
-						res.status(200).json({ message: this.messages.delDislike });
-						return true;
-					}
-					break;					
-				case 'dislike':
-					if (oldReaction.likeOrDislike === 'dislike') {
-						res.status(409).json({ message: this.messages.alreadyDisliked });
-						return true;
-					} else if (oldReaction.likeOrDislike === 'like') {
-						await oldReaction.destroy<Reaction>();
-						res.status(200).json({ message: this.messages.delLiked });
-						return true;
-					}										
-			}
-		}
-		return undefined;
-	}
-    
     /**
      * Create one reaction for a post
      * @memberof ReactionController
@@ -157,13 +125,6 @@ class ReactionController {
 				const $React = await post.addReaction<Reaction>(newReaction);
 				res.status(201).json($React);				
 			}
-			// // check if already liked/disliked
-			// const oldReaction = await this.reactionModel.findOne<Reaction>({
-			// 	where: {userId: tokenPayload.userId}
-			// })
-			// // if old reaction, analyse 
-			// const state = await this.analyseReaction(oldReaction, req.body.likeOrDislike, res);
-			// if (state) return;
 		} catch (err: any) {
 			res.status(500).json({ error: err.message });
 		}

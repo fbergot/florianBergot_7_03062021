@@ -9,11 +9,22 @@ type RootState = {
     profileInfos: {
         isLoading: boolean,
 		infos: {
-			Posts: any;
-			username: string;
+			Posts: Post[];
+			dataValues: {
+				username: string;
+			}
 		},
 		error: ""
     };
+}
+
+type Post = {
+	createdAt: string;
+	username: string;
+	Categories: any[];
+	content: string;
+	attachment: string;
+
 }
 
 type Props = {
@@ -32,11 +43,13 @@ const ProfileContainer: React.FC<Props> = ({ displayInfosHeader }) => {
 		}
 		apiCall();
 	}, [dispatch, displayInfosHeader]);
-
 	return (
 		<main className="main-profile">
 			<UserData data={ stateCurrentUserInfos }/>
-			<PostsListProfile data= { stateCurrentUserInfos }/>
+			<PostsListProfile data={stateCurrentUserInfos} />
+			<div className="div3">
+				<div></div>
+			</div>
 		</main>
 	)
 }

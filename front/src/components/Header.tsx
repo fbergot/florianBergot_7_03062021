@@ -1,6 +1,6 @@
 import React from "react";
 import ProfileInfos from './page/home/components/ProfileInfos';
-import logo from "../assets/imagesAndIcones/icon/icon-above-font.svg";
+import logo from "../assets/imagesAndIcones/icon/icon-left-font-monochrome-white.svg";
 import { Link } from "react-router-dom";
 import { BsFillHouseDoorFill, BsBoxArrowInRight, BsFillPersonFill } from "react-icons/bs";
 import { useHistory } from "react-router-dom";
@@ -21,9 +21,9 @@ const Header: React.FC<Props> = ({ headerProfile }) => {
 		<div>
 			<header className="header">
 				<img className="headerLogo" src={ logo } alt="logo" />
-
+				<h1 className="title">Groupomania, le réseau social</h1>
 				<div className="container-nav">
-					{ headerProfile && <ProfileInfos /> }				
+									
 					<nav className="headerNav">
 						<Link className="linkNavbar" to="/">
 							<BsFillHouseDoorFill />
@@ -37,6 +37,7 @@ const Header: React.FC<Props> = ({ headerProfile }) => {
 							<BsBoxArrowInRight />
 						</button>
 					</nav>
+					{ headerProfile && <ProfileInfos /> }
 				</div>
 			</header>
 		</div>

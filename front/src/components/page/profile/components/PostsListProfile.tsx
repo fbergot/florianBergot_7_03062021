@@ -7,8 +7,10 @@ type Props = {
 	data: {
 		isLoading: boolean;
 		infos: {
-			Posts: any;
-			username: string;
+			Posts: Post[];
+			dataValues: {
+				username: string;
+			}
 		};
 	};
 }
@@ -25,7 +27,7 @@ type Post = {
 const PostsListProfile: React.FC<Props> = ({ data }) => {
 	const loadingOrListOfPost = data.isLoading ? <Loader className={"lds-ring-color"} /> : 
 		data.infos.Posts && data.infos.Posts.length !== 0 && data.infos.Posts.map((post: Post, index: number) => {
-			return <SimplePostProfile creator={ data.infos.username } key={ index } data={ post }/>
+			return <SimplePostProfile creator={ data.infos.dataValues.username } key={ index } data={ post }/>
 		})
     return (
 		<div className="profilePosts-list-container">

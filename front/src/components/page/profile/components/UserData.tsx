@@ -21,7 +21,7 @@ const UserData: React.FC<Props> = ({ data }) => {
             </div>
             <div className="cont-userDataInfos">
                 { data.isLoading ? <Loader className={"lds-ring-color"} /> :
-                    <UserDataInfos data={ data.infos }/> }			
+                    data.infos.length !== 0 ? <UserDataInfos data={ data.infos }/> : null }			
             </div>
 		</div>
     );

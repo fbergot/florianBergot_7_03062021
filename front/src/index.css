@@ -16,8 +16,8 @@
 
 :root {
     --loaderColor: #FFF;
-    --backgrdColorDivisions: rgb(44, 66, 138);
-    --bubblesColor: rgb(79, 104, 158);
+    --backgrdColorDivisions: rgb(38, 39, 41);
+    --bubblesColor: rgb(79, 82, 89);
     --globalFont: "AlmaroseBold";
     --contentFontRegular: "AlmaroseRegular";
     --contentFontItalic: "AlmaroseBoldItalic";

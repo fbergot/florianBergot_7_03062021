@@ -8,7 +8,21 @@ type MethodsModel = {
 	save<T>(): Promise<T>;
 };
 // ---------- /User types/ --------------
-
+export type UserMe = {
+	dataValues: {
+		readonly uuid: string;
+		readonly id: number;
+		email: string;
+		password: string;
+		username: string;
+		isAdmin: boolean;
+		businessRole: string;
+		urlAvatar: string;
+		updatedAt: string;
+		createdAt: string;
+	},
+	Posts: Post[];
+}
 export type User = {
 	readonly uuid: string;
 	readonly id: number;
@@ -19,8 +33,10 @@ export type User = {
 	businessRole: string;
 	urlAvatar: string;
 	updatedAt: string;
-	createdAt: string;
-} & MethodsModel;
+	dataValues: any
+	
+	
+} & MethodsModel & MethodsModel;
 
 
 // ---------- /Post types/ --------------
@@ -113,7 +129,7 @@ export type JWT = {
         payload: { userUuid: string },
         secret: string,
         options: any,
-		callback: (err: any, token: any) => void
+		callback: (err: any, token: string) => void
 	): string;
 	
 	verify(

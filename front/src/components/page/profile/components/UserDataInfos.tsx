@@ -7,11 +7,14 @@ import { useHistory } from 'react-router-dom';
 
 type Props = {
     data: {
-        businessRole: string;
-        createdAt: string;
-        email: string;
-        urlAvatar?: string;
-        username: string;
+        dataValues: {
+            businessRole: string;
+            createdAt: string;
+            email: string;
+            urlAvatar?: string;
+            username: string;
+
+        }
     };
 }
 
@@ -29,15 +32,15 @@ const UserDataInfos: React.FC<Props> = ({ data }) => {
     }
     // time ago & update moment locale
     Moment.momentLoc();
-    const timeAgo = moment(data.createdAt).fromNow(true);
-    const imgAvatar = data.urlAvatar ? <img className="img-user-profile" src={data.urlAvatar} alt="avatar" /> : null;
+    const timeAgo = moment(data.dataValues.createdAt).fromNow(true);
+    const imgAvatar = data.dataValues.urlAvatar ? <img className="img-user-profile" src={data.dataValues.urlAvatar} alt="avatar" /> : null;
 
     /**
      * for delete user account
      */
     const deleteHandleClick = async () => {
         // call API for delete account
-        const responseApi = await toApiInstance.callApiRefact('DELETE', `users/delete/${data.email}`, {}, {}, token);
+        const responseApi = await toApiInstance.callApiRefact('DELETE', `users/delete/${data.dataValues.email}`, {}, {}, token);
         if (typeof responseApi === 'string') {
             setError(responseApi);
             return;
@@ -53,14 +56,14 @@ const UserDataInfos: React.FC<Props> = ({ data }) => {
             {error ? <p>{error}</p> :
                 <>
                     <div className="container-profile-userDataHeader">
-                        {imgAvatar}
-                        <h3>{data.username}</h3>
+                        {imgAvatar} 
+                        {<h3>{data.dataValues.username}</h3> }
                     </div>
                     <div className="container-profile-userData">
-                        <p>Role dans l'entreprise: <span>{data.businessRole}</span> </p>
-                        <p>Email: <span>{data.email}</span></p>
-                        <p>Compte crée il y a <span>{timeAgo}</span></p>
-                        <p>
+                        <p>Rôle: <span>{data.dataValues.businessRole}</span> </p>
+                        <p><span>{data.dataValues.email}</span></p>
+                        <p>Crée il y a <span>{timeAgo}</span></p>
+                        <p className="deleteAccountCont">
                             <button onClick={() => deleteHandleClick()} type="button">Supprimer mon compte</button>
                         </p>
                     </div>

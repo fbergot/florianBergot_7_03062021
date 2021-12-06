@@ -46,6 +46,15 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
+};
 exports.__esModule = true;
 var Bcrypt_1 = require("../class/Bcrypt");
 var Jwt_1 = require("../class/Jwt");
@@ -382,43 +391,48 @@ var UserController = /** @class */ (function () {
      */
     UserController.prototype.me = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
-            var tokenPayload, user, err_6;
+            var tokenPayload, user, posts, dataUserAndPosts, err_6;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 3, , 4]);
+                        _a.trys.push([0, 4, , 5]);
                         return [4 /*yield*/, Auth_1["default"].getTokenInfo(req)];
                     case 1:
                         tokenPayload = _a.sent();
                         return [4 /*yield*/, this.userModel.findOne({
-                                where: { id: tokenPayload.userId },
-                                include: [
-                                    {
-                                        model: this.postModel,
-                                        order: [
-                                            ["createdAt", "ASC"]
-                                        ],
-                                        include: {
-                                            model: this.categoryModel,
-                                            attributes: ["name"]
-                                        }
-                                    },
-                                ]
+                                where: { id: tokenPayload.userId }
                             })];
                     case 2:
                         user = _a.sent();
+                        return [4 /*yield*/, this.postModel.findAll({
+                                where: { userId: tokenPayload.userId },
+                                order: [
+                                    ["createdAt", "DESC"]
+                                ],
+                                include: [
+                                    {
+                                        model: this.categoryModel,
+                                        attributes: ["name"]
+                                    },
+                                ]
+                            })
+                            // if not user with this userId
+                        ];
+                    case 3:
+                        posts = _a.sent();
                         // if not user with this userId
                         if (!user) {
                             res.status(404).json({ message: this.messages.userNotFound });
                             return [2 /*return*/];
                         }
-                        res.status(200).json(user);
-                        return [3 /*break*/, 4];
-                    case 3:
+                        dataUserAndPosts = __assign(__assign({}, user), { Posts: __spreadArray([], posts, true) });
+                        res.status(200).json(dataUserAndPosts);
+                        return [3 /*break*/, 5];
+                    case 4:
                         err_6 = _a.sent();
                         res.status(500).json({ error: err_6.message });
-                        return [3 /*break*/, 4];
-                    case 4: return [2 /*return*/];
+                        return [3 /*break*/, 5];
+                    case 5: return [2 /*return*/];
                 }
             });
         });

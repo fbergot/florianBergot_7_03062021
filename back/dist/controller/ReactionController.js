@@ -54,51 +54,6 @@ var ReactionController = /** @class */ (function () {
         };
     }
     /**
-     * Analyse reaction and state of old reaction (if exist)
-     * @memberof ReactionController
-     */
-    ReactionController.prototype.analyseReaction = function (oldReaction, likeOrDislike, res) {
-        return __awaiter(this, void 0, void 0, function () {
-            var _a;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
-                    case 0:
-                        if (!oldReaction) return [3 /*break*/, 8];
-                        _a = likeOrDislike;
-                        switch (_a) {
-                            case "like": return [3 /*break*/, 1];
-                            case 'dislike': return [3 /*break*/, 5];
-                        }
-                        return [3 /*break*/, 8];
-                    case 1:
-                        if (!(oldReaction.likeOrDislike === 'like')) return [3 /*break*/, 2];
-                        res.status(409).json({ message: this.messages.alreadyLiked });
-                        return [2 /*return*/, true];
-                    case 2:
-                        if (!(oldReaction.likeOrDislike === 'dislike')) return [3 /*break*/, 4];
-                        return [4 /*yield*/, oldReaction.destroy()];
-                    case 3:
-                        _b.sent();
-                        res.status(200).json({ message: this.messages.delDislike });
-                        return [2 /*return*/, true];
-                    case 4: return [3 /*break*/, 8];
-                    case 5:
-                        if (!(oldReaction.likeOrDislike === 'dislike')) return [3 /*break*/, 6];
-                        res.status(409).json({ message: this.messages.alreadyDisliked });
-                        return [2 /*return*/, true];
-                    case 6:
-                        if (!(oldReaction.likeOrDislike === 'like')) return [3 /*break*/, 8];
-                        return [4 /*yield*/, oldReaction.destroy()];
-                    case 7:
-                        _b.sent();
-                        res.status(200).json({ message: this.messages.delLiked });
-                        return [2 /*return*/, true];
-                    case 8: return [2 /*return*/, undefined];
-                }
-            });
-        });
-    };
-    /**
      * Create one reaction for a post
      * @memberof ReactionController
      */

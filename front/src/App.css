@@ -5,32 +5,35 @@
 	justify-content: space-between;
 	width: 100%;
 	position: relative;
+	background-image: url("./assets/imagesAndIcones/icon/rock-ore.jpg");
+	border-image-repeat: repeat;
 }
 
 .headerLogo {
-	width: 170px;
-	height: 120px;
-	object-fit: cover;
-	position: relative;
+	width: 180px;
+	height: 90px;
+	margin-top: -1rem;
+	margin-left: .5rem;
+	/*object-fit: cover; */
+	/* position: relative;
 	right: 50%;
 	left: 50%;
-	transform: translateX(-50%);
+	transform: translateX(-50%); */
 }
 
 .container-nav {
-	position: fixed;
+	/* position: fixed; */
 	right: 0;
 	width: calc(12% - 1.005%);
-	background-color: #FFF;
+	background-color: transparent;
 	z-index: 10;
-	border: 1px solid black;
 	min-width: 120px;
 	margin-right: 0;
 }
 
 .headerNav {
 	display: flex;
-	justify-content: center;
+	justify-content: right;
 	margin-top: .5rem;
 	margin-right: 1rem;
 	
@@ -39,7 +42,7 @@
 .headerNav button {
 	background-color: transparent;
 	border: none;
-	color: #fd2d01;
+	color: #fff;
 	padding: .5rem;
 	font-size: 1.2rem;
 	cursor: pointer
@@ -48,7 +51,7 @@
 
 .linkNavbar {
 	text-decoration: none;
-	color: #fd2d01;
+	color: #fff;
 	padding: .5rem;
 	font-size: 1.2rem;
 }
@@ -67,15 +70,15 @@
 
 .nameCurrentUser {
 	font-size: .9rem;
-	color: #000;
+	color: #fff;
 	font-weight: 600;
 	margin-top: 0.1rem;
 	padding-right: 0.5rem;
 }
 
 .avatarImg {
-	width: 40px;
-	height: 40px;
+	width: 35px;
+	height: 35px;
 	object-fit: cover;
 	border-radius: 5em;
 	margin-right: 1rem;
@@ -90,14 +93,11 @@
 
 .title {
 	text-align: center;
-	font-size: 1.8rem;
-	margin-top: .5rem;
-	color: rgb(56, 56, 56);
-	position: absolute;
-	top: 10px;
-	right: 50%;
-	font-weight: 400;
-	transform: translateX(50%);
+	font-size: 1.5rem;
+	margin-top: .7rem;
+
+	font-family: var(--globalFont);
+	color: #fff;
 }
 
 .title > p {
@@ -119,7 +119,7 @@
 
 .categoriesContainer {
 	grid-area: categoriescontainer;
-	background-color: var(--backgrdColorDivisions);
+	background-image: url("./assets/imagesAndIcones/icon/rock-ore.jpg");
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -127,10 +127,12 @@
 }
 
 .icon-header-cate-area {
-	font-size: 1.9rem;
+	font-size: 1.7rem;
 	color: #FFF;
-	padding: .2rem;
-	margin-right: .2rem;
+	padding: 0.1rem;
+	margin-right: 0.2rem;
+	margin-left: .5rem;
+	margin-top: .2rem;
 }
 
 .icon-header-post-area {
@@ -142,8 +144,10 @@
 
 .header-cate-container {
 	display: flex;
-	justify-content: space-between;
+	justify-content: center;
 	align-items: center;
+	width: 100%;
+	background-color: var(--backgrdColorDivisions);
 }
 
 .list-categories {
@@ -197,11 +201,12 @@
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	background-color: var(--backgrdColorDivisions);
+	background-image: url("./assets/imagesAndIcones/icon/rock-ore.jpg");
 }
 
 .list-users {
 	width: 90%;
+	background-image: url("./assets/imagesAndIcones/icon/rock-ore.jpg");
 }
 
 .bubble-user {
@@ -268,7 +273,6 @@
 }
 
 .title-area {
-	width: 100%;
 	margin-top: .2rem;
 	text-align: center;
 	background-color: var(--backgrdColorDivisions);
@@ -280,6 +284,8 @@
 }
 
 .title-area-p {
+	display: flex;
+	justify-content: center;
 	margin-bottom: .2rem;
 	width: 100%;
 	margin-top: .2rem;
@@ -308,7 +314,7 @@
 .postsContainer {
 	min-width: 400px;
 	width: 100%;	
-	background-color: var(--backgrdColorDivisions);
+	background-image: url("./assets/imagesAndIcones/icon/rock-ore.jpg");
 	max-height: 1000px;
 	overflow-y: scroll;
 }
@@ -484,7 +490,7 @@
 	margin-top: .5rem;
 	width: 100%;
 	height: auto;
-	max-height: 400px;
+	max-height: 300px;
 	object-fit: cover;
 	border-radius: 0 0 13px 13px;
 	margin-bottom: -.3rem;
@@ -634,13 +640,26 @@
 
 .main-profile {
 	display: grid;
-	grid-template-columns: 20% 80%;
-	grid-template-areas: "userdata posts_profile_container ";
+	grid-template-columns: 20% 60% 20%;
+	grid-template-areas: "userdata posts_profile_container test";
 }
 
 /* userData area*/
 .userData-container {
 	grid-area: userdata;
+	background-image: url("./assets/imagesAndIcones/icon/rock-ore.jpg");
+}
+.div3 {
+	width: 100%;
+	grid-area: test;
+	background-image: url("./assets/imagesAndIcones/icon/rock-ore.jpg");
+	border-image-repeat: repeat;
+}
+
+.div3 > div {
+	width: 100%;
+	height: 41.4px;
+	background-color: var(--backgrdColorDivisions);
 }
 
 .container-header-userData-profile {
@@ -651,9 +670,10 @@
 }
 
 .header-userData-profile {
-	background-color: var(--backgrdColorDivisions);
+	/* background-image: url("./assets/imagesAndIcones/icon/rock-ore.jpg"); */
 	display: flex;
 	justify-content: center;
+	
 }
 
 .title-area-profile {
@@ -673,12 +693,12 @@
 .cont-userDataInfos {
 	display: flex;
 	justify-content: center;
+	color: #FFF;
 }
 
 .section-user-infos {
-	margin-top: 1rem;
+	margin-top: .5rem;
 	width: 90%;
-	border: 1px solid gray;
 	font-family: "Roboto";
 	border-radius: 13px;
 }
@@ -696,9 +716,9 @@
 }
 
 .container-profile-userData {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
+	border: 1px solid #fff;
+	margin-top: .5rem;
+
 }
 
 .container-profile-userData > p {
@@ -709,6 +729,16 @@
 	font-weight: 500;
 }
 
+.deleteAccountCont {
+	display: flex;
+	justify-content: center;
+}
+
+.deleteAccountCont > button{
+	padding: .4rem;
+	background-color: var(--backgrdColorDivisions);
+	color: #fff;
+}
 .img-user-profile {
 	width: 150px;
 	height: 150px;
@@ -1021,12 +1051,7 @@ input[type="file"] {
 	}
 
 	.usersListContainer {
-		display: flex;
-		align-items: center;
-		background-color: var(--backgrdColorDivisions);
-		width: 100%;
-		order: 1;
-		height: auto;
+		display: none;
 	}
 
 	.list-users {
@@ -1053,6 +1078,21 @@ input[type="file"] {
 	.postsContainer {
 		width: 90%;	
 	}
+
+	/* profile */
+	.main-profile {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.section-user-infos {
+		display: flex;
+		justify-content: space-around;
+	}
+
+	.div3 {
+		display: none;
+	}
 }
 
 
@@ -1065,21 +1105,6 @@ input[type="file"] {
 		position: relative;
 	}
 
-	.headerLogo {
-		width: 170px;
-		height: 120px;
-		object-fit: cover;
-		position: static;
-		transform: none; 
-	}
-
-	.container-nav {
-		position: static;
-		right: 0;
-		width: calc(12% - 1.005%);
-		background-color: #FFF;
-	}
-
 	.postsContainer {
 		min-width: 400px;
 		width: 90%;	
@@ -1090,8 +1115,22 @@ input[type="file"] {
 		flex-direction: column;
 		align-items: center;
 	}
+	.usersListContainer {
+		display: none;
+		align-items: center;
+		background-color: var(--backgrdColorDivisions);
+		width: 100%;
+		order: 1;
+		height: auto;
+	}
 
 	
+}
+
+@media screen and (max-width: 680px) { 
+	.title{
+		display: none;
+	}
 }
 
 @media screen and (max-width: 470px) { 
@@ -1113,10 +1152,12 @@ input[type="file"] {
 		font-size: .9rem;
 		margin-right: .2rem;
 	}
+
 	.list-categories {
 		width: 90%;
 		min-height: 65px;
 	}
+
 	.categoriesContainer {
 
 		height: 100px;
@@ -1125,5 +1166,13 @@ input[type="file"] {
 
 	.postsContainer {
 		width: 90%;
+		overflow-y: auto;
+	}
+
+	/* profile */
+	.section-user-infos {
+		flex-direction: column;
+		align-items: center;
+		margin-bottom: .5rem;
 	}
 }

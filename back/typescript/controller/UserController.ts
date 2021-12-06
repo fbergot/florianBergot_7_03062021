@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { bcryptInstance, Bcrypt } from '../class/Bcrypt';
 import { jwtInstance, JSONWebToken } from '../class/Jwt';
-import type { User, Post, Messages, Category } from "../type/allTypes";
+import type { User, UserMe, Post, Messages, Category } from "../type/allTypes";
 import authInstance from "../middleware/Auth";
 import * as dotenv from 'dotenv';
 import * as fs from "fs";
@@ -268,27 +268,28 @@ class UserController {
 			const tokenPayload = await authInstance.getTokenInfo(req);
 			// find user with posts associated
 			const user = await this.userModel.findOne<User>({
-				where: { id: tokenPayload.userId },
+				where: { id: tokenPayload.userId }				
+			});
+			const posts = await this.postModel.findAll<Post>({
+				where: { userId: tokenPayload.userId },
+				order: [
+					["createdAt", "DESC"]
+				],
 				include: [
 					{
-						model: this.postModel,
-						order: [
-							["createdAt", "ASC"]
-						],
-						include: {
-							model: this.categoryModel,
-							attributes: ["name"]
-						}
-					},
-					
+						
+						model: this.categoryModel,
+						attributes: ["name"]	
+					},					
 				]
-			});
+			})
 			// if not user with this userId
 			if (!user) {
 				res.status(404).json({ message: this.messages.userNotFound });
 				return;
 			}
-			res.status(200).json(user);
+			const dataUserAndPosts: UserMe = { ...user, Posts: [...posts] };
+			res.status(200).json(dataUserAndPosts);
 		} catch (err: any) {
 			res.status(500).json({ error: err.message });
 		}
