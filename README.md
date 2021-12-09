@@ -16,6 +16,6 @@ Buils with NodeJS + Sequelize + express (JS & TS)
 
 Build with ReactJS (TS)
 
-1.Use npm install on front folder
-2.Follow .env-fake for build the .env file
-3.Use npm start 
+    1.Use npm install on front folder
+    2.Follow .env-fake for build the .env file
+    3.Use npm start 
