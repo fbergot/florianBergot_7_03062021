@@ -1,8 +1,8 @@
-#Groupomania
+# Groupomania
 
 projet n°7 Openclassrooms
 
-##Install Backend
+## Install Backend
 
 Buils with NodeJS + Sequelize + express (JS & TS)
 
@@ -12,7 +12,7 @@ Buils with NodeJS + Sequelize + express (JS & TS)
 4.Use command "sequelize db:migrate" for migration in database 
 5.Use npm start
 
-##Install Frontend
+## Install Frontend
 
 Build with ReactJS (TS)
 
