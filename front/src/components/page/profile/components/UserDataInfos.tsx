@@ -13,7 +13,6 @@ type Props = {
             email: string;
             urlAvatar?: string;
             username: string;
-
         }
     };
 }
