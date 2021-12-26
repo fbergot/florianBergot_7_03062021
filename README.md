@@ -4,7 +4,7 @@ projet n°7 Openclassrooms
 
 ## Install Backend
 
-Buils with NodeJS + Sequelize + express (JS & TS)
+Build with NodeJS + Sequelize + express (JS & TS)
 
     1.Use npm install on back folder
     2.Follow .env-fake for build the .env file with config database and other params (port ...)
